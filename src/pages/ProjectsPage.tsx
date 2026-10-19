@@ -7,6 +7,7 @@ import {
   ChevronLeftIcon,
   ChevronRightIcon,
   CompassIcon,
+  CreditCardIcon,
   FootprintsIcon,
   LayersIcon,
   MenuIcon,
@@ -24,6 +25,7 @@ import { UserMenu } from '../components/auth/UserMenu';
 import { LandingHero } from '../components/home/LandingHero';
 import { FeatureCards } from '../components/home/FeatureCards';
 import { EmbedShowcase } from '../components/home/EmbedShowcase';
+import { PricingSection } from '../components/home/PricingSection';
 import { AiWizardModal } from '../components/ai/AiWizardModal';
 import { MapFlexLogo } from '../components/common/MapFlexLogo';
 import { useProjects } from '../contexts/ProjectsContext';
@@ -77,6 +79,7 @@ export function ProjectsPage() {
       { id: 'inicio', label: t('navHome'), icon: SparklesIcon },
       { id: 'funciones', label: t('navFeatures'), icon: LayersIcon },
       { id: 'recorrido', label: t('navVirtualTour'), icon: FootprintsIcon },
+      { id: 'precios', label: t('navPricing'), icon: CreditCardIcon },
       { id: 'mis-planos', label: t('navMyMaps'), icon: CompassIcon },
       { id: 'plantillas', label: t('navTemplates'), icon: PlusIcon },
     ],
@@ -233,7 +236,10 @@ export function ProjectsPage() {
       {/* 3. Embed & Visitor Experience Showcase */}
       <EmbedShowcase demoProjectId={demoId} />
 
-      {/* 4. Plans Workspace Section */}
+      {/* 4. Pricing & Plans Section */}
+      <PricingSection onCreateFree={() => setDialogTemplate('event')} />
+
+      {/* 5. Plans Workspace Section */}
       <main id="mis-planos" className="scroll-mt-16 mx-auto max-w-6xl px-4 py-12 sm:px-6 lg:py-16">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between border-b border-line pb-6">
           <div>

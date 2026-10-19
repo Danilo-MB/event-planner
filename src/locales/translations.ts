@@ -49,6 +49,7 @@ export const translations = {
     navHome: 'Inicio',
     navFeatures: 'Funciones',
     navVirtualTour: 'Recorrido 360°',
+    navPricing: 'Precios',
     navMyMaps: 'Mis Mapas',
     navTemplates: 'Plantillas',
 
@@ -265,7 +266,53 @@ export const translations = {
     // Place Search
     searchUnavailable: 'La búsqueda no está disponible ahora. Intenta nuevamente.',
     noPlacesFound: 'No se encontraron lugares para “{query}”.',
-    searchingPlaces: 'Buscando…'
+    searchingPlaces: 'Buscando…',
+
+    // Pricing
+    pricingBadge: 'Planes claros y transparentes',
+    pricingTitle: 'Comienza gratis por $0. Paga solo si necesitas compartir.',
+    pricingSubtitle: 'Dibuja tu plano satelital completo, mide superficies reales y crea tu recorrido virtual 360° gratis. Desbloquea la inserción iFrame en tu web y la nube ilimitada cuando estés listo.',
+    pricingFreeName: 'Gratuito',
+    pricingFreeBadge: 'Sin tarjeta de crédito',
+    pricingFreePrice: '$0',
+    pricingFreePeriod: 'para siempre',
+    pricingFreeDesc: 'Ideal para probar, proyectar y medir cualquier predio sin pagar un centavo.',
+    pricingFreeCta: 'Comenzar gratis por $0',
+    pricingProName: 'Pro / Evento',
+    pricingProBadge: 'Más popular',
+    pricingProPrice: '$29',
+    pricingProPeriod: 'pago único por evento o $19/mes',
+    pricingProDesc: 'Para festivales, loteos y empresas que necesitan compartir e insertar su plano interactivo en su web.',
+    pricingProCta: 'Elegir Plan Pro',
+    pricingBusinessName: 'Business / Productoras',
+    pricingBusinessBadge: 'Para equipos y desarrollos',
+    pricingBusinessPrice: '$59',
+    pricingBusinessPeriod: 'al mes (facturación flexible)',
+    pricingBusinessDesc: 'Para desarrolladoras inmobiliarias, parques industriales y productoras con múltiples eventos.',
+    pricingBusinessCta: 'Contactar por Business',
+
+    // Pricing feature items
+    pricingFeat1MapCloud: '1 plano activo sincronizado en la nube',
+    pricingFeatLocalUnlimited: 'Planos locales ilimitados en tu navegador',
+    pricingFeatDrawingTools: 'Herramientas de dibujo completas (áreas, recorridos, marcadores)',
+    pricingFeatMetrics: 'Medición automática satelital en tiempo real (ha, m², perímetros)',
+    pricingFeatStreetView: 'Recorrido Virtual 360° con fotos, brújula y mini-mapa',
+    pricingFeatAi: 'Asistente IA para zonificación y análisis de terreno',
+    pricingFeatMobileGps: 'Modo Visitante con geolocalización GPS en vivo sin instalar apps',
+    pricingFeatNoIframe: 'Sin inserción iFrame en sitios web',
+    pricingFeatNoGeojson: 'Sin exportación GeoJSON',
+    pricingFeat5Cloud: 'Hasta 5 planos activos sincronizados en la nube',
+    pricingFeatIframe: 'Incrustar con iFrame (1 clic) en WordPress, Wix o tu web',
+    pricingFeatPublicShare: 'Compartir enlace público interactivo para visitantes',
+    pricingFeatGeojson: 'Exportación completa en formato GeoJSON (QGIS / AutoCAD / SIG)',
+    pricingFeatQr: 'Código QR descargable para cartelería del predio',
+    pricingFeatEmailSupport: 'Soporte técnico por correo electrónico',
+    pricingFeatUnlimitedCloud: 'Planos en la nube ILIMITADOS',
+    pricingFeatUnlimitedStreetView: 'Recorridos virtuales foto a foto ilimitados',
+    pricingFeatMultiCollab: 'Múltiples administradores y edición colaborativa',
+    pricingFeatDigitizationHelp: 'Asistencia en digitalización satelital de predios',
+    pricingFeatPrioritySupport: 'Soporte prioritario directo vía WhatsApp',
+    pricingFooterNote: '¿Tienes un evento benéfico o sin fines de lucro? Escríbenos para acceso Pro bonificado.'
   },
   en: {
     // Brand & Marketing
@@ -315,6 +362,7 @@ export const translations = {
     navHome: 'Home',
     navFeatures: 'Features',
     navVirtualTour: '360° Tour',
+    navPricing: 'Pricing',
     navMyMaps: 'My Maps',
     navTemplates: 'Templates',
 
@@ -531,7 +579,53 @@ export const translations = {
     // Place Search
     searchUnavailable: 'Search is unavailable right now. Try again.',
     noPlacesFound: 'No places found for “{query}”.',
-    searchingPlaces: 'Searching…'
+    searchingPlaces: 'Searching…',
+
+    // Pricing
+    pricingBadge: 'Clear & transparent pricing',
+    pricingTitle: 'Start free for $0. Pay only when you need to embed.',
+    pricingSubtitle: 'Draft your full satellite map, measure real surfaces, and build your 360° virtual walkthrough for free. Unlock iFrame embedding on your website and unlimited cloud sync whenever you are ready.',
+    pricingFreeName: 'Free Starter',
+    pricingFreeBadge: 'No credit card needed',
+    pricingFreePrice: '$0',
+    pricingFreePeriod: 'forever',
+    pricingFreeDesc: 'Perfect to test, design, and measure any venue without paying a dime.',
+    pricingFreeCta: 'Start for $0 free',
+    pricingProName: 'Pro / Event',
+    pricingProBadge: 'Most Popular',
+    pricingProPrice: '$29',
+    pricingProPeriod: 'one-time per event or $19/mo',
+    pricingProDesc: 'For festivals, land developments, and businesses that need to share and embed their map on their site.',
+    pricingProCta: 'Choose Pro Plan',
+    pricingBusinessName: 'Business / Enterprise',
+    pricingBusinessBadge: 'For teams & developments',
+    pricingBusinessPrice: '$59',
+    pricingBusinessPeriod: 'per month (flexible billing)',
+    pricingBusinessDesc: 'For real estate developers, industrial hubs, and ongoing event production agencies.',
+    pricingBusinessCta: 'Contact for Business',
+
+    // Pricing feature items
+    pricingFeat1MapCloud: '1 active plan synced to cloud',
+    pricingFeatLocalUnlimited: 'Unlimited local plans in your browser',
+    pricingFeatDrawingTools: 'Full drawing toolkit (areas, paths, markers)',
+    pricingFeatMetrics: 'Real-time satellite measurements (ha, m², perimeters)',
+    pricingFeatStreetView: '360° Virtual Walkthrough with photos, compass & mini-map',
+    pricingFeatAi: 'AI Assistant for smart zoning & terrain analysis',
+    pricingFeatMobileGps: 'Visitor mode with live mobile GPS (no app install)',
+    pricingFeatNoIframe: 'No iFrame embedding on external websites',
+    pricingFeatNoGeojson: 'No GeoJSON export',
+    pricingFeat5Cloud: 'Up to 5 active plans synced to cloud',
+    pricingFeatIframe: '1-click iFrame embed in WordPress, Wix, or custom sites',
+    pricingFeatPublicShare: 'Interactive public sharing link for visitors',
+    pricingFeatGeojson: 'Full GeoJSON export (for QGIS / AutoCAD / GIS)',
+    pricingFeatQr: 'Printable QR code for event signs',
+    pricingFeatEmailSupport: 'Standard email support',
+    pricingFeatUnlimitedCloud: 'UNLIMITED cloud plans',
+    pricingFeatUnlimitedStreetView: 'Unlimited virtual walkthroughs with photos',
+    pricingFeatMultiCollab: 'Multiple team collaborators & shared editing',
+    pricingFeatDigitizationHelp: 'Satellite venue digitization assistance',
+    pricingFeatPrioritySupport: 'Priority 24/7 WhatsApp support',
+    pricingFooterNote: 'Running a non-profit or charity event? Reach out for complimentary Pro access.'
   }
 } as const;
 
