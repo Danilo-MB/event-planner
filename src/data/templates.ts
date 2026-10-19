@@ -1,67 +1,140 @@
 import type { MapView, PlanTemplate } from '../types/plan';
+import type { Language } from '../locales/translations';
 
 export const defaultMapView: MapView = { lat: -34.6037, lng: -58.3816, zoom: 13 };
 
-export const planTemplates: PlanTemplate[] = [
-{
-  id: 'event',
-  name: 'Event layout',
-  description: 'Zones, stages, food, parking and safety for festivals, fairs and car shows.',
-  categories: [
-  { id: 'zones', name: 'Zones', color: '#E8590C', icon: 'tent', kindHint: 'area' },
-  { id: 'stages', name: 'Stages & shows', color: '#AE3EC9', icon: 'music' },
-  { id: 'food', name: 'Food & drinks', color: '#F59F00', icon: 'food' },
-  { id: 'parking', name: 'Parking', color: '#1C7ED6', icon: 'parking' },
-  { id: 'access', name: 'Access & paths', color: '#F06595', icon: 'door', kindHint: 'line' },
-  { id: 'safety', name: 'Safety & services', color: '#0CA678', icon: 'ambulance', kindHint: 'point' }]
+export const planTemplatesEs: PlanTemplate[] = [
+  {
+    id: 'event',
+    name: 'Distribución de evento',
+    description: 'Zonas, escenarios, gastronomía, estacionamiento y seguridad para festivales, ferias y exposiciones.',
+    categories: [
+      { id: 'zones', name: 'Zonas', color: '#E8590C', icon: 'tent', kindHint: 'area' },
+      { id: 'stages', name: 'Escenarios y shows', color: '#AE3EC9', icon: 'music' },
+      { id: 'food', name: 'Gastronomía y bebidas', color: '#F59F00', icon: 'food' },
+      { id: 'parking', name: 'Estacionamiento', color: '#1C7ED6', icon: 'parking' },
+      { id: 'access', name: 'Accesos y senderos', color: '#F06595', icon: 'door', kindHint: 'line' },
+      { id: 'safety', name: 'Seguridad y servicios', color: '#0CA678', icon: 'ambulance', kindHint: 'point' }
+    ]
+  },
+  {
+    id: 'realEstate',
+    name: 'Desarrollo inmobiliario',
+    description: 'Lotes, calles, espacios verdes y amenidades para barrios y loteos.',
+    categories: [
+      { id: 'lots', name: 'Lotes', color: '#E8590C', icon: 'house', kindHint: 'area' },
+      { id: 'streets', name: 'Calles y accesos', color: '#F59F00', icon: 'route', kindHint: 'line' },
+      { id: 'green', name: 'Espacios verdes', color: '#74B816', icon: 'trees' },
+      { id: 'amenities', name: 'Amenidades', color: '#AE3EC9', icon: 'store' },
+      { id: 'common', name: 'Áreas comunes', color: '#1C7ED6', icon: 'building' },
+      { id: 'poi', name: 'Puntos de interés', color: '#F06595', icon: 'pin', kindHint: 'point' }
+    ]
+  },
+  {
+    id: 'logistics',
+    name: 'Logística y Almacenamiento',
+    description: 'Muelles, dársenas, playa de maniobras de camiones, pasillos y oficinas de despacho.',
+    categories: [
+      { id: 'docks', name: 'Muelles y Dársenas', color: '#E8590C', icon: 'door', kindHint: 'area' },
+      { id: 'storage', name: 'Almacén y Racks', color: '#1C7ED6', icon: 'warehouse', kindHint: 'area' },
+      { id: 'yard', name: 'Playa de camiones', color: '#F59F00', icon: 'parking', kindHint: 'area' },
+      { id: 'aisles', name: 'Pasillos de autoelevador', color: '#0CA678', icon: 'route', kindHint: 'line' },
+      { id: 'office', name: 'Control y Oficinas', color: '#AE3EC9', icon: 'building' },
+      { id: 'safety', name: 'Extintores y Seguridad', color: '#E03131', icon: 'shield', kindHint: 'point' }
+    ]
+  },
+  {
+    id: 'industrial',
+    name: 'Planta Industrial y Manufactura',
+    description: 'Naves de producción, líneas de montaje, patio de materiales, expedición y puestos de seguridad.',
+    categories: [
+      { id: 'production', name: 'Naves de producción', color: '#1C7ED6', icon: 'building', kindHint: 'area' },
+      { id: 'assembly', name: 'Línea de montaje', color: '#E03131', icon: 'route', kindHint: 'line' },
+      { id: 'materials', name: 'Patio de materiales', color: '#F59F00', icon: 'warehouse', kindHint: 'area' },
+      { id: 'shipping', name: 'Expedición y Docks', color: '#E8590C', icon: 'door', kindHint: 'area' },
+      { id: 'services', name: 'Subestación y Servicios', color: '#AE3EC9', icon: 'power' },
+      { id: 'medical', name: 'Enfermería y Seguridad', color: '#0CA678', icon: 'ambulance', kindHint: 'point' }
+    ]
+  },
+  {
+    id: 'blank',
+    name: 'Plano en blanco',
+    description: 'Tres capas básicas para comenzar. Puedes renombrarlas o añadir las tuyas.',
+    categories: [
+      { id: 'areas', name: 'Áreas', color: '#E8590C', icon: 'star', kindHint: 'area' },
+      { id: 'paths', name: 'Recorridos', color: '#1C7ED6', icon: 'route', kindHint: 'line' },
+      { id: 'points', name: 'Marcadores', color: '#0CA678', icon: 'pin', kindHint: 'point' }
+    ]
+  }
+];
 
-},
-{
-  id: 'realEstate',
-  name: 'Land development',
-  description: 'Lots, streets, green spaces and amenities for neighborhoods and subdivisions.',
-  categories: [
-  { id: 'lots', name: 'Lots', color: '#E8590C', icon: 'house', kindHint: 'area' },
-  { id: 'streets', name: 'Streets', color: '#F59F00', icon: 'route', kindHint: 'line' },
-  { id: 'green', name: 'Green spaces', color: '#74B816', icon: 'trees' },
-  { id: 'amenities', name: 'Amenities', color: '#AE3EC9', icon: 'store' },
-  { id: 'common', name: 'Common areas', color: '#1C7ED6', icon: 'building' },
-  { id: 'poi', name: 'Points of interest', color: '#F06595', icon: 'pin', kindHint: 'point' }]
+export const planTemplatesEn: PlanTemplate[] = [
+  {
+    id: 'event',
+    name: 'Event layout',
+    description: 'Zones, stages, food, parking and safety for festivals, fairs and car shows.',
+    categories: [
+      { id: 'zones', name: 'Zones', color: '#E8590C', icon: 'tent', kindHint: 'area' },
+      { id: 'stages', name: 'Stages & shows', color: '#AE3EC9', icon: 'music' },
+      { id: 'food', name: 'Food & drinks', color: '#F59F00', icon: 'food' },
+      { id: 'parking', name: 'Parking', color: '#1C7ED6', icon: 'parking' },
+      { id: 'access', name: 'Access & paths', color: '#F06595', icon: 'door', kindHint: 'line' },
+      { id: 'safety', name: 'Safety & services', color: '#0CA678', icon: 'ambulance', kindHint: 'point' }
+    ]
+  },
+  {
+    id: 'realEstate',
+    name: 'Land development',
+    description: 'Lots, streets, green spaces and amenities for neighborhoods and subdivisions.',
+    categories: [
+      { id: 'lots', name: 'Lots', color: '#E8590C', icon: 'house', kindHint: 'area' },
+      { id: 'streets', name: 'Streets', color: '#F59F00', icon: 'route', kindHint: 'line' },
+      { id: 'green', name: 'Green spaces', color: '#74B816', icon: 'trees' },
+      { id: 'amenities', name: 'Amenities', color: '#AE3EC9', icon: 'store' },
+      { id: 'common', name: 'Common areas', color: '#1C7ED6', icon: 'building' },
+      { id: 'poi', name: 'Points of interest', color: '#F06595', icon: 'pin', kindHint: 'point' }
+    ]
+  },
+  {
+    id: 'logistics',
+    name: 'Logistics & Warehousing',
+    description: 'Docks, storage bays, truck maneuvering yards, aisles, and dispatch offices.',
+    categories: [
+      { id: 'docks', name: 'Docks & Bays', color: '#E8590C', icon: 'door', kindHint: 'area' },
+      { id: 'storage', name: 'Storage & Racks', color: '#1C7ED6', icon: 'warehouse', kindHint: 'area' },
+      { id: 'yard', name: 'Truck yard', color: '#F59F00', icon: 'parking', kindHint: 'area' },
+      { id: 'aisles', name: 'Forklift aisles', color: '#0CA678', icon: 'route', kindHint: 'line' },
+      { id: 'office', name: 'Control & Offices', color: '#AE3EC9', icon: 'building' },
+      { id: 'safety', name: 'Safety & Extinguishers', color: '#E03131', icon: 'shield', kindHint: 'point' }
+    ]
+  },
+  {
+    id: 'industrial',
+    name: 'Industrial Plant & Manufacturing',
+    description: 'Production halls, assembly lines, raw material yards, supplier docks, and safety posts.',
+    categories: [
+      { id: 'production', name: 'Production halls', color: '#1C7ED6', icon: 'building', kindHint: 'area' },
+      { id: 'assembly', name: 'Assembly line', color: '#E03131', icon: 'route', kindHint: 'line' },
+      { id: 'materials', name: 'Raw material yards', color: '#F59F00', icon: 'warehouse', kindHint: 'area' },
+      { id: 'shipping', name: 'Shipping & Docks', color: '#E8590C', icon: 'door', kindHint: 'area' },
+      { id: 'services', name: 'Utilities & Power', color: '#AE3EC9', icon: 'power' },
+      { id: 'medical', name: 'First aid & Safety', color: '#0CA678', icon: 'ambulance', kindHint: 'point' }
+    ]
+  },
+  {
+    id: 'blank',
+    name: 'Blank plan',
+    description: 'Three basic layers to start with. Rename them or add your own.',
+    categories: [
+      { id: 'areas', name: 'Areas', color: '#E8590C', icon: 'star', kindHint: 'area' },
+      { id: 'paths', name: 'Paths', color: '#1C7ED6', icon: 'route', kindHint: 'line' },
+      { id: 'points', name: 'Markers', color: '#0CA678', icon: 'pin', kindHint: 'point' }
+    ]
+  }
+];
 
-},
-{
-  id: 'logistics',
-  name: 'Logistics & Warehousing',
-  description: 'Docks, storage bays, truck maneuvering yards, aisles, and dispatch offices.',
-  categories: [
-    { id: 'docks', name: 'Muelles / Docks', color: '#E8590C', icon: 'door', kindHint: 'area' },
-    { id: 'storage', name: 'Almacén & Racks', color: '#1C7ED6', icon: 'warehouse', kindHint: 'area' },
-    { id: 'yard', name: 'Playa de camiones', color: '#F59F00', icon: 'parking', kindHint: 'area' },
-    { id: 'aisles', name: 'Pasillos de autoelevador', color: '#0CA678', icon: 'route', kindHint: 'line' },
-    { id: 'office', name: 'Control & Oficinas', color: '#AE3EC9', icon: 'building' },
-    { id: 'safety', name: 'Extintores & Seguridad', color: '#E03131', icon: 'shield', kindHint: 'point' }
-  ]
-},
-{
-  id: 'industrial',
-  name: 'Industrial Plant & Manufacturing',
-  description: 'Production halls, assembly lines, raw material yards, supplier docks, and safety posts.',
-  categories: [
-    { id: 'production', name: 'Naves de producción', color: '#1C7ED6', icon: 'building', kindHint: 'area' },
-    { id: 'assembly', name: 'Línea de montaje', color: '#E03131', icon: 'route', kindHint: 'line' },
-    { id: 'materials', name: 'Patio de materiales', color: '#F59F00', icon: 'warehouse', kindHint: 'area' },
-    { id: 'shipping', name: 'Expedición & Docks', color: '#E8590C', icon: 'door', kindHint: 'area' },
-    { id: 'services', name: 'Subestación & Servicios', color: '#AE3EC9', icon: 'power' },
-    { id: 'medical', name: 'Enfermería & Seguridad', color: '#0CA678', icon: 'ambulance', kindHint: 'point' }
-  ]
-},
-{
-  id: 'blank',
-  name: 'Blank plan',
-  description: 'Three basic layers to start with. Rename them or add your own.',
-  categories: [
-  { id: 'areas', name: 'Areas', color: '#E8590C', icon: 'star', kindHint: 'area' },
-  { id: 'paths', name: 'Paths', color: '#1C7ED6', icon: 'route', kindHint: 'line' },
-  { id: 'points', name: 'Points', color: '#0CA678', icon: 'pin', kindHint: 'point' }]
+export function getPlanTemplates(lang: Language = 'es'): PlanTemplate[] {
+  return lang === 'en' ? planTemplatesEn : planTemplatesEs;
+}
 
-}];
+export const planTemplates: PlanTemplate[] = planTemplatesEs;

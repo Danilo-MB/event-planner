@@ -175,12 +175,13 @@ export function ProjectsProvider({ children }: { children: React.ReactNode }) {
 
   const createProject = useCallback((input: NewPlanInput): Project => {
     const template = planTemplates.find((t) => t.id === input.template) ?? planTemplates[0];
+    const templateCategories = (input.categories && input.categories.length > 0) ? input.categories : template.categories;
     const now = Date.now();
     const place = input.place;
 
     // Merge template categories and ensure all feature categories are present
     const categoryMap = new Map<string, import('../types/plan').Category>();
-    for (const c of template.categories) {
+    for (const c of templateCategories) {
       categoryMap.set(c.id, { ...c });
     }
     // Also include standard event categories as fallback

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { formatDistanceToNow } from 'date-fns';
+import { es, enUS } from 'date-fns/locale';
 import { ArrowRightIcon, CloudIcon, CloudOffIcon, ExternalLinkIcon, EyeIcon, GlobeIcon, MapPinIcon, Trash2Icon } from 'lucide-react';
 import { PlanThumbnail } from '../PlanThumbnail';
 import { canDeleteProject, summarizeKinds } from '../../utils/plan';
@@ -14,7 +15,7 @@ interface FeaturedPlanProps {
 }
 
 export function FeaturedPlan({ project, onDelete }: FeaturedPlanProps) {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const { user } = useAuth();
   const showDelete = canDeleteProject(project, user);
 
@@ -53,7 +54,7 @@ export function FeaturedPlan({ project, onDelete }: FeaturedPlanProps) {
             {project.description}
           </p>
         )}
-        <p className="mt-4 text-sm font-medium text-ink">{summarizeKinds(project.features)}</p>
+        <p className="mt-4 text-sm font-medium text-ink">{summarizeKinds(project.features, t)}</p>
 
         <div className="mt-auto flex flex-wrap items-center gap-2 pt-6">
           <Link
@@ -74,7 +75,11 @@ export function FeaturedPlan({ project, onDelete }: FeaturedPlanProps) {
           )}
 
           <span className="ml-auto text-xs text-muted">
-            {t('edited')} {formatDistanceToNow(project.updatedAt, { addSuffix: true })}
+            {t('edited')}{' '}
+            {formatDistanceToNow(project.updatedAt, {
+              addSuffix: true,
+              locale: language === 'es' ? es : enUS
+            })}
           </span>
         </div>
       </div>

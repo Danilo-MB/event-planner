@@ -120,4 +120,5 @@ export interface NewPlanInput {
   websiteUrl?: string;
   description?: string;
   features?: PlanFeature[];
+  categories?: Category[];
 }

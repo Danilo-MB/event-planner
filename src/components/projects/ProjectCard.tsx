@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { formatDistanceToNow } from 'date-fns';
+import { es, enUS } from 'date-fns/locale';
 import { MapPinIcon, Trash2Icon } from 'lucide-react';
 import { PlanThumbnail } from '../PlanThumbnail';
 import { canDeleteProject, summarizeKinds } from '../../utils/plan';
@@ -15,7 +16,7 @@ interface ProjectCardProps {
 
 export function ProjectCard({ project, onDelete }: ProjectCardProps) {
   const { user } = useAuth();
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const showDelete = canDeleteProject(project, user);
 
   return (
@@ -52,8 +53,13 @@ export function ProjectCard({ project, onDelete }: ProjectCardProps) {
         </div>
 
         <div className="mt-3 flex items-center justify-between gap-2 text-xs text-muted">
-          <span className="truncate">{summarizeKinds(project.features)}</span>
-          <span className="shrink-0">{formatDistanceToNow(project.updatedAt, { addSuffix: true })}</span>
+          <span className="truncate">{summarizeKinds(project.features, t)}</span>
+          <span className="shrink-0">
+            {formatDistanceToNow(project.updatedAt, {
+              addSuffix: true,
+              locale: language === 'es' ? es : enUS
+            })}
+          </span>
         </div>
 
         <div className="mt-auto pt-4 border-t border-line">
@@ -70,7 +76,7 @@ export function ProjectCard({ project, onDelete }: ProjectCardProps) {
         <button
           type="button"
           onClick={onDelete}
-          aria-label={`Eliminar ${project.name}`}
+          aria-label={`${t('deletePlan')} ${project.name}`}
           className="absolute right-2.5 top-2.5 z-10 grid h-8 w-8 place-items-center rounded-lg bg-surface/90 backdrop-blur-md text-muted shadow-sm transition-all hover:bg-danger hover:text-white active:scale-95"
         >
           <Trash2Icon className="h-4 w-4" aria-hidden="true" />

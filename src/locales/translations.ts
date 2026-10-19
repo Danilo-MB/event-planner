@@ -218,12 +218,54 @@ export const translations = {
     aiOpenInEditor: 'Abrir plano generado en el editor',
     aiSuccessTitle: '¡Plano inteligente generado con éxito!',
 
-    // Recorrido Virtual
+    // Virtual Walkthrough / Ground-level view
     streetViewTitle: 'Recorrido Virtual 360°',
     streetViewSubtitle: 'Caminar foto a foto por el sendero',
     streetViewWalk: 'Iniciar Recorrido Virtual',
     streetViewLoadSamples: 'Cargar fotos de ejemplo',
-    streetViewUploadPhotos: 'Subir fotos a cada punto'
+    streetViewUploadPhotos: 'Subir fotos a cada punto',
+
+    // Feature kinds / Feature summary
+    kindAreaSingle: 'área',
+    kindAreaPlural: 'áreas',
+    kindLineSingle: 'recorrido',
+    kindLinePlural: 'recorridos',
+    kindPointSingle: 'marcador',
+    kindPointPlural: 'marcadores',
+    noElementsYet: 'Sin elementos aún',
+
+    // Dashboard Empty & Footer & Nav
+    noPlansYet: 'No hay planos aún',
+    noPlansYetDesc: 'Comienza con una plantilla para crear tu primer plano interactivo.',
+    allRightsReserved: 'Todos los derechos reservados.',
+    openMenu: 'Abrir menú',
+    closeMenu: 'Cerrar menú',
+    planMovedToTrash: 'Plano “{name}” movido a la papelera',
+    preferAiPrompt: '¿Prefieres que la IA trace el plano automáticamente sobre el satélite?',
+
+    // Templates
+    templateEventName: 'Distribución de evento',
+    templateEventDesc: 'Zonas, escenarios, gastronomía, estacionamiento y seguridad para festivales, ferias y exposiciones.',
+    templateRealEstateName: 'Desarrollo inmobiliario',
+    templateRealEstateDesc: 'Lotes, calles, espacios verdes y amenidades para barrios y loteos.',
+    templateLogisticsName: 'Logística y Almacenamiento',
+    templateLogisticsDesc: 'Muelles, dársenas, playa de maniobras de camiones, pasillos y oficinas de despacho.',
+    templateIndustrialName: 'Planta Industrial y Manufactura',
+    templateIndustrialDesc: 'Naves de producción, líneas de montaje, patio de materiales, expedición y puestos de seguridad.',
+    templateBlankName: 'Plano en blanco',
+    templateBlankDesc: 'Tres capas básicas para comenzar. Puedes renombrarlas o añadir las tuyas.',
+
+    // Embed showcase mockup
+    interactivePreview: 'Vista previa interactiva',
+    satelliteMapMockup: '🛰️ Mapa Satelital',
+    mockupTourHeading: '🧭 Rumbo: 215° SO',
+    mockupTourPhoto: 'Foto del recorrido',
+    mockupTourCaption: 'Paseo Central Arbolado · Punto 2 de 5',
+
+    // Place Search
+    searchUnavailable: 'La búsqueda no está disponible ahora. Intenta nuevamente.',
+    noPlacesFound: 'No se encontraron lugares para “{query}”.',
+    searchingPlaces: 'Buscando…'
   },
   en: {
     // Brand & Marketing
@@ -447,7 +489,49 @@ export const translations = {
     streetViewSubtitle: 'Walk photo-by-photo along the route at ground level',
     streetViewWalk: 'Start Virtual Walkthrough',
     streetViewLoadSamples: 'Load sample photos',
-    streetViewUploadPhotos: 'Upload photos per point'
+    streetViewUploadPhotos: 'Upload photos per point',
+
+    // Feature kinds / Feature summary
+    kindAreaSingle: 'area',
+    kindAreaPlural: 'areas',
+    kindLineSingle: 'path',
+    kindLinePlural: 'paths',
+    kindPointSingle: 'marker',
+    kindPointPlural: 'markers',
+    noElementsYet: 'No elements yet',
+
+    // Dashboard Empty & Footer & Nav
+    noPlansYet: 'No plans yet',
+    noPlansYetDesc: 'Start with a template to create your first interactive plan.',
+    allRightsReserved: 'All rights reserved.',
+    openMenu: 'Open menu',
+    closeMenu: 'Close menu',
+    planMovedToTrash: 'Plan “{name}” moved to trash',
+    preferAiPrompt: 'Prefer AI to draft the layout over satellite imagery automatically?',
+
+    // Templates
+    templateEventName: 'Event layout',
+    templateEventDesc: 'Zones, stages, food, parking and safety for festivals, fairs and car shows.',
+    templateRealEstateName: 'Land development',
+    templateRealEstateDesc: 'Lots, streets, green spaces and amenities for neighborhoods and subdivisions.',
+    templateLogisticsName: 'Logistics & Warehousing',
+    templateLogisticsDesc: 'Docks, storage bays, truck maneuvering yards, aisles, and dispatch offices.',
+    templateIndustrialName: 'Industrial Plant & Manufacturing',
+    templateIndustrialDesc: 'Production halls, assembly lines, raw material yards, supplier docks, and safety posts.',
+    templateBlankName: 'Blank plan',
+    templateBlankDesc: 'Three basic layers to start with. Rename them or add your own.',
+
+    // Embed showcase mockup
+    interactivePreview: 'Interactive preview',
+    satelliteMapMockup: '🛰️ Satellite Map',
+    mockupTourHeading: '🧭 Heading: 215° SW',
+    mockupTourPhoto: 'Tour photo',
+    mockupTourCaption: 'Tree-lined Promenade · Point 2 of 5',
+
+    // Place Search
+    searchUnavailable: 'Search is unavailable right now. Try again.',
+    noPlacesFound: 'No places found for “{query}”.',
+    searchingPlaces: 'Searching…'
   }
 } as const;
 

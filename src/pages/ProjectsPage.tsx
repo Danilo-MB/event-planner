@@ -29,14 +29,15 @@ import { MapFlexLogo } from '../components/common/MapFlexLogo';
 import { useProjects } from '../contexts/ProjectsContext';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useAuth } from '../contexts/AuthContext';
-import { planTemplates } from '../data/templates';
+import { getPlanTemplates } from '../data/templates';
 import type { NewPlanInput, Project, TemplateId } from '../types/plan';
 
 export function ProjectsPage() {
   const { projects, createProject, deleteProject, restoreProject, demoProjectId } = useProjects();
   const { user } = useAuth();
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const navigate = useNavigate();
+  const templates = useMemo(() => getPlanTemplates(language), [language]);
   const [dialogTemplate, setDialogTemplate] = useState<TemplateId | null>(null);
   const [isAiWizardOpen, setIsAiWizardOpen] = useState(false);
   const [projectToDelete, setProjectToDelete] = useState<Project | null>(null);
@@ -113,7 +114,7 @@ export function ProjectsPage() {
     const index = projects.findIndex((item) => item.id === p.id);
     deleteProject(p.id);
     setProjectToDelete(null);
-    toast(`Plano “${p.name}” movido a la papelera`, {
+    toast(t('planMovedToTrash').replace('{name}', p.name), {
       action: {
         label: t('undo'),
         onClick: () => restoreProject(p, index)
@@ -175,7 +176,7 @@ export function ProjectsPage() {
             <button
               type="button"
               onClick={() => setMobileMenuOpen((v) => !v)}
-              aria-label={mobileMenuOpen ? 'Cerrar menú' : 'Abrir menú'}
+              aria-label={mobileMenuOpen ? t('closeMenu') : t('openMenu')}
               className="grid h-9 w-9 place-items-center rounded-xl border border-line bg-surface text-ink md:hidden hover:bg-subtle active:scale-95 transition-all"
             >
               {mobileMenuOpen ? <XIcon className="h-4 w-4" /> : <MenuIcon className="h-4 w-4" />}
@@ -293,8 +294,8 @@ export function ProjectsPage() {
 
         {sorted.length === 0 ? (
           <div className="mt-8 rounded-2xl border border-dashed border-line bg-surface px-6 py-14 text-center">
-            <h3 className="text-lg font-semibold text-ink">No hay planos aún</h3>
-            <p className="mt-1 text-sm text-muted">Comienza con una plantilla para crear tu primer plano interactivo.</p>
+            <h3 className="text-lg font-semibold text-ink">{t('noPlansYet')}</h3>
+            <p className="mt-1 text-sm text-muted">{t('noPlansYetDesc')}</p>
           </div>
         ) : (
           <div className="relative mt-6 sm:mt-8">
@@ -410,7 +411,7 @@ export function ProjectsPage() {
             {t('whatPlanning')}
           </h3>
           <div className="mt-4 grid gap-3 sm:grid-cols-3">
-            {planTemplates.map((tTemplate) => (
+            {templates.map((tTemplate) => (
               <button
                 key={tTemplate.id}
                 type="button"
@@ -438,7 +439,7 @@ export function ProjectsPage() {
             <span className="hidden sm:inline">{t('brandTagline')}</span>
           </div>
           <div>
-            <span>© {new Date().getFullYear()} MapFlex. Todos los derechos reservados.</span>
+            <span>© {new Date().getFullYear()} MapFlex. {t('allRightsReserved')}</span>
           </div>
         </div>
       </footer>

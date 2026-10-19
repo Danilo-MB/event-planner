@@ -1,5 +1,6 @@
 import { featureKinds } from '../data/featureKinds';
 import type { Category, FeatureKind, PlanFeature } from '../types/plan';
+import type { TranslationKey } from '../locales/translations';
 
 export const fallbackCategory: Category = {
   id: 'uncategorized',
@@ -12,8 +13,12 @@ export function pickCategory(categories: Category[], kind: FeatureKind): Categor
   return categories.find((c) => c.kindHint === kind) ?? categories[0] ?? fallbackCategory;
 }
 
-export function nextFeatureName(features: PlanFeature[], kind: FeatureKind): string {
+export function nextFeatureName(features: PlanFeature[], kind: FeatureKind, t?: (key: TranslationKey) => string): string {
   const count = features.filter((f) => f.kind === kind).length + 1;
+  if (t) {
+    const key: TranslationKey = kind === 'area' ? 'toolArea' : kind === 'line' ? 'toolLine' : 'toolPoint';
+    return `${t(key)} ${count}`;
+  }
   return `${featureKinds[kind].label} ${count}`;
 }
 
@@ -27,11 +32,31 @@ export function countByKind(features: PlanFeature[]): Record<FeatureKind, number
   );
 }
 
-export function summarizeKinds(features: PlanFeature[]): string {
+export function summarizeKinds(features: PlanFeature[], t?: (key: TranslationKey) => string): string {
   const counts = countByKind(features);
-  const parts = (Object.keys(counts) as FeatureKind[]).
-  filter((k) => counts[k] > 0).
-  map((k) => `${counts[k]} ${counts[k] === 1 ? featureKinds[k].label.toLowerCase() : featureKinds[k].plural}`);
+  const kinds: FeatureKind[] = ['area', 'line', 'point'];
+
+  if (t) {
+    const parts = kinds
+      .filter((k) => counts[k] > 0)
+      .map((k) => {
+        const count = counts[k];
+        let label = '';
+        if (k === 'area') {
+          label = count === 1 ? t('kindAreaSingle') : t('kindAreaPlural');
+        } else if (k === 'line') {
+          label = count === 1 ? t('kindLineSingle') : t('kindLinePlural');
+        } else {
+          label = count === 1 ? t('kindPointSingle') : t('kindPointPlural');
+        }
+        return `${count} ${label}`;
+      });
+    return parts.length ? parts.join(' · ') : t('noElementsYet');
+  }
+
+  const parts = kinds
+    .filter((k) => counts[k] > 0)
+    .map((k) => `${counts[k]} ${counts[k] === 1 ? featureKinds[k].label.toLowerCase() : featureKinds[k].plural}`);
   return parts.length ? parts.join(' · ') : 'No elements yet';
 }
 

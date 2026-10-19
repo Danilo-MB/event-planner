@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { GlobeIcon, MapPinIcon, SparklesIcon, XIcon } from 'lucide-react';
-import { planTemplates } from '../../data/templates';
+import { getPlanTemplates } from '../../data/templates';
 import { PlaceSearch } from '../PlaceSearch';
 import { TemplateIcon } from './TemplateIcon';
 import { useLanguage } from '../../contexts/LanguageContext';
@@ -17,7 +17,8 @@ interface NewPlanDialogProps {
 const ease = [0.23, 1, 0.32, 1] as const;
 
 export function NewPlanDialog({ initialTemplate, onClose, onCreate, onSwitchToAi }: NewPlanDialogProps) {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+  const templates = React.useMemo(() => getPlanTemplates(language), [language]);
   const [name, setName] = useState('');
   const [template, setTemplate] = useState<TemplateId>(initialTemplate);
   const [place, setPlace] = useState<PlaceResult | null>(null);
@@ -35,11 +36,13 @@ export function NewPlanDialog({ initialTemplate, onClose, onCreate, onSwitchToAi
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
     if (canCreate) {
+      const selectedTemplate = templates.find((item) => item.id === template) ?? templates[0];
       onCreate({
         name,
         template,
         place,
-        websiteUrl: websiteUrl.trim() || undefined
+        websiteUrl: websiteUrl.trim() || undefined,
+        categories: selectedTemplate.categories
       });
     }
   };
@@ -83,7 +86,7 @@ export function NewPlanDialog({ initialTemplate, onClose, onCreate, onSwitchToAi
           <div className="mx-5 mt-4 flex items-center justify-between rounded-xl border border-amber-500/30 bg-gradient-to-r from-amber-500/10 via-orange-500/5 to-emerald-500/10 p-3">
             <div className="flex items-center gap-2">
               <SparklesIcon className="h-4 w-4 text-amber-500 shrink-0" aria-hidden="true" />
-              <span className="text-xs text-ink font-medium">¿Prefieres que la IA trace el plano automáticamente sobre el satélite?</span>
+              <span className="text-xs text-ink font-medium">{t('preferAiPrompt')}</span>
             </div>
             <button
               type="button"
@@ -158,7 +161,7 @@ export function NewPlanDialog({ initialTemplate, onClose, onCreate, onSwitchToAi
           <fieldset>
             <legend className="text-sm font-medium text-ink">{t('whatPlanning')}</legend>
             <div role="radiogroup" className="mt-2 grid gap-2 sm:grid-cols-3">
-              {planTemplates.map((tTemplate) => {
+              {templates.map((tTemplate) => {
                 const checked = tTemplate.id === template;
                 return (
                   <button

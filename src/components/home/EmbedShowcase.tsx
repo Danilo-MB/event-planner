@@ -61,7 +61,7 @@ export function EmbedShowcase({ demoProjectId = 'carbriata-2027' }: EmbedShowcas
           <div className="relative">
             <div className="overflow-hidden rounded-2xl border border-line bg-surface shadow-2xl">
               <div className="flex items-center justify-between border-b border-line bg-subtle/60 px-4 py-2.5">
-                <span className="text-xs font-semibold text-muted">Vista previa interactiva</span>
+                <span className="text-xs font-semibold text-muted">{t('interactivePreview')}</span>
                 <div className="flex rounded-lg border border-line bg-surface p-0.5">
                   <button
                     type="button"
@@ -72,7 +72,7 @@ export function EmbedShowcase({ demoProjectId = 'carbriata-2027' }: EmbedShowcas
                         : 'text-muted hover:text-ink'
                     }`}>
                     <FootprintsIcon className="h-3.5 w-3.5" />
-                    <span>Recorrido 360°</span>
+                    <span>{t('streetViewTitle')}</span>
                   </button>
                   <button
                     type="button"
@@ -82,7 +82,7 @@ export function EmbedShowcase({ demoProjectId = 'carbriata-2027' }: EmbedShowcas
                         ? 'bg-ink text-on-ink font-semibold shadow-2xs'
                         : 'text-muted hover:text-ink'
                     }`}>
-                    🛰️ Mapa Satelital
+                    {t('satelliteMapMockup')}
                   </button>
                 </div>
               </div>
@@ -108,16 +108,16 @@ export function EmbedShowcase({ demoProjectId = 'carbriata-2027' }: EmbedShowcas
                     {/* Top overlay badge */}
                     <div className="absolute left-3 top-3 flex items-center gap-2 rounded-lg bg-black/70 px-2.5 py-1 text-[11px] font-semibold text-white backdrop-blur-md shadow-sm">
                       <FootprintsIcon className="h-3.5 w-3.5 text-amber-400" />
-                      <span>Paseo Central Arbolado · Punto 2 de 5</span>
+                      <span>{t('mockupTourCaption')}</span>
                     </div>
 
                     {/* Bottom overlay info bar */}
                     <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between text-xs text-white">
                       <span className="rounded-lg bg-black/70 px-2.5 py-1 font-mono text-[11px] backdrop-blur-md">
-                        🧭 Rumbo: 215° SO
+                        {t('mockupTourHeading')}
                       </span>
                       <span className="rounded-lg bg-amber-500 px-2.5 py-1 text-[11px] font-bold text-black shadow-sm">
-                        Foto del recorrido
+                        {t('mockupTourPhoto')}
                       </span>
                     </div>
                   </div>

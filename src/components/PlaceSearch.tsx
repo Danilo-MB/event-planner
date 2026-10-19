@@ -1,6 +1,7 @@
 import React, { useId, useState } from 'react';
 import { Loader2Icon, MapPinIcon, SearchIcon } from 'lucide-react';
 import { usePlaceSearch } from '../hooks/usePlaceSearch';
+import { useLanguage } from '../contexts/LanguageContext';
 import type { PlaceResult } from '../types/plan';
 
 interface PlaceSearchProps {
@@ -13,11 +14,14 @@ interface PlaceSearchProps {
 
 export function PlaceSearch({
   onPick,
-  placeholder = 'Search a place or address',
-  label = 'Search a place',
+  placeholder,
+  label,
   autoFocus,
   inline
 }: PlaceSearchProps) {
+  const { t } = useLanguage();
+  const searchPlaceholder = placeholder ?? t('searchPlace');
+  const searchLabel = label ?? t('searchPlace');
   const [query, setQuery] = useState('');
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState(0);
@@ -52,13 +56,13 @@ export function PlaceSearch({
         <input
           type="search"
           role="combobox"
-          aria-label={label}
+          aria-label={searchLabel}
           aria-expanded={showResults}
           aria-controls={listId}
           aria-autocomplete="list"
           autoFocus={autoFocus}
           value={query}
-          placeholder={placeholder}
+          placeholder={searchPlaceholder}
           onChange={(e) => {
             setQuery(e.target.value);
             setOpen(true);
@@ -70,7 +74,7 @@ export function PlaceSearch({
           className="h-10 w-full rounded-lg border border-line bg-subtle pl-9 pr-9 text-sm text-ink placeholder:text-muted focus:border-ink focus:bg-surface focus:outline-none" />
         
         {status === 'loading' &&
-        <Loader2Icon className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 animate-spin text-muted" aria-label="Searching" />
+        <Loader2Icon className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 animate-spin text-muted" aria-label={t('searchingPlaces')} />
         }
       </div>
       {showResults &&
@@ -81,11 +85,11 @@ export function PlaceSearch({
         'absolute inset-x-0 top-full z-50 mt-1 overflow-hidden rounded-lg border border-line bg-surface shadow-float'
         }>
         
-          {status === 'error' && <p className="px-3 py-3 text-sm text-danger">Search is unavailable right now. Try again.</p>}
+          {status === 'error' && <p className="px-3 py-3 text-sm text-danger">{t('searchUnavailable')}</p>}
           {status === 'success' && results.length === 0 &&
-        <p className="px-3 py-3 text-sm text-muted">No places found for “{query.trim()}”.</p>
+        <p className="px-3 py-3 text-sm text-muted">{t('noPlacesFound').replace('{query}', query.trim())}</p>
         }
-          {status === 'loading' && results.length === 0 && <p className="px-3 py-3 text-sm text-muted">Searching…</p>}
+          {status === 'loading' && results.length === 0 && <p className="px-3 py-3 text-sm text-muted">{t('searchingPlaces')}</p>}
           {results.length > 0 &&
         <ul id={listId} role="listbox" aria-label="Places">
               {results.map((r, i) =>
