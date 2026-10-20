@@ -35,10 +35,6 @@ export function PricingSection({ onCreateFree, onSelectPro, onSelectBusiness }: 
           <h2 id="pricing-heading" className="text-3xl font-extrabold tracking-tight text-ink sm:text-4xl lg:text-5xl">
             {t('pricingTitle')}
           </h2>
-
-          <p className="mt-4 text-base sm:text-lg leading-relaxed text-muted">
-            {t('pricingSubtitle')}
-          </p>
         </div>
 
         {/* 3 Pricing Cards Grid */}
@@ -228,9 +224,6 @@ export function PricingSection({ onCreateFree, onSelectPro, onSelectBusiness }: 
             <div>
               <div className="flex items-center justify-between gap-2">
                 <h3 className="text-xl font-bold text-ink">{t('pricingBusinessName')}</h3>
-                <span className="rounded-full bg-subtle px-2.5 py-0.5 text-[11px] font-semibold text-muted">
-                  {t('pricingBusinessBadge')}
-                </span>
               </div>
 
               <p className="mt-3 text-xs sm:text-sm text-muted leading-relaxed">
