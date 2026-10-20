@@ -9,7 +9,7 @@ import {
   XIcon,
 } from 'lucide-react';
 import { StreetViewPlayer } from './StreetViewPlayer';
-import { SAMPLE_STREETVIEW_WAYPOINTS } from '../../data/streetViewSamples';
+import { getSampleListForFeature } from '../../data/streetViewSamples';
 import type { PlanFeature } from '../../types/plan';
 
 interface RouteStreetViewPromptModalProps {
@@ -38,12 +38,12 @@ export function RouteStreetViewPromptModal({
             [-36.33, -57.694],
           ];
 
-    const count = coords.length;
+    const samplesList = getSampleListForFeature(feature);
     return {
       ...feature,
       coords,
       routeWaypoints: coords.map((_, i) => {
-        const sample = SAMPLE_STREETVIEW_WAYPOINTS[i % SAMPLE_STREETVIEW_WAYPOINTS.length];
+        const sample = samplesList[i % samplesList.length];
         return {
           index: i,
           title: sample.title,

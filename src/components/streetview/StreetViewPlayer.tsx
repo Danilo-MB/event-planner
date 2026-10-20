@@ -414,7 +414,7 @@ export function StreetViewPlayer({
         <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-thin">
           {waypoints.map((wp, idx) => {
             const isActive = idx === currentIndex;
-            const img = wp.image || SAMPLE_STREETVIEW_WAYPOINTS[idx % SAMPLE_STREETVIEW_WAYPOINTS.length].image;
+            const img = wp.image || sampleList[idx % sampleList.length].image;
             return (
               <button
                 key={idx}
