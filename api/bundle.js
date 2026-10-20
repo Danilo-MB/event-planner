@@ -85315,35 +85315,38 @@ var require_carbriata_data = __commonJS({
               ],
               name: "Traza Principal de Obra",
               categoryId: "streets",
-              notes: "Avenida principal del desarrollo en obra. Calzada de tosca consolidada, zanjeo perimetral para redes de servicios y tr\xE1nsito continuo de camiones y maquinaria pesada.",
+              notes: "Avenida principal del desarrollo. Apertura vial con maquinaria pesada, nivelaci\xF3n de calzada tosca y per\xEDmetro forestado.",
               images: [
-                "/streetview/carlina/point1.jpg"
+                "/streetview/carlina/real_1_vista_aerea.jpg",
+                "/streetview/carlina/real_5_maquinaria_camion.jpg",
+                "/streetview/carlina/real_3_avenidas_boulevard.jpg",
+                "/streetview/carlina/real_10_sendero_tranquera.jpg"
               ],
               createdAt: 1791992869963,
               routeWaypoints: [
                 {
                   index: 0,
-                  title: "Acceso Principal y Portal de Obra",
-                  caption: "Entrada provisoria al loteo con cerco de obra, cartel reglamentario y control de ingreso de camiones.",
-                  image: "/streetview/carlina/point1.jpg"
+                  title: "Acceso y Vista A\xE9rea del Master Plan",
+                  caption: "Perspectiva a\xE9rea panor\xE1mica de la traza de Barrio Carlina y el entorno de Los Cardales.",
+                  image: "/streetview/carlina/real_1_vista_aerea.jpg"
                 },
                 {
                   index: 1,
-                  title: "Avenida Central - Movimiento de Suelos",
-                  caption: "Apertura y nivelaci\xF3n de traza vial mediante motoniveladora y compactaci\xF3n de suelo tosca para futuras calzadas.",
-                  image: "/streetview/carlina/point2.jpg"
+                  title: "Apertura de Traza y Maquinaria Pesada",
+                  caption: "Operaci\xF3n de excavadora y camiones volcadores consolidando la calzada de tosca.",
+                  image: "/streetview/carlina/real_5_maquinaria_camion.jpg"
                 },
                 {
                   index: 2,
-                  title: "Sector Lotes y Zanjeo de Redes",
-                  caption: "Trazado de cordones cuneta y zanjas de distribuci\xF3n subterr\xE1nea de agua corriente, tendido el\xE9ctrico y pluviales.",
-                  image: "/streetview/carlina/point3.jpg"
+                  title: "Avenida Central y Desmonte",
+                  caption: "Apertura de las arterias viales principales en direcci\xF3n al \xF3valo central.",
+                  image: "/streetview/carlina/real_3_avenidas_boulevard.jpg"
                 },
                 {
                   index: 3,
-                  title: "Cul-de-sac y Primeras Obras",
-                  caption: "Rotonda final de la calle en apertura con plateas de fundaci\xF3n y replanteo de parcelas residenciales.",
-                  image: "/streetview/carlina/point4.jpg"
+                  title: "Sendero Forestado y Per\xEDmetro",
+                  caption: "Tranquera de acceso rural y per\xEDmetro arbolado del desarrollo.",
+                  image: "/streetview/carlina/real_10_sendero_tranquera.jpg"
                 }
               ]
             },
@@ -85370,9 +85373,9 @@ var require_carbriata_data = __commonJS({
               ],
               name: "Lote 23422",
               categoryId: "lots",
-              notes: "Parcela residencial desmalezada y nivelada. Delimitaci\xF3n con estacas de agrimensura y amojonamiento topogr\xE1fico lista para excavaci\xF3n de cimientos.",
+              notes: "Parcela amojonada con calzada de suelo tosca consolidada y pilar de acometida instalado sobre el frente del lote.",
               images: [
-                "/streetview/carlina/lote_23422_1.jpg"
+                "/streetview/carlina/real_2_pilares_servicios.jpg"
               ],
               createdAt: 1791993117753
             },
@@ -85399,9 +85402,9 @@ var require_carbriata_data = __commonJS({
               ],
               name: "Lote 12321",
               categoryId: "lots",
-              notes: "Etapa de movimiento de suelo y zanjeo de cimientos. Replanteo de ejes de obra, excavaci\xF3n para vigas de fundaci\xF3n y acopio de \xE1ridos.",
+              notes: "Etapa de movimiento de suelo, zanjeo perimetral y apertura de tendido de servicios.",
               images: [
-                "/streetview/carlina/lote_12321_1.jpg"
+                "/streetview/carlina/real_4_excavacion_zenital.jpg"
               ],
               createdAt: 1791993122742
             },
@@ -85428,9 +85431,9 @@ var require_carbriata_data = __commonJS({
               ],
               name: "Lote 23211",
               categoryId: "lots",
-              notes: "Llenado de platea de hormig\xF3n armado H-21. Encofrados perimetrales de madera, malla electrosoldada y ca\xF1er\xEDas sanitarias bajo losa.",
+              notes: "Sector en etapa de nivelaci\xF3n, colocaci\xF3n de arbolado nativo con tractor y preparaci\xF3n de suelo.",
               images: [
-                "/streetview/carlina/lote_23211_1.jpg"
+                "/streetview/carlina/real_6_forestacion_tractor.jpg"
               ],
               createdAt: 1791993128139
             },
@@ -85457,9 +85460,9 @@ var require_carbriata_data = __commonJS({
               ],
               name: "Lote 4567",
               categoryId: "lots",
-              notes: "Obra gruesa en avance. Levantamiento de muros de ladrillo cer\xE1mico portante, columnas de hormig\xF3n armado y andamios tubulares de fachada.",
+              notes: "Lote residencial con frente sobre avenida principal del desarrollo y excelente nivel de cota.",
               images: [
-                "/streetview/carlina/lote_4567_1.jpg"
+                "/streetview/carlina/real_3_avenidas_boulevard.jpg"
               ],
               createdAt: 1791993179860,
               color: "#D4AF37"
@@ -85487,9 +85490,9 @@ var require_carbriata_data = __commonJS({
               ],
               name: "Lote 1234",
               categoryId: "lots",
-              notes: "Vivienda unifamiliar moderna con estructura avanzada. Losas de hormig\xF3n visto, cubierta estanca, tabiquer\xEDa perimetral y contrapisos.",
+              notes: "Parcela residencial consolidada en el sector norte del barrio, con entorno forestado.",
               images: [
-                "/streetview/carlina/lote_1234_1.jpg"
+                "/streetview/carlina/real_1_vista_aerea.jpg"
               ],
               createdAt: 1791993184748,
               color: "#10B981"
@@ -85505,9 +85508,10 @@ var require_carbriata_data = __commonJS({
               ],
               name: "Obrador Central y Showroom de Ventas",
               categoryId: "parking",
-              notes: "Contenedores modulares de jefatura de obra, vestuarios de personal, cartel con render del m\xE1ster plan y oficina de atenci\xF3n comercial.",
+              notes: 'M\xF3dulo showroom comercial "CARLINA" con revestimiento de madera, sector de atenci\xF3n a clientes y gazebos para reuniones.',
               images: [
-                "/streetview/carlina/marker_showroom.jpg"
+                "/streetview/carlina/real_8_showroom_carlina.jpg",
+                "/streetview/carlina/real_9_reunion_gazebos.jpg"
               ],
               createdAt: 1791993208440
             },
@@ -85532,11 +85536,11 @@ var require_carbriata_data = __commonJS({
                   -58.94305586814881
                 ]
               ],
-              name: "Playa de Estacionamiento de Obra y Visitas",
+              name: "Playa de Estacionamiento y Sector de Visitas",
               categoryId: "parking",
-              notes: "Sector consolidado con piedra partida para estacionamiento de veh\xEDculos del personal t\xE9cnico, camionetas de contratistas y visitas.",
+              notes: "Playa de estacionamiento vehicular para visitas y eventos comerciales del barrio junto al \xE1rea de carpas.",
               images: [
-                "/streetview/carlina/estacionamiento_1.jpg"
+                "/streetview/carlina/real_7_evento_lanzamiento.jpg"
               ],
               createdAt: 1791993221410
             },
@@ -85563,9 +85567,9 @@ var require_carbriata_data = __commonJS({
               ],
               name: "Lote 23212",
               categoryId: "lots",
-              notes: "Montaje de estructura de techo, cabriadas de madera/acero galvanizado y aislaci\xF3n hidr\xF3fuga en vivienda en construcci\xF3n.",
+              notes: "Lote residencial amojonado, suelo tosca compactado y conexi\xF3n de servicios lista sobre el frente.",
               images: [
-                "/streetview/carlina/lote_roof_framing.jpg"
+                "/streetview/carlina/real_2_pilares_servicios.jpg"
               ],
               createdAt: 1792021734660
             },
@@ -85580,9 +85584,9 @@ var require_carbriata_data = __commonJS({
               ],
               name: "Pilar El\xE9ctrico y Acometida Provisoria",
               categoryId: "lots",
-              notes: "Tablero general de obra con disyuntores y tomas trif\xE1sicas/monof\xE1sicas para alimentaci\xF3n de hormigoneras, amoladoras y herramientas.",
+              notes: "Pilares de conexi\xF3n de servicios con cajas estandarizadas de hormig\xF3n ya instaladas en el frente de las parcelas.",
               images: [
-                "/streetview/carlina/marker_electric.jpg"
+                "/streetview/carlina/real_2_pilares_servicios.jpg"
               ],
               createdAt: 1792021746414
             },
@@ -85597,9 +85601,9 @@ var require_carbriata_data = __commonJS({
               ],
               name: "Punto Geod\xE9sico y Esquina de Replanteo",
               categoryId: "poi",
-              notes: "Hito de agrimensura y verificaci\xF3n de niveles con estaci\xF3n total l\xE1ser para cotas de nivelaci\xF3n de parcelas.",
+              notes: "Trazado geod\xE9sico y replanteo topogr\xE1fico de precisi\xF3n para ejes viales y tendido de redes.",
               images: [
-                "/streetview/carlina/lote_slab_corner.jpg"
+                "/streetview/carlina/real_4_excavacion_zenital.jpg"
               ],
               createdAt: 1792021753369,
               color: "#10B981"
@@ -85615,9 +85619,9 @@ var require_carbriata_data = __commonJS({
               ],
               name: "Tendido de Redes Subterr\xE1neas",
               categoryId: "poi",
-              notes: "Zanja madre para cruce de ca\xF1er\xEDas de agua corriente, bitubos de fibra \xF3ptica y tritubo el\xE9ctrico de media tensi\xF3n.",
+              notes: "Excavaci\xF3n de zanja madre mediante retroexcavadora para tendido de redes subterr\xE1neas y pluviales.",
               images: [
-                "/streetview/carlina/marker_utility.jpg"
+                "/streetview/carlina/real_4_excavacion_zenital.jpg"
               ],
               createdAt: 1792021760481,
               color: "#D4AF37"
@@ -85631,11 +85635,11 @@ var require_carbriata_data = __commonJS({
                   -58.94204113469875
                 ]
               ],
-              name: "Acopio de Materiales y \xC1ridos",
+              name: "Operaci\xF3n de Maquinaria y Movimiento de Suelos",
               categoryId: "zones",
-              notes: "Sector de descarga y estiba de pallets de ladrillos cer\xE1micos, bolsas de cemento bajo lona y silos de arena gruesa.",
+              notes: "Sector activo de carga y distribuci\xF3n de suelo seleccionado con camiones volcadores y excavadoras de oruga.",
               images: [
-                "/streetview/carlina/marker_bricks.jpg"
+                "/streetview/carlina/real_5_maquinaria_camion.jpg"
               ],
               createdAt: 1792021768223
             },
@@ -85656,11 +85660,11 @@ var require_carbriata_data = __commonJS({
                   -58.94290566444398
                 ]
               ],
-              name: "Futuro Parque Central (Nivelaci\xF3n)",
+              name: "\xC1rea Verde y Forestaci\xF3n Central",
               categoryId: "green",
-              notes: "\xC1rea verde de uso com\xFAn en etapa de desmonte, perfilado de pendientes pluviales y preparaci\xF3n de suelo para siembra de c\xE9sped.",
+              notes: "Trabajos de parquizaci\xF3n y forestaci\xF3n con tractor John Deere, colocaci\xF3n de pinos j\xF3venes y nivelaci\xF3n de suelo.",
               images: [
-                "/streetview/carlina/area_green_prep.jpg"
+                "/streetview/carlina/real_6_forestacion_tractor.jpg"
               ],
               createdAt: 1792021788714
             },
@@ -85673,11 +85677,11 @@ var require_carbriata_data = __commonJS({
                   -58.941972255706794
                 ]
               ],
-              name: "Perforaci\xF3n y Pozo de Agua de Obra",
+              name: "Sendero Perimetral y Arboleda",
               categoryId: "green",
-              notes: "Bomba sumergible a segunda napa con tanque cisterna m\xF3vil para abastecimiento de agua a camiones regadores y hormig\xF3n.",
+              notes: "Sendero perimetral arbolado con tranquera de campo tradicional y frondosa vegetaci\xF3n aut\xF3ctona.",
               images: [
-                "/streetview/carlina/marker_water_well.jpg"
+                "/streetview/carlina/real_10_sendero_tranquera.jpg"
               ],
               createdAt: 1792021792968
             },
@@ -85724,17 +85728,17 @@ var require_carbriata_data = __commonJS({
               ],
               name: "Boulevard Secundario en Apertura",
               categoryId: "streets",
-              notes: "Traza secundaria de circulaci\xF3n interna. Apertura de caja de calle, tendido de desag\xFCes y conexi\xF3n entre manzanas del barrio.",
+              notes: "Traza secundaria de circulaci\xF3n interna. Apertura vial, tendido de servicios subterr\xE1neos, forestaci\xF3n y conexi\xF3n con el showroom.",
               images: [
-                "/streetview/carlina/path2_pt1.jpg",
-                "/streetview/carlina/path2_pt2.jpg",
-                "/streetview/carlina/path2_pt3.jpg",
-                "/streetview/carlina/path2_pt4.jpg",
-                "/streetview/carlina/path2_pt5.jpg",
-                "/streetview/carlina/path2_pt6.jpg",
-                "/streetview/carlina/path2_pt7.jpg",
-                "/streetview/carlina/path2_pt8.jpg",
-                "/streetview/carlina/path2_pt9.jpg"
+                "/streetview/carlina/real_1_vista_aerea.jpg",
+                "/streetview/carlina/real_5_maquinaria_camion.jpg",
+                "/streetview/carlina/real_3_avenidas_boulevard.jpg",
+                "/streetview/carlina/real_4_excavacion_zenital.jpg",
+                "/streetview/carlina/real_2_pilares_servicios.jpg",
+                "/streetview/carlina/real_6_forestacion_tractor.jpg",
+                "/streetview/carlina/real_9_reunion_gazebos.jpg",
+                "/streetview/carlina/real_8_showroom_carlina.jpg",
+                "/streetview/carlina/real_10_sendero_tranquera.jpg"
               ],
               createdAt: 1792021816488,
               routeWaypoints: [
@@ -85742,55 +85746,55 @@ var require_carbriata_data = __commonJS({
                   index: 0,
                   title: "Vista A\xE9rea General - Acceso Norte",
                   caption: "Perspectiva panor\xE1mica a\xE9rea del master plan de Barrio Carlina, traza vial y entorno natural.",
-                  image: "/streetview/carlina/path2_pt1.jpg"
+                  image: "/streetview/carlina/real_1_vista_aerea.jpg"
                 },
                 {
                   index: 1,
                   title: "Apertura de Calzada y Maquinaria Pesada",
                   caption: "Excavadora Caterpillar cargando material en cami\xF3n volcador para apertura y nivelaci\xF3n de calle.",
-                  image: "/streetview/carlina/path2_pt2.jpg"
+                  image: "/streetview/carlina/real_5_maquinaria_camion.jpg"
                 },
                 {
                   index: 2,
                   title: "Avenidas Principales del Loteo",
                   caption: "Vista a\xE9rea de las dos arterias paralelas del desarrollo, avance de desmonte y delimitaci\xF3n de manzanas.",
-                  image: "/streetview/carlina/path2_pt3.jpg"
+                  image: "/streetview/carlina/real_3_avenidas_boulevard.jpg"
                 },
                 {
                   index: 3,
                   title: "Zanjeo y Tendido de Redes Subterr\xE1neas",
                   caption: "Excavaci\xF3n precisa sobre traza delimitada para desag\xFCes pluviales y distribuci\xF3n de servicios.",
-                  image: "/streetview/carlina/path2_pt4.jpg"
+                  image: "/streetview/carlina/real_4_excavacion_zenital.jpg"
                 },
                 {
                   index: 4,
                   title: "Manzanas y Pilares de Conexi\xF3n El\xE9ctrica",
                   caption: "Calzada interna consolidada con pilares de servicio ya instalados en frentes de parcelas.",
-                  image: "/streetview/carlina/path2_pt5.jpg"
+                  image: "/streetview/carlina/real_2_pilares_servicios.jpg"
                 },
                 {
                   index: 5,
-                  title: "Nivelaci\xF3n Vial con Motoniveladora",
-                  caption: "Operaci\xF3n de carga y consolidaci\xF3n de suelo tosca sobre la traza del boulevard.",
-                  image: "/streetview/carlina/path2_pt6.jpg"
+                  title: "Forestaci\xF3n de Parcelas con Tractor",
+                  caption: "Operarios y tractor John Deere plantando pinos j\xF3venes para cortinas forestales de vereda.",
+                  image: "/streetview/carlina/real_6_forestacion_tractor.jpg"
                 },
                 {
                   index: 6,
-                  title: "Sector Central y Bifurcaci\xF3n Vial",
-                  caption: "Perspectiva hacia el \xF3valo central, cantero distribuidor y futuras \xE1reas comunes del barrio.",
-                  image: "/streetview/carlina/path2_pt7.jpg"
+                  title: "\xC1rea de Visitas y Gazebos Comerciales",
+                  caption: "Sector de atenci\xF3n y presentaci\xF3n comercial al aire libre con gazebos y fardos campestres.",
+                  image: "/streetview/carlina/real_9_reunion_gazebos.jpg"
                 },
                 {
                   index: 7,
-                  title: "Trazado Geod\xE9sico y Excavaci\xF3n Continua",
-                  caption: "Replanteo con estacas y excavaci\xF3n lineal continua para tendido de redes de infraestructura.",
-                  image: "/streetview/carlina/path2_pt8.jpg"
+                  title: "Showroom Modular CARLINA",
+                  caption: "Oficina de ventas y atenci\xF3n comercial de Barrio Carlina revestida en madera.",
+                  image: "/streetview/carlina/real_8_showroom_carlina.jpg"
                 },
                 {
                   index: 8,
-                  title: "Panor\xE1mica A\xE9rea Integral de Lotes",
-                  caption: "Vista a\xE9rea integral de las manzanas loteadas, per\xEDmetro forestado y parcelas residenciales.",
-                  image: "/streetview/carlina/path2_pt9.jpg"
+                  title: "Sendero Rural y Tranquera al Atardecer",
+                  caption: "Sendero arbolado con tranquera de madera y vistas al atardecer en Los Cardales.",
+                  image: "/streetview/carlina/real_10_sendero_tranquera.jpg"
                 }
               ]
             },
@@ -85815,11 +85819,11 @@ var require_carbriata_data = __commonJS({
                   -58.94101696627993
                 ]
               ],
-              name: "Comedor y Vestuario de Cuadrillas",
+              name: "\xC1rea de Encuentro y Gazebos",
               categoryId: "food",
-              notes: "M\xF3dulo de descanso y comedor para operarios de obra, sanitarios qu\xEDmicos y sector techado para pausas de cuadrilla.",
+              notes: "Sector de reuni\xF3n y atenci\xF3n a visitantes bajo gazebos con fardos campestres junto al showroom.",
               images: [
-                "/streetview/carlina/area_canteen.jpg"
+                "/streetview/carlina/real_9_reunion_gazebos.jpg"
               ],
               createdAt: 1792021831579
             },
@@ -85832,18 +85836,18 @@ var require_carbriata_data = __commonJS({
                   -58.94183630101499
                 ]
               ],
-              name: "Puesto de Seguridad e Hidrataci\xF3n",
+              name: "Acceso a Showroom CARLINA",
               categoryId: "food",
-              notes: "Puesto de hidrataci\xF3n con dispenser de agua fresca, botiqu\xEDn de primeros auxilios y entrega de elementos de protecci\xF3n personal (EPP).",
+              notes: "Puesto de ingreso y recepci\xF3n comercial en el showroom modular de ventas de Barrio Carlina.",
               images: [
-                "/streetview/carlina/marker_firstaid.jpg"
+                "/streetview/carlina/real_8_showroom_carlina.jpg"
               ],
               createdAt: 1792021837887
             }
           ],
           hiddenCategoryIds: [],
           createdAt: 1791992584008,
-          updatedAt: 179253e7
+          updatedAt: 1792531e6
         },
         i6666hqmv8mdpge: {
           id: "i6666hqmv8mdpge",

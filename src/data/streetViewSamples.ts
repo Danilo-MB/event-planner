@@ -79,39 +79,49 @@ export const SAMPLE_INDUSTRIAL_WAYPOINTS: SampleWaypointData[] = [
 
 export const SAMPLE_REALESTATE_WAYPOINTS: SampleWaypointData[] = [
   {
-    title: 'Acceso Principal y Portal de Entrada',
-    caption: 'Pórtico de bienvenida al loteo, garita de seguridad y acceso principal.',
-    image: '/streetview/carlina/point1.jpg',
+    title: 'Vista Aérea General - Acceso Norte',
+    caption: 'Perspectiva aérea panorámica de la traza de Barrio Carlina y el entorno de Los Cardales.',
+    image: '/streetview/carlina/real_1_vista_aerea.jpg',
   },
   {
-    title: 'Avenida Central - Movimiento de Suelos',
-    caption: 'Nivelación de traza vial, calzadas consolidadas y cordón cuneta.',
-    image: '/streetview/carlina/point2.jpg',
+    title: 'Apertura de Traza y Maquinaria Pesada',
+    caption: 'Operación de excavadora y camiones volcadores consolidando la calzada de tosca.',
+    image: '/streetview/carlina/real_5_maquinaria_camion.jpg',
   },
   {
-    title: 'Boulevard de Lotes y Servicios',
-    caption: 'Manzanas amojonadas con zanjeo de servicios y tendido eléctrico.',
-    image: '/streetview/carlina/path2_pt5.jpg',
+    title: 'Avenidas Principales del Loteo',
+    caption: 'Apertura de las arterias viales principales en dirección al óvalo central.',
+    image: '/streetview/carlina/real_3_avenidas_boulevard.jpg',
   },
   {
-    title: 'Frente de Obras y Construcción',
-    caption: 'Primeras viviendas unifamiliares en construcción y acopio de materiales.',
-    image: '/streetview/carlina/path2_pt6.jpg',
+    title: 'Zanjeo y Tendido de Redes Subterráneas',
+    caption: 'Excavación precisa sobre traza delimitada para desagües pluviales y servicios.',
+    image: '/streetview/carlina/real_4_excavacion_zenital.jpg',
   },
   {
-    title: 'Área Recreativa y Espejo de Agua',
-    caption: 'Reserva ecológica, parque central y sector deportivo.',
-    image: '/streetview/carlina/path2_pt7.jpg',
+    title: 'Manzanas y Pilares de Conexión Eléctrica',
+    caption: 'Calzada interna consolidada con pilares de servicio ya instalados en frentes de parcelas.',
+    image: '/streetview/carlina/real_2_pilares_servicios.jpg',
   },
   {
-    title: 'Sector Residencial Consolidado',
-    caption: 'Viviendas modernas con diseño contemporáneo y frentes parquizados.',
-    image: '/streetview/carlina/path2_pt8.jpg',
+    title: 'Forestación de Parcelas con Tractor',
+    caption: 'Operarios y tractor John Deere plantando pinos jóvenes para cortinas forestales de vereda.',
+    image: '/streetview/carlina/real_6_forestacion_tractor.jpg',
   },
   {
-    title: 'Rotonda de Retorno Sur',
-    caption: 'Cul-de-sac con cantero central arbolado y visuales abiertas al campo.',
-    image: '/streetview/carlina/path2_pt9.jpg',
+    title: 'Área de Visitas y Gazebos Comerciales',
+    caption: 'Sector de atención y presentación comercial al aire libre con gazebos y fardos campestres.',
+    image: '/streetview/carlina/real_9_reunion_gazebos.jpg',
+  },
+  {
+    title: 'Showroom Modular CARLINA',
+    caption: 'Oficina de ventas y atención comercial de Barrio Carlina revestida en madera.',
+    image: '/streetview/carlina/real_8_showroom_carlina.jpg',
+  },
+  {
+    title: 'Sendero Rural y Tranquera al Atardecer',
+    caption: 'Sendero arbolado con tranquera de madera y vistas al atardecer en Los Cardales.',
+    image: '/streetview/carlina/real_10_sendero_tranquera.jpg',
   },
 ];
 
