@@ -77,6 +77,83 @@ export const SAMPLE_INDUSTRIAL_WAYPOINTS: SampleWaypointData[] = [
   },
 ];
 
+export const SAMPLE_REALESTATE_WAYPOINTS: SampleWaypointData[] = [
+  {
+    title: 'Acceso Principal y Portal de Entrada',
+    caption: 'Pórtico de bienvenida al loteo, garita de seguridad y acceso principal.',
+    image: '/streetview/carlina/point1.jpg',
+  },
+  {
+    title: 'Avenida Central - Movimiento de Suelos',
+    caption: 'Nivelación de traza vial, calzadas consolidadas y cordón cuneta.',
+    image: '/streetview/carlina/point2.jpg',
+  },
+  {
+    title: 'Boulevard de Lotes y Servicios',
+    caption: 'Manzanas amojonadas con zanjeo de servicios y tendido eléctrico.',
+    image: '/streetview/carlina/path2_pt5.jpg',
+  },
+  {
+    title: 'Frente de Obras y Construcción',
+    caption: 'Primeras viviendas unifamiliares en construcción y acopio de materiales.',
+    image: '/streetview/carlina/path2_pt6.jpg',
+  },
+  {
+    title: 'Área Recreativa y Espejo de Agua',
+    caption: 'Reserva ecológica, parque central y sector deportivo.',
+    image: '/streetview/carlina/path2_pt7.jpg',
+  },
+  {
+    title: 'Sector Residencial Consolidado',
+    caption: 'Viviendas modernas con diseño contemporáneo y frentes parquizados.',
+    image: '/streetview/carlina/path2_pt8.jpg',
+  },
+  {
+    title: 'Rotonda de Retorno Sur',
+    caption: 'Cul-de-sac con cantero central arbolado y visuales abiertas al campo.',
+    image: '/streetview/carlina/path2_pt9.jpg',
+  },
+];
+
+/**
+ * Returns the appropriate sample list of waypoints based on feature context.
+ */
+export function getSampleListForFeature(featureContext?: PlanFeature | boolean): SampleWaypointData[] {
+  if (typeof featureContext === 'boolean') {
+    return featureContext ? SAMPLE_INDUSTRIAL_WAYPOINTS : SAMPLE_STREETVIEW_WAYPOINTS;
+  }
+  if (!featureContext) return SAMPLE_STREETVIEW_WAYPOINTS;
+
+  const name = (featureContext.name || '').toLowerCase();
+  const cat = (featureContext.categoryId || '').toLowerCase();
+
+  const isIndustrial =
+    cat === 'industrial' ||
+    name.includes('logistica') ||
+    name.includes('carga') ||
+    name.includes('deposito') ||
+    name.includes('hormigon') ||
+    name.includes('industrial');
+
+  if (isIndustrial) return SAMPLE_INDUSTRIAL_WAYPOINTS;
+
+  const isRealEstate =
+    cat === 'streets' ||
+    cat === 'lots' ||
+    name.includes('boulevard') ||
+    name.includes('barrio') ||
+    name.includes('lote') ||
+    name.includes('obra') ||
+    name.includes('calle') ||
+    name.includes('avenida') ||
+    name.includes('traza') ||
+    name.includes('manzana');
+
+  if (isRealEstate) return SAMPLE_REALESTATE_WAYPOINTS;
+
+  return SAMPLE_STREETVIEW_WAYPOINTS;
+}
+
 /**
  * Returns waypoints filled with sample photos for a given number of coordinates.
  */
@@ -84,19 +161,7 @@ export function generateSampleWaypointsForCoords(
   coordsCount: number,
   featureContext?: PlanFeature | boolean
 ): RouteWaypoint[] {
-  const isIndustrial =
-    typeof featureContext === 'boolean'
-      ? featureContext
-      : Boolean(
-          featureContext?.categoryId === 'access' ||
-          featureContext?.categoryId === 'parking' ||
-          featureContext?.name?.toLowerCase().includes('logistica') ||
-          featureContext?.name?.toLowerCase().includes('carga') ||
-          featureContext?.name?.toLowerCase().includes('deposito') ||
-          featureContext?.name?.toLowerCase().includes('industrial')
-        );
-
-  const samplesList = isIndustrial ? SAMPLE_INDUSTRIAL_WAYPOINTS : SAMPLE_STREETVIEW_WAYPOINTS;
+  const samplesList = getSampleListForFeature(featureContext);
   const waypoints: RouteWaypoint[] = [];
   const count = Math.max(coordsCount, 1);
   for (let i = 0; i < count; i++) {

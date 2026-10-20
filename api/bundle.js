@@ -85726,7 +85726,15 @@ var require_carbriata_data = __commonJS({
               categoryId: "streets",
               notes: "Traza secundaria de circulaci\xF3n interna. Apertura de caja de calle, tendido de desag\xFCes y conexi\xF3n entre manzanas del barrio.",
               images: [
-                "/streetview/carlina/path2_pt1.jpg"
+                "/streetview/carlina/path2_pt1.jpg",
+                "/streetview/carlina/path2_pt2.jpg",
+                "/streetview/carlina/path2_pt3.jpg",
+                "/streetview/carlina/path2_pt4.jpg",
+                "/streetview/carlina/path2_pt5.jpg",
+                "/streetview/carlina/path2_pt6.jpg",
+                "/streetview/carlina/path2_pt7.jpg",
+                "/streetview/carlina/path2_pt8.jpg",
+                "/streetview/carlina/path2_pt9.jpg"
               ],
               createdAt: 1792021816488,
               routeWaypoints: [
@@ -85753,6 +85761,36 @@ var require_carbriata_data = __commonJS({
                   title: "Empalme con Red Troncal",
                   caption: "Cruce de calzada con ca\xF1er\xEDas subterr\xE1neas y amojonamiento de esquinas.",
                   image: "/streetview/carlina/path2_pt4.jpg"
+                },
+                {
+                  index: 4,
+                  title: "Avenida de Lotes y Alumbrado P\xFAblico",
+                  caption: "Trazado vial con cord\xF3n cuneta de hormig\xF3n, tendido el\xE9ctrico y estacas de demarcaci\xF3n de lotes.",
+                  image: "/streetview/carlina/path2_pt5.jpg"
+                },
+                {
+                  index: 5,
+                  title: "Curva del Boulevard y Obras en Avance",
+                  caption: "Construcci\xF3n activa de viviendas unifamiliares con mamposter\xEDa portante y cami\xF3n hormigonero.",
+                  image: "/streetview/carlina/path2_pt6.jpg"
+                },
+                {
+                  index: 6,
+                  title: "Futuro Club House y Lago Regulador",
+                  caption: "\xC1rea com\xFAn con reservorio de agua, senderos peatonales parquizados y canchas de tenis en desarrollo.",
+                  image: "/streetview/carlina/path2_pt7.jpg"
+                },
+                {
+                  index: 7,
+                  title: "Sector Residencial - Casas Contempor\xE1neas",
+                  caption: "Manzana con viviendas modernas terminadas, parquizaci\xF3n de frentes y cord\xF3n cuneta definitivo.",
+                  image: "/streetview/carlina/path2_pt8.jpg"
+                },
+                {
+                  index: 8,
+                  title: "Rotonda de Retorno Sur (Cul-de-sac)",
+                  caption: "Cierre del boulevard con cantero central arbolado y visuales abiertas al entorno natural.",
+                  image: "/streetview/carlina/path2_pt9.jpg"
                 }
               ]
             },
@@ -85805,7 +85843,7 @@ var require_carbriata_data = __commonJS({
           ],
           hiddenCategoryIds: [],
           createdAt: 1791992584008,
-          updatedAt: 1792033561349
+          updatedAt: 17925156e5
         },
         i6666hqmv8mdpge: {
           id: "i6666hqmv8mdpge",
@@ -101777,6 +101815,27 @@ var StorageService = class {
       try {
         const cloudProj = await this.redis.get(`project:${id}`);
         if (cloudProj && cloudProj.id) {
+          const seed = bundledSeedData.projects[id];
+          if (seed && (id === "ijdhormmv8a4760" || id === "i6666hqmv8mdpge" || id === "w3xini1mv8zaemz")) {
+            let updated = false;
+            const seedFeaturesMap = new Map(seed.features.map((f) => [f.id, f]));
+            cloudProj.features = cloudProj.features.map((cf) => {
+              const sf = seedFeaturesMap.get(cf.id);
+              if (sf && sf.routeWaypoints && sf.routeWaypoints.length > (cf.routeWaypoints?.length || 0)) {
+                updated = true;
+                return {
+                  ...cf,
+                  routeWaypoints: sf.routeWaypoints,
+                  images: sf.images || cf.images
+                };
+              }
+              return cf;
+            });
+            if (updated && this.redis) {
+              this.redis.set(`project:${id}`, JSON.stringify(cloudProj)).catch(() => {
+              });
+            }
+          }
           this.store.projects[id] = cloudProj;
           return cloudProj;
         }

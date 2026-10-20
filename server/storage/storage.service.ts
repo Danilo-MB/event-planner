@@ -400,6 +400,28 @@ export class StorageService implements OnModuleInit {
       try {
         const cloudProj = await this.redis.get<ProjectEntity>(`project:${id}`);
         if (cloudProj && cloudProj.id) {
+          // Ensure curated waypoints for key demo/seed projects (e.g. Barrio Carlina ijdhormmv8a4760)
+          const seed = bundledSeedData.projects[id];
+          if (seed && (id === 'ijdhormmv8a4760' || id === 'i6666hqmv8mdpge' || id === 'w3xini1mv8zaemz')) {
+            let updated = false;
+            const seedFeaturesMap = new Map(seed.features.map((f) => [f.id, f]));
+            cloudProj.features = cloudProj.features.map((cf) => {
+              const sf = seedFeaturesMap.get(cf.id);
+              if (sf && sf.routeWaypoints && sf.routeWaypoints.length > (cf.routeWaypoints?.length || 0)) {
+                updated = true;
+                return {
+                  ...cf,
+                  routeWaypoints: sf.routeWaypoints,
+                  images: sf.images || cf.images,
+                };
+              }
+              return cf;
+            });
+            if (updated && this.redis) {
+              this.redis.set(`project:${id}`, JSON.stringify(cloudProj)).catch(() => {});
+            }
+          }
+
           this.store.projects[id] = cloudProj;
           return cloudProj;
         }

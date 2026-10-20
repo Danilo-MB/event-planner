@@ -775,7 +775,15 @@ export const seedProjects: Project[] = [
       "categoryId": "streets",
       "notes": "Traza secundaria de circulación interna. Apertura de caja de calle, tendido de desagües y conexión entre manzanas del barrio.",
       "images": [
-        "/streetview/carlina/path2_pt1.jpg"
+        "/streetview/carlina/path2_pt1.jpg",
+        "/streetview/carlina/path2_pt2.jpg",
+        "/streetview/carlina/path2_pt3.jpg",
+        "/streetview/carlina/path2_pt4.jpg",
+        "/streetview/carlina/path2_pt5.jpg",
+        "/streetview/carlina/path2_pt6.jpg",
+        "/streetview/carlina/path2_pt7.jpg",
+        "/streetview/carlina/path2_pt8.jpg",
+        "/streetview/carlina/path2_pt9.jpg"
       ],
       "createdAt": 1792021816488,
       "routeWaypoints": [
@@ -802,6 +810,36 @@ export const seedProjects: Project[] = [
           "title": "Empalme con Red Troncal",
           "caption": "Cruce de calzada con cañerías subterráneas y amojonamiento de esquinas.",
           "image": "/streetview/carlina/path2_pt4.jpg"
+        },
+        {
+          "index": 4,
+          "title": "Avenida de Lotes y Alumbrado Público",
+          "caption": "Trazado vial con cordón cuneta de hormigón, tendido eléctrico y estacas de demarcación de lotes.",
+          "image": "/streetview/carlina/path2_pt5.jpg"
+        },
+        {
+          "index": 5,
+          "title": "Curva del Boulevard y Obras en Avance",
+          "caption": "Construcción activa de viviendas unifamiliares con mampostería portante y camión hormigonero.",
+          "image": "/streetview/carlina/path2_pt6.jpg"
+        },
+        {
+          "index": 6,
+          "title": "Futuro Club House y Lago Regulador",
+          "caption": "Área común con reservorio de agua, senderos peatonales parquizados y canchas de tenis en desarrollo.",
+          "image": "/streetview/carlina/path2_pt7.jpg"
+        },
+        {
+          "index": 7,
+          "title": "Sector Residencial - Casas Contemporáneas",
+          "caption": "Manzana con viviendas modernas terminadas, parquización de frentes y cordón cuneta definitivo.",
+          "image": "/streetview/carlina/path2_pt8.jpg"
+        },
+        {
+          "index": 8,
+          "title": "Rotonda de Retorno Sur (Cul-de-sac)",
+          "caption": "Cierre del boulevard con cantero central arbolado y visuales abiertas al entorno natural.",
+          "image": "/streetview/carlina/path2_pt9.jpg"
         }
       ]
     },

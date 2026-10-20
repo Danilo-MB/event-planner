@@ -22,7 +22,7 @@ import {
   calculateBearing,
   getCompassDirection,
   getEffectiveWaypoints,
-  SAMPLE_STREETVIEW_WAYPOINTS,
+  getSampleListForFeature,
 } from '../../data/streetViewSamples';
 import type { LatLng, PlanFeature, RouteWaypoint } from '../../types/plan';
 
@@ -155,7 +155,8 @@ export function StreetViewPlayer({
   };
 
   // Fallback image if current waypoint has no image
-  const currentImage = currentWaypoint.image || SAMPLE_STREETVIEW_WAYPOINTS[currentIndex % SAMPLE_STREETVIEW_WAYPOINTS.length].image;
+  const sampleList = useMemo(() => getSampleListForFeature(feature), [feature]);
+  const currentImage = currentWaypoint.image || sampleList[currentIndex % sampleList.length].image;
 
   // Save / download image to user's device
   const handleDownloadImage = () => {
