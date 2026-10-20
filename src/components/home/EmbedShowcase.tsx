@@ -112,10 +112,7 @@ export function EmbedShowcase({ demoProjectId = 'carbriata-2027' }: EmbedShowcas
                     </div>
 
                     {/* Bottom overlay info bar */}
-                    <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between text-xs text-white">
-                      <span className="rounded-lg bg-black/70 px-2.5 py-1 font-mono text-[11px] backdrop-blur-md">
-                        {t('mockupTourHeading')}
-                      </span>
+                    <div className="absolute bottom-3 right-3 flex items-center justify-end text-xs text-white">
                       <span className="rounded-lg bg-amber-500 px-2.5 py-1 text-[11px] font-bold text-black shadow-sm">
                         {t('mockupTourPhoto')}
                       </span>

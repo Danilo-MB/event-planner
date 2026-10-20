@@ -273,8 +273,8 @@ export const translations = {
 
     // Pricing
     pricingBadge: 'Planes claros y transparentes',
-    pricingTitle: 'Comienza gratis por $0. Paga solo si necesitas compartir.',
-    pricingSubtitle: 'Dibuja tu plano satelital completo, mide superficies reales y crea tu recorrido virtual 360° gratis. Desbloquea la inserción iFrame en tu web, exportación GIS y trabajo en equipo cuando estés listo.',
+    pricingTitle: 'Comienza gratis y evalúa el plan según tu necesidad.',
+    pricingSubtitle: 'Dibuja tu plano satelital completo, mide superficies reales y crea tu recorrido virtual 360° gratis. Elige el plan adecuado según la escala de tus proyectos y el nivel de difusión que necesites.',
     pricingFreeName: 'Gratuito',
     pricingFreeBadge: 'Sin tarjeta de crédito',
     pricingFreePrice: '$0',
@@ -602,8 +602,8 @@ export const translations = {
 
     // Pricing
     pricingBadge: 'Clear & transparent pricing',
-    pricingTitle: 'Start free for $0. Pay only when you need to embed.',
-    pricingSubtitle: 'Draft your full satellite map, measure real surfaces, and build your 360° virtual walkthrough for free. Unlock iFrame embedding, GIS export, and team collaboration when you are ready.',
+    pricingTitle: 'Start for free and choose the plan that fits your needs.',
+    pricingSubtitle: 'Draft your full satellite map, measure real surfaces, and build your 360° virtual walkthrough for free. Choose the right plan based on your project scale and distribution needs.',
     pricingFreeName: 'Free Starter',
     pricingFreeBadge: 'No credit card needed',
     pricingFreePrice: '$0',
