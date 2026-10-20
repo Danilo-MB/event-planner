@@ -11,6 +11,7 @@ import {
 } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useLanguage } from '../../contexts/LanguageContext';
+import { type TranslationKey } from '../../locales/translations';
 
 interface LandingHeroProps {
   onCreateClick: () => void;
@@ -18,23 +19,28 @@ interface LandingHeroProps {
   demoProjectId?: string;
 }
 
-const HERO_SLIDES = [
+interface HeroSlide {
+  id: string;
+  image: string;
+  titleKey?: TranslationKey;
+  alt: string;
+}
+
+const HERO_SLIDES: HeroSlide[] = [
   {
     id: 'map-qr',
     image: '/images/hero-map-qr.jpg',
-    titleKey: 'heroSlideMap' as const,
+    titleKey: 'heroSlideMap',
     alt: 'MapFlex - Plataforma satelital interactiva con código QR',
   },
   {
     id: 'event-qr',
     image: '/images/hero-event-qr.jpg',
-    titleKey: 'heroSlideEvent' as const,
     alt: 'MapFlex - Cartelería física con QR en accesos a eventos',
   },
   {
     id: 'lot-qr',
     image: '/images/hero-lot-qr.jpg',
-    titleKey: 'heroSlideLot' as const,
     alt: 'MapFlex - Señalética de loteos y desarrollos con QR',
   },
 ];
@@ -155,13 +161,15 @@ export function LandingHero({ onCreateClick, onAiClick }: LandingHeroProps) {
                   />
                 </AnimatePresence>
 
-                {/* Floating Category Pill on top-left */}
-                <div className="absolute top-3 left-3 z-10 pointer-events-none">
-                  <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-black/65 px-3 py-1 text-[11px] sm:text-xs font-semibold text-white backdrop-blur-md shadow-lg">
-                    <span className="flex h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
-                    <span>{t(HERO_SLIDES[currentSlide].titleKey)}</span>
+                {/* Floating Category Pill on top-left (only rendered when titleKey is set) */}
+                {HERO_SLIDES[currentSlide].titleKey && (
+                  <div className="absolute top-3 left-3 z-10 pointer-events-none">
+                    <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-black/65 px-3 py-1 text-[11px] sm:text-xs font-semibold text-white backdrop-blur-md shadow-lg">
+                      <span className="flex h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
+                      <span>{t(HERO_SLIDES[currentSlide].titleKey)}</span>
+                    </div>
                   </div>
-                </div>
+                )}
 
                 {/* Subtle Prev/Next Chevrons */}
                 <button
