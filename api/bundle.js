@@ -85740,56 +85740,56 @@ var require_carbriata_data = __commonJS({
               routeWaypoints: [
                 {
                   index: 0,
-                  title: "Boulevard Secundario - Acceso Norte",
-                  caption: "Apertura de calzada secundaria con tosca seleccionada y cunetas laterales.",
+                  title: "Vista A\xE9rea General - Acceso Norte",
+                  caption: "Perspectiva panor\xE1mica a\xE9rea del master plan de Barrio Carlina, traza vial y entorno natural.",
                   image: "/streetview/carlina/path2_pt1.jpg"
                 },
                 {
                   index: 1,
-                  title: "Corte y Nivelaci\xF3n de Traza",
-                  caption: "Operaci\xF3n de bulldozer perfilando taludes y desniveles del terreno natural.",
+                  title: "Apertura de Calzada y Maquinaria Pesada",
+                  caption: "Excavadora Caterpillar cargando material en cami\xF3n volcador para apertura y nivelaci\xF3n de calle.",
                   image: "/streetview/carlina/path2_pt2.jpg"
                 },
                 {
                   index: 2,
-                  title: "Frente de Obras y Manzanas",
-                  caption: "Vista hacia las primeras viviendas unifamiliares con entramados de madera y hormig\xF3n.",
+                  title: "Avenidas Principales del Loteo",
+                  caption: "Vista a\xE9rea de las dos arterias paralelas del desarrollo, avance de desmonte y delimitaci\xF3n de manzanas.",
                   image: "/streetview/carlina/path2_pt3.jpg"
                 },
                 {
                   index: 3,
-                  title: "Empalme con Red Troncal",
-                  caption: "Cruce de calzada con ca\xF1er\xEDas subterr\xE1neas y amojonamiento de esquinas.",
+                  title: "Zanjeo y Tendido de Redes Subterr\xE1neas",
+                  caption: "Excavaci\xF3n precisa sobre traza delimitada para desag\xFCes pluviales y distribuci\xF3n de servicios.",
                   image: "/streetview/carlina/path2_pt4.jpg"
                 },
                 {
                   index: 4,
-                  title: "Avenida de Lotes y Alumbrado P\xFAblico",
-                  caption: "Trazado vial con cord\xF3n cuneta de hormig\xF3n, tendido el\xE9ctrico y estacas de demarcaci\xF3n de lotes.",
+                  title: "Manzanas y Pilares de Conexi\xF3n El\xE9ctrica",
+                  caption: "Calzada interna consolidada con pilares de servicio ya instalados en frentes de parcelas.",
                   image: "/streetview/carlina/path2_pt5.jpg"
                 },
                 {
                   index: 5,
-                  title: "Curva del Boulevard y Obras en Avance",
-                  caption: "Construcci\xF3n activa de viviendas unifamiliares con mamposter\xEDa portante y cami\xF3n hormigonero.",
+                  title: "Nivelaci\xF3n Vial con Motoniveladora",
+                  caption: "Operaci\xF3n de carga y consolidaci\xF3n de suelo tosca sobre la traza del boulevard.",
                   image: "/streetview/carlina/path2_pt6.jpg"
                 },
                 {
                   index: 6,
-                  title: "Futuro Club House y Lago Regulador",
-                  caption: "\xC1rea com\xFAn con reservorio de agua, senderos peatonales parquizados y canchas de tenis en desarrollo.",
+                  title: "Sector Central y Bifurcaci\xF3n Vial",
+                  caption: "Perspectiva hacia el \xF3valo central, cantero distribuidor y futuras \xE1reas comunes del barrio.",
                   image: "/streetview/carlina/path2_pt7.jpg"
                 },
                 {
                   index: 7,
-                  title: "Sector Residencial - Casas Contempor\xE1neas",
-                  caption: "Manzana con viviendas modernas terminadas, parquizaci\xF3n de frentes y cord\xF3n cuneta definitivo.",
+                  title: "Trazado Geod\xE9sico y Excavaci\xF3n Continua",
+                  caption: "Replanteo con estacas y excavaci\xF3n lineal continua para tendido de redes de infraestructura.",
                   image: "/streetview/carlina/path2_pt8.jpg"
                 },
                 {
                   index: 8,
-                  title: "Rotonda de Retorno Sur (Cul-de-sac)",
-                  caption: "Cierre del boulevard con cantero central arbolado y visuales abiertas al entorno natural.",
+                  title: "Panor\xE1mica A\xE9rea Integral de Lotes",
+                  caption: "Vista a\xE9rea integral de las manzanas loteadas, per\xEDmetro forestado y parcelas residenciales.",
                   image: "/streetview/carlina/path2_pt9.jpg"
                 }
               ]
@@ -85843,7 +85843,7 @@ var require_carbriata_data = __commonJS({
           ],
           hiddenCategoryIds: [],
           createdAt: 1791992584008,
-          updatedAt: 17925156e5
+          updatedAt: 179253e7
         },
         i6666hqmv8mdpge: {
           id: "i6666hqmv8mdpge",

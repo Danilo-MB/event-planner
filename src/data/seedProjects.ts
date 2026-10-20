@@ -789,56 +789,56 @@ export const seedProjects: Project[] = [
       "routeWaypoints": [
         {
           "index": 0,
-          "title": "Boulevard Secundario - Acceso Norte",
-          "caption": "Apertura de calzada secundaria con tosca seleccionada y cunetas laterales.",
+          "title": "Vista Aérea General - Acceso Norte",
+          "caption": "Perspectiva panorámica aérea del master plan de Barrio Carlina, traza vial y entorno natural.",
           "image": "/streetview/carlina/path2_pt1.jpg"
         },
         {
           "index": 1,
-          "title": "Corte y Nivelación de Traza",
-          "caption": "Operación de bulldozer perfilando taludes y desniveles del terreno natural.",
+          "title": "Apertura de Calzada y Maquinaria Pesada",
+          "caption": "Excavadora Caterpillar cargando material en camión volcador para apertura y nivelación de calle.",
           "image": "/streetview/carlina/path2_pt2.jpg"
         },
         {
           "index": 2,
-          "title": "Frente de Obras y Manzanas",
-          "caption": "Vista hacia las primeras viviendas unifamiliares con entramados de madera y hormigón.",
+          "title": "Avenidas Principales del Loteo",
+          "caption": "Vista aérea de las dos arterias paralelas del desarrollo, avance de desmonte y delimitación de manzanas.",
           "image": "/streetview/carlina/path2_pt3.jpg"
         },
         {
           "index": 3,
-          "title": "Empalme con Red Troncal",
-          "caption": "Cruce de calzada con cañerías subterráneas y amojonamiento de esquinas.",
+          "title": "Zanjeo y Tendido de Redes Subterráneas",
+          "caption": "Excavación precisa sobre traza delimitada para desagües pluviales y distribución de servicios.",
           "image": "/streetview/carlina/path2_pt4.jpg"
         },
         {
           "index": 4,
-          "title": "Avenida de Lotes y Alumbrado Público",
-          "caption": "Trazado vial con cordón cuneta de hormigón, tendido eléctrico y estacas de demarcación de lotes.",
+          "title": "Manzanas y Pilares de Conexión Eléctrica",
+          "caption": "Calzada interna consolidada con pilares de servicio ya instalados en frentes de parcelas.",
           "image": "/streetview/carlina/path2_pt5.jpg"
         },
         {
           "index": 5,
-          "title": "Curva del Boulevard y Obras en Avance",
-          "caption": "Construcción activa de viviendas unifamiliares con mampostería portante y camión hormigonero.",
+          "title": "Nivelación Vial con Motoniveladora",
+          "caption": "Operación de carga y consolidación de suelo tosca sobre la traza del boulevard.",
           "image": "/streetview/carlina/path2_pt6.jpg"
         },
         {
           "index": 6,
-          "title": "Futuro Club House y Lago Regulador",
-          "caption": "Área común con reservorio de agua, senderos peatonales parquizados y canchas de tenis en desarrollo.",
+          "title": "Sector Central y Bifurcación Vial",
+          "caption": "Perspectiva hacia el óvalo central, cantero distribuidor y futuras áreas comunes del barrio.",
           "image": "/streetview/carlina/path2_pt7.jpg"
         },
         {
           "index": 7,
-          "title": "Sector Residencial - Casas Contemporáneas",
-          "caption": "Manzana con viviendas modernas terminadas, parquización de frentes y cordón cuneta definitivo.",
+          "title": "Trazado Geodésico y Excavación Continua",
+          "caption": "Replanteo con estacas y excavación lineal continua para tendido de redes de infraestructura.",
           "image": "/streetview/carlina/path2_pt8.jpg"
         },
         {
           "index": 8,
-          "title": "Rotonda de Retorno Sur (Cul-de-sac)",
-          "caption": "Cierre del boulevard con cantero central arbolado y visuales abiertas al entorno natural.",
+          "title": "Panorámica Aérea Integral de Lotes",
+          "caption": "Vista aérea integral de las manzanas loteadas, perímetro forestado y parcelas residenciales.",
           "image": "/streetview/carlina/path2_pt9.jpg"
         }
       ]
