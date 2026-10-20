@@ -1,5 +1,5 @@
 export const currentUser = {
-  name: 'Lucas Abriata',
-  initials: 'LA',
-  organization: 'Carbriata Concours'
+  name: 'Juan Pérez',
+  initials: 'JP',
+  organization: 'Desarrollos & Eventos'
 };

@@ -257,7 +257,7 @@ export function ProjectsPage() {
       {/* 1. Marketing Hero at the Top */}
       <LandingHero
         onCreateClick={() => handleStartNewPlan('event')}
-        onAiClick={handleStartAi}
+        onAiClick={undefined}
         demoProjectId={demoId}
       />
 
@@ -312,6 +312,7 @@ export function ProjectsPage() {
               </div>
             )}
 
+            {/* AI button temporarily commented out
             <button
               type="button"
               onClick={handleStartAi}
@@ -319,6 +320,7 @@ export function ProjectsPage() {
               <SparklesIcon className="h-4 w-4 text-amber-500" aria-hidden="true" />
               <span>{t('aiWizardButton')}</span>
             </button>
+            */}
             <button
               type="button"
               onClick={() => handleStartNewPlan('event')}
@@ -482,6 +484,7 @@ export function ProjectsPage() {
       </footer>
 
       <AnimatePresence>
+        {/* AiWizardModal temporarily commented out
         {isAiWizardOpen && (
           <AiWizardModal
             key="ai-wizard"
@@ -489,16 +492,13 @@ export function ProjectsPage() {
             onCreate={handleCreate}
           />
         )}
+        */}
         {dialogTemplate && (
           <NewPlanDialog
             key="new-plan"
             initialTemplate={dialogTemplate}
             onClose={() => setDialogTemplate(null)}
             onCreate={handleCreate}
-            onSwitchToAi={() => {
-              setDialogTemplate(null);
-              setIsAiWizardOpen(true);
-            }}
           />
         )}
         {projectToDelete && (

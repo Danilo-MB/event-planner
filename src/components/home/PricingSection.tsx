@@ -1,5 +1,5 @@
 import React from 'react';
-import { CheckIcon, CreditCardIcon, HelpCircleIcon, MinusIcon, SparklesIcon, ZapIcon } from 'lucide-react';
+import { CheckIcon, MinusIcon, SparklesIcon, ZapIcon } from 'lucide-react';
 import { useLanguage } from '../../contexts/LanguageContext';
 
 interface PricingSectionProps {
@@ -32,12 +32,7 @@ export function PricingSection({ onCreateFree, onSelectPro, onSelectBusiness }: 
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         {/* Header */}
         <div className="text-center max-w-3xl mx-auto">
-          <div className="inline-flex items-center gap-2 rounded-full border border-amber-500/30 bg-amber-500/10 px-3.5 py-1 text-xs font-semibold text-amber-600 dark:text-amber-400 shadow-2xs">
-            <CreditCardIcon className="h-3.5 w-3.5" aria-hidden="true" />
-            <span>{t('pricingBadge')}</span>
-          </div>
-
-          <h2 id="pricing-heading" className="mt-4 text-3xl font-extrabold tracking-tight text-ink sm:text-4xl lg:text-5xl">
+          <h2 id="pricing-heading" className="text-3xl font-extrabold tracking-tight text-ink sm:text-4xl lg:text-5xl">
             {t('pricingTitle')}
           </h2>
 
@@ -103,12 +98,14 @@ export function PricingSection({ onCreateFree, onSelectPro, onSelectBusiness }: 
                   </span>
                   <span>{t('pricingFeatStreetView')}</span>
                 </li>
+                {/* AI feature temporarily commented out
                 <li className="flex items-start gap-2.5">
                   <span className="grid h-5 w-5 shrink-0 place-items-center rounded-full bg-emerald-500/15 text-emerald-500 mt-0.5">
                     <CheckIcon className="h-3.5 w-3.5" aria-hidden="true" />
                   </span>
                   <span>{t('pricingFeatAi')}</span>
                 </li>
+                */}
                 <li className="flex items-start gap-2.5">
                   <span className="grid h-5 w-5 shrink-0 place-items-center rounded-full bg-emerald-500/15 text-emerald-500 mt-0.5">
                     <CheckIcon className="h-3.5 w-3.5" aria-hidden="true" />
@@ -305,12 +302,6 @@ export function PricingSection({ onCreateFree, onSelectPro, onSelectBusiness }: 
               </button>
             </div>
           </div>
-        </div>
-
-        {/* Footer Note */}
-        <div className="mt-12 text-center text-xs text-muted max-w-xl mx-auto flex items-center justify-center gap-2">
-          <HelpCircleIcon className="h-4 w-4 shrink-0 text-accent" />
-          <span>{t('pricingFooterNote')}</span>
         </div>
       </div>
     </section>

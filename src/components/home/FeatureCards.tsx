@@ -34,6 +34,7 @@ export function FeatureCards() {
       title: t('feature4Title'),
       desc: t('feature4Desc')
     },
+    /* AI feature temporarily commented out
     {
       icon: SparklesIcon,
       color: 'from-violet-500/20 to-purple-500/10 text-violet-500',
@@ -41,6 +42,7 @@ export function FeatureCards() {
       title: t('feature5Title'),
       desc: t('feature5Desc')
     },
+    */
     {
       icon: SmartphoneIcon,
       color: 'from-pink-500/20 to-rose-500/10 text-pink-500',

@@ -4,7 +4,7 @@ export interface ColorPreset {
 }
 
 export const OFFICIAL_PALETTE: ColorPreset[] = [
-  { hex: '#D4AF37', label: 'Oro Carbriata' },
+  { hex: '#D4AF37', label: 'Oro Clásico' },
   { hex: '#10B981', label: 'Verde British' },
   { hex: '#EF4444', label: 'Rojo Corsa' },
   { hex: '#0284C7', label: 'Azul Podio' },

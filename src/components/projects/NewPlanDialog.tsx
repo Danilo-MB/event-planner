@@ -82,6 +82,7 @@ export function NewPlanDialog({ initialTemplate, onClose, onCreate, onSwitchToAi
           </button>
         </div>
 
+        {/* AI feature banner temporarily commented out
         {onSwitchToAi && (
           <div className="mx-5 mt-4 flex items-center justify-between rounded-xl border border-amber-500/30 bg-gradient-to-r from-amber-500/10 via-orange-500/5 to-emerald-500/10 p-3">
             <div className="flex items-center gap-2">
@@ -96,6 +97,7 @@ export function NewPlanDialog({ initialTemplate, onClose, onCreate, onSwitchToAi
             </button>
           </div>
         )}
+        */}
 
         <div className="flex-1 space-y-6 overflow-y-auto px-5 py-5">
           <div>

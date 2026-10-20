@@ -102,6 +102,7 @@ export function LandingHero({ onCreateClick, onAiClick }: LandingHeroProps) {
 
             {/* CTA Buttons */}
             <div className="mt-6 flex flex-wrap items-center gap-3">
+              {/* AI Wizard button temporarily commented out
               {onAiClick && (
                 <button
                   type="button"
@@ -113,6 +114,7 @@ export function LandingHero({ onCreateClick, onAiClick }: LandingHeroProps) {
                   </span>
                 </button>
               )}
+              */}
 
               <button
                 type="button"
@@ -188,23 +190,6 @@ export function LandingHero({ onCreateClick, onAiClick }: LandingHeroProps) {
                 >
                   <ChevronRightIcon className="h-4 w-4" />
                 </button>
-
-                {/* Navigation Dots Indicator */}
-                <div className="absolute bottom-3 left-1/2 -translate-x-1/2 z-10 flex items-center gap-1.5 rounded-full bg-black/65 px-2.5 py-1 backdrop-blur-md border border-white/15 shadow-lg">
-                  {HERO_SLIDES.map((slide, idx) => (
-                    <button
-                      key={slide.id}
-                      type="button"
-                      onClick={() => setCurrentSlide(idx)}
-                      aria-label={`Ir a imagen ${idx + 1}`}
-                      className={`h-2 rounded-full transition-all duration-300 ${
-                        idx === currentSlide
-                          ? 'w-6 bg-gradient-to-r from-amber-400 to-emerald-400 shadow-xs'
-                          : 'w-2 bg-white/40 hover:bg-white/70'
-                      }`}
-                    />
-                  ))}
-                </div>
               </div>
 
               {/* 4 Feature Badges placed outside and beneath the image */}
