@@ -18,6 +18,9 @@ export const translations = {
     heroBadgeMetrics: 'Medición automática (ha / km / m²)',
     heroBadgeMobile: 'Cartelería QR & iFrame',
     heroBadgeStreetView: 'Recorridos virtuales 360° propios',
+    heroSlideMap: 'Plataforma Satelital 3D + QR',
+    heroSlideEvent: 'Cartel con QR en Acceso a Eventos',
+    heroSlideLot: 'Cartel en Loteos y Desarrollos',
 
     // Features
     featuresTitle: 'Mapas interactivos y recorridos virtuales donde las apps tradicionales no llegan',
@@ -344,6 +347,9 @@ export const translations = {
     heroBadgeMetrics: 'Instant measurements (ha / km / m²)',
     heroBadgeMobile: 'QR Signage & iFrame',
     heroBadgeStreetView: '360° Virtual Walkthroughs',
+    heroSlideMap: '3D Satellite Platform + QR',
+    heroSlideEvent: 'QR Totem at Event Entrances',
+    heroSlideLot: 'Signage for Land Developments',
 
     // Features
     featuresTitle: 'Interactive maps and virtual walkthroughs where traditional apps cannot reach',
