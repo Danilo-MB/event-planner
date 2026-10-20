@@ -8,6 +8,7 @@ export interface User {
   name: string;
   role?: 'admin' | 'user';
   isAdmin?: boolean;
+  tier?: 'free' | 'pro' | 'business';
   emailVerified?: boolean;
 }
 

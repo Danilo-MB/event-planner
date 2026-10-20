@@ -106241,6 +106241,7 @@ var AuthService = class {
       name: user.name,
       role: isAdmin ? "admin" : user.role || "user",
       isAdmin,
+      tier: user.tier || (isAdmin ? "business" : "free"),
       emailVerified
     };
   }
@@ -106798,11 +106799,33 @@ var ProjectsController = class {
       return null;
     }
   }
-  checkCanEditOrDelete(project, user) {
+  getMaxCloudProjects(user) {
+    if (!user) return 0;
+    const cleanEmail = (user.email || "").toLowerCase().trim();
+    if (user.isAdmin || cleanEmail === UNLIMITED_TIER_EMAIL) return Infinity;
+    const tier = user.tier || "free";
+    if (tier === "business") return 20;
+    if (tier === "pro") return 5;
+    return 1;
+  }
+  checkCanEdit(project, user) {
     if (!user) return false;
     if (user.isAdmin) return true;
+    const cleanEmail = (user.email || "").toLowerCase().trim();
+    if (cleanEmail === UNLIMITED_TIER_EMAIL) return true;
     if (project.userId && project.userId === user.id) return true;
-    if (project.authorEmail && project.authorEmail.toLowerCase() === user.email.toLowerCase()) return true;
+    if (project.authorEmail && project.authorEmail.toLowerCase().trim() === cleanEmail) return true;
+    if (project.collaborators && project.collaborators.some((c) => c.toLowerCase().trim() === cleanEmail)) return true;
+    if (!project.userId && !project.authorEmail) return true;
+    return false;
+  }
+  checkCanDelete(project, user) {
+    if (!user) return false;
+    if (user.isAdmin) return true;
+    const cleanEmail = (user.email || "").toLowerCase().trim();
+    if (cleanEmail === UNLIMITED_TIER_EMAIL) return true;
+    if (project.userId && project.userId === user.id) return true;
+    if (project.authorEmail && project.authorEmail.toLowerCase().trim() === cleanEmail) return true;
     return false;
   }
   checkVerified(user) {
@@ -106839,8 +106862,8 @@ var ProjectsController = class {
     const user = await this.getUser(auth);
     this.checkVerified(user);
     const userEmail = (user?.email || "").toLowerCase().trim();
-    const isUnlimited = userEmail === UNLIMITED_TIER_EMAIL;
-    if (!isUnlimited) {
+    const maxProjects = this.getMaxCloudProjects(user);
+    if (Number.isFinite(maxProjects)) {
       let existing;
       if (body.id) {
         try {
@@ -106852,9 +106875,9 @@ var ProjectsController = class {
       const isExistingOwned = existing && !existing.isDeleted && (existing.userId === user?.id || userEmail && existing.authorEmail?.toLowerCase() === userEmail);
       if (!isExistingOwned) {
         const activeCount = await this.projectsService.countActiveProjectsByUser(user?.id, userEmail);
-        if (activeCount >= 1) {
+        if (activeCount >= maxProjects) {
           throw new ForbiddenException(
-            "Has alcanzado el l\xEDmite de 1 plano guardado en la nube. Los planos adicionales funcionan de manera local en tu navegador."
+            `Has alcanzado el l\xEDmite de ${maxProjects} ${maxProjects === 1 ? "plano guardado" : "planos guardados"} en la nube para tu plan. Los planos adicionales funcionan de manera local en tu navegador.`
           );
         }
       }
@@ -106870,8 +106893,8 @@ var ProjectsController = class {
     const user = await this.getUser(auth);
     this.checkVerified(user);
     const project = await this.projectsService.getOne(id);
-    if (!this.checkCanEditOrDelete(project, user)) {
-      throw new ForbiddenException("Solo el administrador o el autor del plano pueden modificarlo.");
+    if (!this.checkCanEdit(project, user)) {
+      throw new ForbiddenException("Solo el administrador, el autor o colaboradores autorizados pueden modificar este plano.");
     }
     return this.projectsService.update(id, body);
   }
@@ -106879,7 +106902,7 @@ var ProjectsController = class {
     const user = await this.getUser(auth);
     this.checkVerified(user);
     const project = await this.projectsService.getOne(id);
-    if (!this.checkCanEditOrDelete(project, user)) {
+    if (!this.checkCanDelete(project, user)) {
       throw new ForbiddenException("Solo el administrador o el autor del plano pueden eliminarlo.");
     }
     return this.projectsService.delete(id);
@@ -106888,16 +106911,16 @@ var ProjectsController = class {
     const user = await this.getUser(auth);
     this.checkVerified(user);
     const project = await this.projectsService.getOne(id);
-    if (!this.checkCanEditOrDelete(project, user)) {
+    if (!this.checkCanDelete(project, user)) {
       throw new ForbiddenException("Solo el administrador o el autor del plano pueden restaurarlo.");
     }
     const userEmail = (user?.email || "").toLowerCase().trim();
-    const isUnlimited = userEmail === UNLIMITED_TIER_EMAIL;
-    if (!isUnlimited) {
+    const maxProjects = this.getMaxCloudProjects(user);
+    if (Number.isFinite(maxProjects)) {
       const activeCount = await this.projectsService.countActiveProjectsByUser(user?.id, userEmail);
-      if (activeCount >= 1) {
+      if (activeCount >= maxProjects) {
         throw new ForbiddenException(
-          "No puedes restaurar este plano en la nube porque ya tienes 1 plano activo. Elimina el plano activo primero o util\xEDzalo localmente."
+          `No puedes restaurar este plano en la nube porque ya tienes ${maxProjects} ${maxProjects === 1 ? "plano activo" : "planos activos"}. Elimina uno primero o util\xEDzalo localmente.`
         );
       }
     }
@@ -106907,8 +106930,8 @@ var ProjectsController = class {
     const user = await this.getUser(auth);
     this.checkVerified(user);
     const project = await this.projectsService.getOne(projectId);
-    if (!this.checkCanEditOrDelete(project, user)) {
-      throw new ForbiddenException("Solo el administrador o el autor del plano pueden modificarlo.");
+    if (!this.checkCanEdit(project, user)) {
+      throw new ForbiddenException("Solo el administrador, el autor o colaboradores autorizados pueden modificar este plano.");
     }
     return this.projectsService.syncFeatures(projectId, body.features || []);
   }
@@ -106916,8 +106939,8 @@ var ProjectsController = class {
     const user = await this.getUser(auth);
     this.checkVerified(user);
     const project = await this.projectsService.getOne(projectId);
-    if (!this.checkCanEditOrDelete(project, user)) {
-      throw new ForbiddenException("Solo el administrador o el autor del plano pueden modificarlo.");
+    if (!this.checkCanEdit(project, user)) {
+      throw new ForbiddenException("Solo el administrador, el autor o colaboradores autorizados pueden modificar este plano.");
     }
     return this.projectsService.saveFeature(projectId, feature);
   }
@@ -106925,8 +106948,8 @@ var ProjectsController = class {
     const user = await this.getUser(auth);
     this.checkVerified(user);
     const project = await this.projectsService.getOne(projectId);
-    if (!this.checkCanEditOrDelete(project, user)) {
-      throw new ForbiddenException("Solo el administrador o el autor del plano pueden modificarlo.");
+    if (!this.checkCanEdit(project, user)) {
+      throw new ForbiddenException("Solo el administrador, el autor o colaboradores autorizados pueden modificar este plano.");
     }
     return this.projectsService.saveFeature(projectId, { ...feature, id: featureId });
   }
@@ -106934,8 +106957,8 @@ var ProjectsController = class {
     const user = await this.getUser(auth);
     this.checkVerified(user);
     const project = await this.projectsService.getOne(projectId);
-    if (!this.checkCanEditOrDelete(project, user)) {
-      throw new ForbiddenException("Solo el administrador o el autor del plano pueden eliminarlo.");
+    if (!this.checkCanEdit(project, user)) {
+      throw new ForbiddenException("Solo el administrador, el autor o colaboradores autorizados pueden modificar elementos de este plano.");
     }
     return this.projectsService.deleteFeature(projectId, featureId);
   }

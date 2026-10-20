@@ -80,6 +80,7 @@ export interface Project {
   userId?: string;
   authorEmail?: string;
   authorName?: string;
+  collaborators?: string[];
   isLocalOnly?: boolean;
   name: string;
   description: string;
@@ -121,4 +122,5 @@ export interface NewPlanInput {
   description?: string;
   features?: PlanFeature[];
   categories?: Category[];
+  collaborators?: string[];
 }

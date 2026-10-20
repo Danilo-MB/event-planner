@@ -9,6 +9,7 @@ export interface UserEntity {
   passwordHash?: string;
   name: string;
   role?: 'admin' | 'user';
+  tier?: 'free' | 'pro' | 'business';
   emailVerified?: boolean;
   createdAt: number;
 }
@@ -53,6 +54,7 @@ export interface ProjectEntity {
   userId?: string;
   authorEmail?: string;
   authorName?: string;
+  collaborators?: string[];
   name: string;
   description: string;
   location: string;

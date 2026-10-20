@@ -32,11 +32,12 @@ import { useProjects } from '../contexts/ProjectsContext';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useAuth } from '../contexts/AuthContext';
 import { getPlanTemplates } from '../data/templates';
+import { seedProjects } from '../data/seedProjects';
 import type { NewPlanInput, Project, TemplateId } from '../types/plan';
 
 export function ProjectsPage() {
   const { projects, createProject, deleteProject, restoreProject, demoProjectId } = useProjects();
-  const { user } = useAuth();
+  const { user, isAuthenticated, openAuthModal } = useAuth();
   const { t, language } = useLanguage();
   const navigate = useNavigate();
   const templates = useMemo(() => getPlanTemplates(language), [language]);
@@ -123,6 +124,36 @@ export function ProjectsPage() {
         onClick: () => restoreProject(p, index)
       }
     });
+  };
+
+  const guestCreatedCount = useMemo(() => {
+    return projects.filter(
+      (p) => !p.isDeleted && p.isLocalOnly && !seedProjects.some((s) => s.id === p.id)
+    ).length;
+  }, [projects]);
+
+  const handleStartNewPlan = (templateId: TemplateId = 'event') => {
+    if (!isAuthenticated && guestCreatedCount >= 1) {
+      toast.info('Regístrate gratis para crear más planos', {
+        description: 'Puedes crear 1 plano local sin registrarte. Crea tu cuenta gratuita en 10 segundos para continuar guardando planos.',
+        duration: 7000
+      });
+      openAuthModal();
+      return;
+    }
+    setDialogTemplate(templateId);
+  };
+
+  const handleStartAi = () => {
+    if (!isAuthenticated && guestCreatedCount >= 1) {
+      toast.info('Regístrate gratis para crear más planos', {
+        description: 'Puedes crear 1 plano local sin registrarte. Crea tu cuenta gratuita en 10 segundos para continuar guardando planos.',
+        duration: 7000
+      });
+      openAuthModal();
+      return;
+    }
+    setIsAiWizardOpen(true);
   };
 
   const handleCreate = (input: NewPlanInput) => {
@@ -225,8 +256,8 @@ export function ProjectsPage() {
 
       {/* 1. Marketing Hero at the Top */}
       <LandingHero
-        onCreateClick={() => setDialogTemplate('event')}
-        onAiClick={() => setIsAiWizardOpen(true)}
+        onCreateClick={() => handleStartNewPlan('event')}
+        onAiClick={handleStartAi}
         demoProjectId={demoId}
       />
 
@@ -237,7 +268,7 @@ export function ProjectsPage() {
       <EmbedShowcase demoProjectId={demoId} />
 
       {/* 4. Pricing & Plans Section */}
-      <PricingSection onCreateFree={() => setDialogTemplate('event')} />
+      <PricingSection onCreateFree={() => handleStartNewPlan('event')} />
 
       {/* 5. Plans Workspace Section */}
       <main id="mis-planos" className="scroll-mt-16 mx-auto max-w-6xl px-4 py-12 sm:px-6 lg:py-16">
@@ -283,14 +314,14 @@ export function ProjectsPage() {
 
             <button
               type="button"
-              onClick={() => setIsAiWizardOpen(true)}
+              onClick={handleStartAi}
               className="inline-flex h-10 items-center gap-2 rounded-lg border border-line bg-surface px-4 text-sm font-semibold text-ink shadow-2xs transition-all hover:bg-subtle active:scale-95">
               <SparklesIcon className="h-4 w-4 text-amber-500" aria-hidden="true" />
               <span>{t('aiWizardButton')}</span>
             </button>
             <button
               type="button"
-              onClick={() => setDialogTemplate('event')}
+              onClick={() => handleStartNewPlan('event')}
               className="inline-flex h-10 w-fit items-center gap-2 whitespace-nowrap rounded-lg bg-ink px-4 text-sm font-medium text-on-ink shadow-sm transition-colors duration-150 hover:bg-ink/90 active:scale-95">
               <PlusIcon className="h-4 w-4" aria-hidden="true" />
               {t('newPlan')}
@@ -421,7 +452,7 @@ export function ProjectsPage() {
               <button
                 key={tTemplate.id}
                 type="button"
-                onClick={() => setDialogTemplate(tTemplate.id)}
+                onClick={() => handleStartNewPlan(tTemplate.id)}
                 className="flex items-start gap-3 rounded-xl border border-line bg-surface p-4 text-left transition-[border-color] duration-150 hover:border-ink/40 active:scale-[0.99]">
                 <span className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-subtle">
                   <TemplateIcon id={tTemplate.id} className="h-[18px] w-[18px] text-ink" />

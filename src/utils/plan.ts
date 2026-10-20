@@ -62,22 +62,57 @@ export function summarizeKinds(features: PlanFeature[], t?: (key: TranslationKey
 
 export const UNLIMITED_TIER_EMAIL = 'dmarinobata@gmail.com';
 
-export function isUnlimitedUser(user: { email?: string; role?: string; isAdmin?: boolean } | null | undefined): boolean {
+export function isUnlimitedUser(user: { email?: string; role?: string; isAdmin?: boolean; tier?: string } | null | undefined): boolean {
   if (!user) return false;
   const email = (user.email || '').toLowerCase().trim();
-  return email === UNLIMITED_TIER_EMAIL;
+  if (email === UNLIMITED_TIER_EMAIL) return true;
+  if (user.isAdmin || user.role === 'admin') return true;
+  return false;
 }
 
-export function canSharePlan(user: { email?: string; role?: string; isAdmin?: boolean } | null | undefined): boolean {
-  return isUnlimitedUser(user);
+export function getUserTier(user: { email?: string; role?: string; isAdmin?: boolean; tier?: 'free' | 'pro' | 'business' } | null | undefined): 'free' | 'pro' | 'business' {
+  if (!user) return 'free';
+  if (isUnlimitedUser(user)) return 'business';
+  return user.tier || 'free';
 }
 
-export function canExportGeoJSON(user: { email?: string; role?: string; isAdmin?: boolean } | null | undefined): boolean {
-  return isUnlimitedUser(user);
+export function getMaxCloudProjects(user: { email?: string; role?: string; isAdmin?: boolean; tier?: 'free' | 'pro' | 'business' } | null | undefined): number {
+  if (!user) return 0;
+  if (isUnlimitedUser(user)) return Infinity;
+  const tier = getUserTier(user);
+  if (tier === 'business') return 20;
+  if (tier === 'pro') return 5;
+  return 1;
+}
+
+export function canSharePlan(_user?: { email?: string; role?: string; isAdmin?: boolean; tier?: string } | null | undefined): boolean {
+  // Public interactive link sharing is enabled for all users (Free, Pro, Business)
+  return true;
+}
+
+export function canEmbedPlan(user: { email?: string; role?: string; isAdmin?: boolean; tier?: 'free' | 'pro' | 'business' } | null | undefined): boolean {
+  if (!user) return false;
+  if (isUnlimitedUser(user)) return true;
+  const tier = getUserTier(user);
+  return tier === 'pro' || tier === 'business';
+}
+
+export function canExportGeoJSON(user: { email?: string; role?: string; isAdmin?: boolean; tier?: 'free' | 'pro' | 'business' } | null | undefined): boolean {
+  if (!user) return false;
+  if (isUnlimitedUser(user)) return true;
+  const tier = getUserTier(user);
+  return tier === 'pro' || tier === 'business';
+}
+
+export function canManageCollaborators(user: { email?: string; role?: string; isAdmin?: boolean; tier?: 'free' | 'pro' | 'business' } | null | undefined): boolean {
+  if (!user) return false;
+  if (isUnlimitedUser(user)) return true;
+  const tier = getUserTier(user);
+  return tier === 'business';
 }
 
 export function canDeleteProject(
-  project: { id: string; userId?: string; authorEmail?: string; isLocalOnly?: boolean },
+  project: { id: string; userId?: string; authorEmail?: string; isLocalOnly?: boolean; collaborators?: string[] },
   user: { id?: string; email?: string; role?: string; isAdmin?: boolean } | null
 ): boolean {
   // If this is a guest draft stored only on this browser, guest can discard it
@@ -98,23 +133,38 @@ export function canDeleteProject(
     return true;
   }
 
-  // Author of the project can delete their own project
+  // Author of the project can delete their own project (collaborators cannot delete)
   if (project.userId && project.userId === user.id) return true;
-  if (project.authorEmail && project.authorEmail.toLowerCase() === email) return true;
+  if (project.authorEmail && project.authorEmail.toLowerCase().trim() === email) return true;
 
   return false;
 }
 
 export function canEditProject(
-  project: { id: string; userId?: string; authorEmail?: string; isLocalOnly?: boolean },
+  project: { id: string; userId?: string; authorEmail?: string; isLocalOnly?: boolean; collaborators?: string[] },
   user: { id?: string; email?: string; role?: string; isAdmin?: boolean } | null | undefined
 ): boolean {
   // If this is a draft newly created by a guest in this browser, they can work on it
   if (project.isLocalOnly) return true;
 
-  // Unauthenticated users cannot edit existing maps (only visitor mode)
+  // Unauthenticated users cannot edit existing cloud maps (only visitor mode)
   if (!user) return false;
 
-  // Logged-in users can edit
-  return true;
+  // Admin or unlimited tier user can edit
+  if (user.isAdmin || user.role === 'admin' || isUnlimitedUser(user)) return true;
+
+  const email = (user.email || '').toLowerCase().trim();
+  // Author can edit
+  if (project.userId && project.userId === user.id) return true;
+  if (project.authorEmail && project.authorEmail.toLowerCase().trim() === email) return true;
+
+  // Authorized team collaborator can edit
+  if (project.collaborators && project.collaborators.some((c) => c.toLowerCase().trim() === email)) {
+    return true;
+  }
+
+  // Legacy/demo project with no author: allow logged in user to work on it
+  if (!project.userId && !project.authorEmail) return true;
+
+  return false;
 }

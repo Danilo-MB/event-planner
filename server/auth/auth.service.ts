@@ -35,6 +35,7 @@ export class AuthService {
       name: user.name,
       role: (isAdmin ? 'admin' : user.role || 'user') as 'admin' | 'user',
       isAdmin,
+      tier: user.tier || (isAdmin ? 'business' : 'free'),
       emailVerified
     };
   }

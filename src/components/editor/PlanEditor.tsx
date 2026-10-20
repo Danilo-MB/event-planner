@@ -161,7 +161,7 @@ export function PlanEditor({
     toast.success('GeoJSON descargado');
   };
 
-  const handleRename = (patch: Partial<Pick<Project, 'name' | 'location' | 'description' | 'websiteUrl'>>) =>
+  const handleRename = (patch: Partial<Pick<Project, 'name' | 'location' | 'description' | 'websiteUrl' | 'collaborators'>>) =>
   update((p) => ({ ...p, ...patch }));
 
   return (

@@ -1,17 +1,18 @@
 import React, { useState } from 'react';
-import { CrosshairIcon, DownloadIcon, GlobeIcon, HouseIcon, PlusIcon } from 'lucide-react';
+import { CrosshairIcon, DownloadIcon, GlobeIcon, HouseIcon, PlusIcon, UsersIcon, XIcon } from 'lucide-react';
+import { toast } from 'sonner';
 import { basemaps } from '../../data/basemaps';
 import { LayerRow } from './LayerRow';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { useAuth } from '../../contexts/AuthContext';
-import { canExportGeoJSON } from '../../utils/plan';
+import { canExportGeoJSON, canManageCollaborators } from '../../utils/plan';
 import type { Editor } from '../../hooks/useEditor';
 import type { Basemap, Project } from '../../types/plan';
 
 interface PlanSettingsProps {
   project: Project;
   editor: Editor;
-  onRename: (patch: Partial<Pick<Project, 'name' | 'location' | 'description' | 'websiteUrl'>>) => void;
+  onRename: (patch: Partial<Pick<Project, 'name' | 'location' | 'description' | 'websiteUrl' | 'collaborators'>>) => void;
   onSaveCenter: () => void;
   onGoToCenter: () => void;
   onExport: () => void;
@@ -21,9 +22,33 @@ export function PlanSettings({ project, editor, onRename, onSaveCenter, onGoToCe
   const { t } = useLanguage();
   const { user } = useAuth();
   const showGeoJSON = canExportGeoJSON(user);
+  const canCollab = canManageCollaborators(user);
   const [expandedLayer, setExpandedLayer] = useState<string | null>(null);
+  const [newCollaboratorEmail, setNewCollaboratorEmail] = useState('');
   const inputClass =
     'mt-1 w-full rounded-lg border border-line bg-surface px-3 text-sm text-ink placeholder:text-muted focus:border-ink focus:outline-none';
+
+  const handleAddCollaborator = () => {
+    const clean = newCollaboratorEmail.trim().toLowerCase();
+    if (!clean || !clean.includes('@')) {
+      toast.error('Ingresa un correo electrónico válido');
+      return;
+    }
+    const currentList = project.collaborators || [];
+    if (currentList.some((e) => e.toLowerCase() === clean)) {
+      toast.info('Este usuario ya está en la lista de colaboradores');
+      return;
+    }
+    onRename({ collaborators: [...currentList, clean] });
+    setNewCollaboratorEmail('');
+    toast.success(t('collaboratorAdded'));
+  };
+
+  const handleRemoveCollaborator = (email: string) => {
+    const next = (project.collaborators || []).filter((e) => e.toLowerCase() !== email.toLowerCase());
+    onRename({ collaborators: next });
+    toast.info(t('collaboratorRemoved'));
+  };
 
   return (
     <div className="pb-8">
@@ -179,6 +204,80 @@ export function PlanSettings({ project, editor, onRename, onSaveCenter, onGoToCe
             />
           ))}
         </ul>
+      </section>
+
+      {/* Collaborators & Team Section */}
+      <section aria-labelledby="plan-collaborators" className="border-b border-line px-4 py-5">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <UsersIcon className="h-4 w-4 text-accent" />
+            <h3 id="plan-collaborators" className="text-sm font-semibold text-ink">
+              {t('collaboratorsTitle')}
+            </h3>
+          </div>
+          <span className="rounded-full bg-emerald-500/10 px-2 py-0.5 text-[10px] font-bold text-emerald-600 dark:text-emerald-400">
+            Business
+          </span>
+        </div>
+        <p className="mt-1 text-xs text-muted leading-relaxed">
+          {t('collaboratorsDesc')}
+        </p>
+
+        {canCollab ? (
+          <div className="mt-3 space-y-3">
+            <div className="flex gap-2">
+              <input
+                type="email"
+                placeholder="colaborador@empresa.com"
+                value={newCollaboratorEmail}
+                onChange={(e) => setNewCollaboratorEmail(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault();
+                    handleAddCollaborator();
+                  }
+                }}
+                className={`${inputClass} mt-0 h-9 flex-1 text-xs`}
+              />
+              <button
+                type="button"
+                onClick={handleAddCollaborator}
+                className="inline-flex h-9 items-center gap-1 rounded-lg bg-ink px-3 text-xs font-semibold text-on-ink hover:bg-ink/90 active:scale-95 transition-all cursor-pointer shrink-0"
+              >
+                <PlusIcon className="h-3.5 w-3.5" />
+                <span>{t('addCollaborator')}</span>
+              </button>
+            </div>
+
+            {project.collaborators && project.collaborators.length > 0 ? (
+              <ul className="divide-y divide-line rounded-lg border border-line bg-surface/50 text-xs">
+                {project.collaborators.map((email) => (
+                  <li key={email} className="flex items-center justify-between px-3 py-2">
+                    <span className="truncate text-ink font-medium">{email}</span>
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveCollaborator(email)}
+                      className="text-muted hover:text-danger p-1 transition-colors cursor-pointer"
+                      title="Quitar colaborador"
+                    >
+                      <XIcon className="h-3.5 w-3.5" />
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="text-[11px] text-muted italic">
+                No hay colaboradores adicionales en este plano.
+              </p>
+            )}
+          </div>
+        ) : (
+          <div className="mt-3 rounded-xl border border-amber-500/20 bg-amber-500/5 p-3 text-xs text-muted">
+            <p className="leading-relaxed">
+              <strong className="text-ink">Múltiples editores:</strong> Invita a tu equipo o productora a editar este plano en tiempo real de forma simultánea. Disponible en el <span className="font-semibold text-amber-600 dark:text-amber-400">Plan Business</span>.
+            </p>
+          </div>
+        )}
       </section>
 
       {/* Export Section (Only for unlimited tier) */}

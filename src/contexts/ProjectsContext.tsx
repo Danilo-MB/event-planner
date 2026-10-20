@@ -7,7 +7,7 @@ import { loadProjects, loadProjectsFromIdb, saveProjects } from '../utils/storag
 import { api } from '../utils/api';
 import { useAuth } from './AuthContext';
 import { toast } from 'sonner';
-import { isUnlimitedUser } from '../utils/plan';
+import { getMaxCloudProjects, isUnlimitedUser } from '../utils/plan';
 import type { NewPlanInput, Project, MapView } from '../types/plan';
 
 export const DEFAULT_DEMO_PROJECT_ID = 'i6666hqmv8mdpge';
@@ -110,7 +110,7 @@ function ensureStreetViewSeed(projs: Project[]): Project[] {
 }
 
 export function ProjectsProvider({ children }: { children: React.ReactNode }) {
-  const { isAuthenticated, user } = useAuth();
+  const { isAuthenticated, user, openAuthModal } = useAuth();
   const [demoProjectId, setDemoProjectIdState] = useState<string>(() => {
     try {
       return localStorage.getItem('mapflex_demo_project_id') || DEFAULT_DEMO_PROJECT_ID;
@@ -216,11 +216,25 @@ export function ProjectsProvider({ children }: { children: React.ReactNode }) {
       ? { lat: place.lat, lng: place.lng, zoom: 17 }
       : defaultMapView;
 
-    const isUnlimited = isUnlimitedUser(user);
+    // If user is guest and already created 1 local plan, prompt registration
+    if (!isAuthenticated) {
+      const guestCreated = projects.filter(
+        (p) => !p.isDeleted && p.isLocalOnly && !seedProjects.some((s) => s.id === p.id)
+      );
+      if (guestCreated.length >= 1) {
+        toast.info('Regístrate gratis para crear más planos', {
+          description: 'Los visitantes sin cuenta pueden crear 1 plano local de prueba. Crea tu cuenta gratuita en 10 segundos para continuar guardando planos.',
+          duration: 7000,
+        });
+        openAuthModal();
+      }
+    }
+
+    const maxCloud = getMaxCloudProjects(user);
     const userCloudProjects = projects.filter(
       (p) => !p.isDeleted && !p.isLocalOnly && (p.userId === user?.id || (user?.email && p.authorEmail?.toLowerCase() === user.email.toLowerCase()))
     );
-    const exceedsCloudLimit = Boolean(isAuthenticated && !isUnlimited && userCloudProjects.length >= 1);
+    const exceedsCloudLimit = Boolean(isAuthenticated && Number.isFinite(maxCloud) && userCloudProjects.length >= maxCloud);
     const isLocalOnly = !isAuthenticated || exceedsCloudLimit;
 
     const project: Project = {
@@ -238,6 +252,7 @@ export function ProjectsProvider({ children }: { children: React.ReactNode }) {
       userId: isAuthenticated ? user?.id : undefined,
       authorEmail: isAuthenticated ? user?.email : undefined,
       authorName: isAuthenticated ? user?.name : undefined,
+      collaborators: input.collaborators || [],
       isLocalOnly,
       createdAt: now,
       updatedAt: now
@@ -246,8 +261,8 @@ export function ProjectsProvider({ children }: { children: React.ReactNode }) {
     setProjects((ps) => [project, ...ps]);
 
     if (exceedsCloudLimit) {
-      toast.warning('Límite de planos en la nube alcanzado (máx. 1)', {
-        description: 'Has alcanzado el límite de 1 plano en la nube. Este nuevo plano se guardará únicamente de forma local en tu navegador.',
+      toast.warning(`Límite de planos en la nube alcanzado (máx. ${maxCloud})`, {
+        description: `Has alcanzado el límite de ${maxCloud} ${maxCloud === 1 ? 'plano' : 'planos'} en la nube para tu plan. Este nuevo plano se guardará únicamente de forma local en tu navegador.`,
         duration: 6500
       });
     } else if (isAuthenticated) {
@@ -255,14 +270,14 @@ export function ProjectsProvider({ children }: { children: React.ReactNode }) {
     }
 
     return project;
-  }, [isAuthenticated, user, projects]);
+  }, [isAuthenticated, user, projects, openAuthModal]);
 
   const importProject = useCallback((project: Project): Project => {
-    const isUnlimited = isUnlimitedUser(user);
+    const maxCloud = getMaxCloudProjects(user);
     const userCloudProjects = projects.filter(
       (p) => !p.isDeleted && !p.isLocalOnly && (p.userId === user?.id || (user?.email && p.authorEmail?.toLowerCase() === user.email.toLowerCase()))
     );
-    const exceedsCloudLimit = Boolean(isAuthenticated && !isUnlimited && userCloudProjects.length >= 1);
+    const exceedsCloudLimit = Boolean(isAuthenticated && Number.isFinite(maxCloud) && userCloudProjects.length >= maxCloud);
     const finalProject: Project = {
       ...project,
       isLocalOnly: !isAuthenticated || exceedsCloudLimit || Boolean(project.isLocalOnly)
@@ -279,8 +294,8 @@ export function ProjectsProvider({ children }: { children: React.ReactNode }) {
     });
 
     if (exceedsCloudLimit) {
-      toast.warning('Límite de planos en la nube alcanzado (máx. 1)', {
-        description: 'Has alcanzado el límite de 1 plano en la nube. Este plano importado funcionará solo de forma local.',
+      toast.warning(`Límite de planos en la nube alcanzado (máx. ${maxCloud})`, {
+        description: `Has alcanzado el límite de ${maxCloud} ${maxCloud === 1 ? 'plano' : 'planos'} en la nube para tu plan. Este plano importado funcionará solo de forma local.`,
         duration: 6500
       });
     } else if (isAuthenticated && !finalProject.isLocalOnly) {

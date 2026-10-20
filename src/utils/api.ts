@@ -60,6 +60,7 @@ export interface UserResponse {
     name: string;
     role?: 'admin' | 'user';
     isAdmin?: boolean;
+    tier?: 'free' | 'pro' | 'business';
     emailVerified?: boolean;
   };
   needsVerification?: boolean;

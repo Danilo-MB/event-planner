@@ -21,7 +21,7 @@ interface SidePanelProps {
   onSaveCenter: () => void;
   onGoToCenter: () => void;
   onExport: () => void;
-  onRename: (patch: Partial<Pick<Project, 'name' | 'location' | 'description' | 'websiteUrl'>>) => void;
+  onRename: (patch: Partial<Pick<Project, 'name' | 'location' | 'description' | 'websiteUrl' | 'collaborators'>>) => void;
   onOpenStreetView?: (feature: PlanFeature, initialIndex?: number) => void;
 }
 

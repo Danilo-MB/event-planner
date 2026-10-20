@@ -113,7 +113,7 @@ export function PricingSection({ onCreateFree, onSelectPro, onSelectBusiness }: 
                   <span className="grid h-5 w-5 shrink-0 place-items-center rounded-full bg-emerald-500/15 text-emerald-500 mt-0.5">
                     <CheckIcon className="h-3.5 w-3.5" aria-hidden="true" />
                   </span>
-                  <span>{t('pricingFeatMobileGps')}</span>
+                  <span className="font-semibold text-emerald-600 dark:text-emerald-400">{t('pricingFeatPublicShare')}</span>
                 </li>
                 <li className="flex items-start gap-2.5 text-muted/70 line-through">
                   <span className="grid h-5 w-5 shrink-0 place-items-center rounded-full bg-subtle text-muted/50 mt-0.5">
@@ -141,7 +141,7 @@ export function PricingSection({ onCreateFree, onSelectPro, onSelectBusiness }: 
             </div>
           </div>
 
-          {/* Card 2: Pro / Evento ($29) - Highlighted */}
+          {/* Card 2: Pro ($29) - Highlighted */}
           <div className="relative flex flex-col justify-between rounded-3xl border-2 border-amber-500/70 bg-gradient-to-b from-surface via-surface to-amber-500/5 p-6 sm:p-8 shadow-xl shadow-amber-500/10 ring-1 ring-amber-500/30">
             {/* Top pill badge */}
             <div className="absolute -top-3.5 left-1/2 -translate-x-1/2">
@@ -192,7 +192,7 @@ export function PricingSection({ onCreateFree, onSelectPro, onSelectBusiness }: 
                   <span className="grid h-5 w-5 shrink-0 place-items-center rounded-full bg-amber-500/20 text-amber-500 mt-0.5">
                     <CheckIcon className="h-3.5 w-3.5" aria-hidden="true" />
                   </span>
-                  <span>{t('pricingFeatPublicShare')}</span>
+                  <span>{t('pricingFeatPublicShare5')}</span>
                 </li>
                 <li className="flex items-start gap-2.5">
                   <span className="grid h-5 w-5 shrink-0 place-items-center rounded-full bg-amber-500/20 text-amber-500 mt-0.5">
@@ -204,19 +204,13 @@ export function PricingSection({ onCreateFree, onSelectPro, onSelectBusiness }: 
                   <span className="grid h-5 w-5 shrink-0 place-items-center rounded-full bg-amber-500/20 text-amber-500 mt-0.5">
                     <CheckIcon className="h-3.5 w-3.5" aria-hidden="true" />
                   </span>
-                  <span>{t('pricingFeatQr')}</span>
+                  <span className="font-semibold text-amber-600 dark:text-amber-400">{t('pricingFeatQr')}</span>
                 </li>
                 <li className="flex items-start gap-2.5">
                   <span className="grid h-5 w-5 shrink-0 place-items-center rounded-full bg-amber-500/20 text-amber-500 mt-0.5">
                     <CheckIcon className="h-3.5 w-3.5" aria-hidden="true" />
                   </span>
-                  <span>{t('pricingFeatStreetView')}</span>
-                </li>
-                <li className="flex items-start gap-2.5">
-                  <span className="grid h-5 w-5 shrink-0 place-items-center rounded-full bg-amber-500/20 text-amber-500 mt-0.5">
-                    <CheckIcon className="h-3.5 w-3.5" aria-hidden="true" />
-                  </span>
-                  <span>{t('pricingFeatEmailSupport')}</span>
+                  <span>{t('pricingFeatStreetView5')}</span>
                 </li>
               </ul>
             </div>
@@ -232,7 +226,7 @@ export function PricingSection({ onCreateFree, onSelectPro, onSelectBusiness }: 
             </div>
           </div>
 
-          {/* Card 3: Business / Productoras ($59) */}
+          {/* Card 3: Business ($59) */}
           <div className="relative flex flex-col justify-between rounded-3xl border border-line bg-surface p-6 sm:p-8 shadow-sm transition-all duration-200 hover:border-ink/20">
             <div>
               <div className="flex items-center justify-between gap-2">
@@ -265,7 +259,7 @@ export function PricingSection({ onCreateFree, onSelectPro, onSelectBusiness }: 
                     <CheckIcon className="h-3.5 w-3.5" aria-hidden="true" />
                   </span>
                   <span className="font-bold text-emerald-600 dark:text-emerald-400">
-                    {t('pricingFeatUnlimitedCloud')}
+                    {t('pricingFeatBusinessCloud')}
                   </span>
                 </li>
                 <li className="flex items-start gap-2.5">
@@ -284,13 +278,13 @@ export function PricingSection({ onCreateFree, onSelectPro, onSelectBusiness }: 
                   <span className="grid h-5 w-5 shrink-0 place-items-center rounded-full bg-emerald-500/15 text-emerald-500 mt-0.5">
                     <CheckIcon className="h-3.5 w-3.5" aria-hidden="true" />
                   </span>
-                  <span>{t('pricingFeatMultiCollab')}</span>
+                  <span className="font-semibold text-ink">{t('pricingFeatMultiCollab')}</span>
                 </li>
                 <li className="flex items-start gap-2.5">
                   <span className="grid h-5 w-5 shrink-0 place-items-center rounded-full bg-emerald-500/15 text-emerald-500 mt-0.5">
                     <CheckIcon className="h-3.5 w-3.5" aria-hidden="true" />
                   </span>
-                  <span>{t('pricingFeatDigitizationHelp')}</span>
+                  <span className="font-semibold text-emerald-600 dark:text-emerald-400">{t('pricingFeatCustomFeatures')}</span>
                 </li>
                 <li className="flex items-start gap-2.5">
                   <span className="grid h-5 w-5 shrink-0 place-items-center rounded-full bg-emerald-500/15 text-emerald-500 mt-0.5">
