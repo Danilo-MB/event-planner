@@ -1144,11 +1144,11 @@ function serializeCookie(name, value, options = {}) {
     throw new TypeError(`Invalid value for cookie "${name}": not a well-formed string`);
   }
   let header = `${name}=${encodedValue}`;
-  const path2 = options.path ?? "/";
-  if (typeof path2 !== "string" || !COOKIE_PATH_REGEXP.test(path2)) {
+  const path3 = options.path ?? "/";
+  if (typeof path3 !== "string" || !COOKIE_PATH_REGEXP.test(path3)) {
     throw new TypeError(`Invalid path for cookie "${name}"`);
   }
-  header += `; Path=${path2}`;
+  header += `; Path=${path3}`;
   if (options.domain !== void 0) {
     if (typeof options.domain !== "string" || !COOKIE_DOMAIN_REGEXP.test(options.domain)) {
       throw new TypeError(`Invalid domain for cookie "${name}"`);
@@ -1358,8 +1358,8 @@ var init_http_adapter = __esm({
        *
        * @see {@link HttpServer.normalizePath}
        */
-      normalizePath(path2) {
-        return path2;
+      normalizePath(path3) {
+        return path3;
       }
       /**
        * Registers a callback that the router invokes right before each route
@@ -1753,9 +1753,9 @@ var init_shared_utils = __esm({
       const ctor = Object.hasOwn(proto, "constructor") && proto.constructor;
       return typeof ctor === "function" && ctor instanceof ctor && Function.prototype.toString.call(ctor) === Function.prototype.toString.call(Object);
     };
-    addLeadingSlash = (path2) => path2 && typeof path2 === "string" ? path2.charAt(0) !== "/" && path2.substring(0, 2) !== "{/" ? "/" + path2 : path2 : "";
-    normalizePath = (path2) => path2 ? ("/" + path2.replace(/\/+$/, "")).replace(/\/+/g, "/") : "/";
-    stripEndSlash = (path2) => path2.endsWith("/") ? path2.slice(0, -1) : path2;
+    addLeadingSlash = (path3) => path3 && typeof path3 === "string" ? path3.charAt(0) !== "/" && path3.substring(0, 2) !== "{/" ? "/" + path3 : path3 : "";
+    normalizePath = (path3) => path3 ? ("/" + path3.replace(/\/+$/, "")).replace(/\/+/g, "/") : "/";
+    stripEndSlash = (path3) => path3.endsWith("/") ? path3.slice(0, -1) : path3;
     isFunction = (val) => typeof val === "function";
     isString = (val) => typeof val === "string";
     isNumber = (val) => typeof val === "number";
@@ -1783,7 +1783,7 @@ var init_shared_utils = __esm({
 // node_modules/@nestjs/common/decorators/core/controller.decorator.js
 function Controller(prefixOrOptions) {
   const defaultPath = "/";
-  const [path2, host, scopeOptions, versionOptions] = isUndefined(prefixOrOptions) ? [defaultPath, void 0, void 0, void 0] : isString(prefixOrOptions) || Array.isArray(prefixOrOptions) ? [prefixOrOptions, void 0, void 0, void 0] : [
+  const [path3, host, scopeOptions, versionOptions] = isUndefined(prefixOrOptions) ? [defaultPath, void 0, void 0, void 0] : isString(prefixOrOptions) || Array.isArray(prefixOrOptions) ? [prefixOrOptions, void 0, void 0, void 0] : [
     prefixOrOptions.path || defaultPath,
     prefixOrOptions.host,
     { scope: prefixOrOptions.scope, durable: prefixOrOptions.durable },
@@ -1791,7 +1791,7 @@ function Controller(prefixOrOptions) {
   ];
   return (target) => {
     Reflect.defineMetadata(CONTROLLER_WATERMARK, true, target);
-    Reflect.defineMetadata(PATH_METADATA, path2, target);
+    Reflect.defineMetadata(PATH_METADATA, path3, target);
     Reflect.defineMetadata(HOST_METADATA, host, target);
     Reflect.defineMetadata(SCOPE_OPTIONS_METADATA, scopeOptions, target);
     Reflect.defineMetadata(VERSION_METADATA, versionOptions, target);
@@ -2105,17 +2105,17 @@ var init_request_mapping_decorator = __esm({
     };
     RequestMapping = (metadata = defaultMetadata) => {
       const pathMetadata = metadata[PATH_METADATA];
-      const path2 = pathMetadata && pathMetadata.length ? pathMetadata : "/";
+      const path3 = pathMetadata && pathMetadata.length ? pathMetadata : "/";
       const requestMethod = metadata[METHOD_METADATA] || RequestMethod.GET;
       return (target, key, descriptor) => {
-        Reflect.defineMetadata(PATH_METADATA, path2, descriptor.value);
+        Reflect.defineMetadata(PATH_METADATA, path3, descriptor.value);
         Reflect.defineMetadata(METHOD_METADATA, requestMethod, descriptor.value);
         return descriptor;
       };
     };
-    createMappingDecorator = (method) => (path2) => {
+    createMappingDecorator = (method) => (path3) => {
       return RequestMapping({
-        [PATH_METADATA]: path2,
+        [PATH_METADATA]: path3,
         [METHOD_METADATA]: method
       });
     };
@@ -2200,6 +2200,22 @@ function createRouteParamDecorator(paramtype) {
     }), target.constructor, key);
   };
 }
+function Query(property, optionsOrPipe, ...pipes) {
+  const isPropertyOptions = isParameterDecoratorOptions(property);
+  if (isPropertyOptions) {
+    return createPipesRouteParamDecorator(RouteParamtypes.QUERY)({
+      pipes: property.pipes,
+      schema: property.schema
+    });
+  }
+  const isOptions = isParameterDecoratorOptions(optionsOrPipe);
+  const actualPipes = isOptions ? [...optionsOrPipe.pipes ?? [], ...pipes] : [optionsOrPipe, ...pipes].filter(Boolean);
+  return createPipesRouteParamDecorator(RouteParamtypes.QUERY)({
+    data: property,
+    pipes: actualPipes,
+    schema: isOptions ? optionsOrPipe.schema : void 0
+  });
+}
 function Body(property, optionsOrPipe, ...pipes) {
   const isPropertyOptions = isParameterDecoratorOptions(property);
   if (isPropertyOptions) {
@@ -2232,7 +2248,7 @@ function Param(property, optionsOrPipe, ...pipes) {
     schema: isOptions ? optionsOrPipe.schema : void 0
   });
 }
-var createPipesRouteParamDecorator, Request, Next, Ip, Session, Headers2;
+var createPipesRouteParamDecorator, Request, Next, Ip, Session, Headers2, Req;
 var init_route_params_decorator = __esm({
   "node_modules/@nestjs/common/decorators/http/route-params.decorator.js"() {
     init_constants2();
@@ -2255,6 +2271,7 @@ var init_route_params_decorator = __esm({
     Ip = createRouteParamDecorator(RouteParamtypes.IP);
     Session = createRouteParamDecorator(RouteParamtypes.SESSION);
     Headers2 = createRouteParamDecorator(RouteParamtypes.HEADERS);
+    Req = Request;
   }
 });
 
@@ -3623,8 +3640,8 @@ var init_is_log_level_enabled_util = __esm({
 function createRedactor(paths, censor = DEFAULT_REDACT_CENSOR) {
   const keys = /* @__PURE__ */ new Set();
   const dottedPaths = [];
-  for (const path2 of paths) {
-    const segments = path2.split(".").map((segment) => segment.trim().toLowerCase()).filter((segment) => segment.length > 0);
+  for (const path3 of paths) {
+    const segments = path3.split(".").map((segment) => segment.trim().toLowerCase()).filter((segment) => segment.length > 0);
     if (segments.length === 1) {
       keys.add(segments[0]);
     } else if (segments.length > 1) {
@@ -3635,7 +3652,7 @@ function createRedactor(paths, censor = DEFAULT_REDACT_CENSOR) {
     return void 0;
   }
   return (value) => {
-    const path2 = [];
+    const path3 = [];
     const ancestors = [];
     const isRedacted = (key) => {
       if (keys.has(key)) {
@@ -3643,11 +3660,11 @@ function createRedactor(paths, censor = DEFAULT_REDACT_CENSOR) {
       }
       return dottedPaths.some((segments) => {
         const last = segments.length - 1;
-        if (segments[last] !== key || last > path2.length) {
+        if (segments[last] !== key || last > path3.length) {
           return false;
         }
         for (let i = 1; i <= last; i++) {
-          if (segments[last - i] !== path2[path2.length - i]) {
+          if (segments[last - i] !== path3[path3.length - i]) {
             return false;
           }
         }
@@ -3662,9 +3679,9 @@ function createRedactor(paths, censor = DEFAULT_REDACT_CENSOR) {
       if (typeof propertyValue !== "object" || propertyValue === null) {
         return propertyValue;
       }
-      path2.push(normalizedKey);
+      path3.push(normalizedKey);
       const redacted = visit(propertyValue);
-      path2.pop();
+      path3.pop();
       return redacted;
     };
     const visit = (current) => {
@@ -11022,9 +11039,9 @@ var require_isObject = __commonJS({
     Object.defineProperty(exports2, "__esModule", {
       value: true
     });
-    exports2["default"] = isObject2;
+    exports2["default"] = isObject3;
     var objectConstructor = {}.constructor;
-    function isObject2(object) {
+    function isObject3(object) {
       return object !== void 0 && object !== null && object.constructor === objectConstructor;
     }
   }
@@ -23425,15 +23442,15 @@ var require_IsObject = __commonJS({
     exports2.IsObject = exports2.isObject = exports2.IS_OBJECT = void 0;
     var ValidateBy_1 = require_ValidateBy();
     exports2.IS_OBJECT = "isObject";
-    function isObject2(value) {
+    function isObject3(value) {
       return value != null && (typeof value === "object" || typeof value === "function") && !Array.isArray(value);
     }
-    exports2.isObject = isObject2;
+    exports2.isObject = isObject3;
     function IsObject(validationOptions) {
       return (0, ValidateBy_1.ValidateBy)({
         name: exports2.IS_OBJECT,
         validator: {
-          validate: (value, args) => isObject2(value),
+          validate: (value, args) => isObject3(value),
           defaultMessage: (0, ValidateBy_1.buildMessage)((eachPrefix) => eachPrefix + "$property must be an object", validationOptions)
         }
       }, validationOptions);
@@ -25253,12 +25270,12 @@ var init_validation_pipe = __esm({
       groupValidationErrors(validationErrors, parentPath) {
         const result = {};
         for (const error of validationErrors) {
-          const path2 = parentPath ? `${parentPath}.${error.property}` : error.property;
+          const path3 = parentPath ? `${parentPath}.${error.property}` : error.property;
           if (error.constraints) {
-            result[path2] = Object.values(error.constraints);
+            result[path3] = Object.values(error.constraints);
           }
           if (error.children && error.children.length) {
-            Object.assign(result, this.groupValidationErrors(error.children, path2));
+            Object.assign(result, this.groupValidationErrors(error.children, path3));
           }
         }
         return result;
@@ -29057,7 +29074,7 @@ var require_concat2 = __commonJS({
     var concatAll_1 = require_concatAll();
     var args_1 = require_args();
     var from_1 = require_from();
-    function concat() {
+    function concat2() {
       var args = [];
       for (var _i = 0; _i < arguments.length; _i++) {
         args[_i] = arguments[_i];
@@ -29067,7 +29084,7 @@ var require_concat2 = __commonJS({
         concatAll_1.concatAll()(from_1.from(__spreadArray([source], __read(args)), scheduler2)).subscribe(subscriber);
       });
     }
-    exports2.concat = concat;
+    exports2.concat = concat2;
   }
 });
 
@@ -29556,14 +29573,14 @@ var require_concat3 = __commonJS({
     var concatAll_1 = require_concatAll();
     var args_1 = require_args();
     var from_1 = require_from();
-    function concat() {
+    function concat2() {
       var args = [];
       for (var _i = 0; _i < arguments.length; _i++) {
         args[_i] = arguments[_i];
       }
       return concatAll_1.concatAll()(from_1.from(args, args_1.popScheduler(args)));
     }
-    exports2.concat = concat;
+    exports2.concat = concat2;
   }
 });
 
@@ -36690,8 +36707,8 @@ var init_base_exception_filter_context = __esm({
         })).toArray();
       }
       getFilterInstance(filter, contextId = STATIC_CONTEXT, inquirerId) {
-        const isObject2 = !!filter.catch;
-        if (isObject2) {
+        const isObject3 = !!filter.catch;
+        if (isObject3) {
           return filter;
         }
         const instanceWrapper = this.getInstanceByMetatype(filter);
@@ -36899,7 +36916,7 @@ For more common dependency resolution issues, see: https://docs.nestjs.com/faq/c
       ...messages.map((message) => `  - ${message}`),
       `Adjust route declarations or relax the 'routeConflictPolicy' option passed to NestFactory.create() to allow the application to start.`
     ].join("\n");
-    DUPLICATE_ROUTE_MESSAGE = (method, path2, firstHandlerLabel, secondHandlerLabel) => `Duplicate route: ${method} ${path2} is registered by both ${firstHandlerLabel} and ${secondHandlerLabel}.`;
+    DUPLICATE_ROUTE_MESSAGE = (method, path3, firstHandlerLabel, secondHandlerLabel) => `Duplicate route: ${method} ${path3} is registered by both ${firstHandlerLabel} and ${secondHandlerLabel}.`;
     SHADOWED_ROUTE_MESSAGE = (method, shadowedPath, shadowedHandlerLabel, winnerPath, winnerHandlerLabel) => `Route ${method} ${shadowedPath} (${shadowedHandlerLabel}) is shadowed by ${method} ${winnerPath} (${winnerHandlerLabel}). The first-registered route will match all matching requests on order-sensitive adapters.`;
     INVALID_EXCEPTION_FILTER = `Invalid exception filters (@UseFilters()).`;
   }
@@ -37144,8 +37161,8 @@ var init_guards_context_creator = __esm({
         return (0, import_iterare4.iterate)(metadata).filter((guard) => guard && (guard.name || guard.canActivate)).map((guard) => this.getGuardInstance(guard, contextId, inquirerId)).filter((guard) => !!guard && isFunction(guard.canActivate)).toArray();
       }
       getGuardInstance(metatype, contextId = STATIC_CONTEXT, inquirerId) {
-        const isObject2 = !!metatype.canActivate;
-        if (isObject2) {
+        const isObject3 = !!metatype.canActivate;
+        if (isObject3) {
           return metatype;
         }
         const instanceWrapper = this.getInstanceByMetatype(metatype);
@@ -37274,8 +37291,8 @@ var init_interceptors_context_creator = __esm({
         return (0, import_iterare5.iterate)(metadata).filter((interceptor) => interceptor && (interceptor.name || interceptor.intercept)).map((interceptor) => this.getInterceptorInstance(interceptor, contextId, inquirerId)).filter((interceptor) => interceptor ? isFunction(interceptor.intercept) : false).toArray();
       }
       getInterceptorInstance(metatype, contextId = STATIC_CONTEXT, inquirerId) {
-        const isObject2 = !!metatype.intercept;
-        if (isObject2) {
+        const isObject3 = !!metatype.intercept;
+        if (isObject3) {
           return metatype;
         }
         const instanceWrapper = this.getInstanceByMetatype(metatype);
@@ -37397,8 +37414,8 @@ var init_pipes_context_creator = __esm({
         return (0, import_iterare6.iterate)(metadata).filter((pipe) => pipe && (pipe.name || pipe.transform)).map((pipe) => this.getPipeInstance(pipe, contextId, inquirerId)).filter((pipe) => !!pipe && pipe.transform && isFunction(pipe.transform)).toArray();
       }
       getPipeInstance(pipe, contextId = STATIC_CONTEXT, inquirerId) {
-        const isObject2 = !!pipe.transform;
-        if (isObject2) {
+        const isObject3 = !!pipe.transform;
+        if (isObject3) {
           return pipe;
         }
         const instanceWrapper = this.getInstanceByMetatype(pipe);
@@ -41011,15 +41028,15 @@ var require_dist = __commonJS({
       let index = 0;
       function consumeUntil(end) {
         const output = [];
-        let path2 = "";
+        let path3 = "";
         function writePath() {
-          if (!path2)
+          if (!path3)
             return;
           output.push({
             type: "text",
-            value: encodePath(path2)
+            value: encodePath(path3)
           });
-          path2 = "";
+          path3 = "";
         }
         while (index < chars.length) {
           const value = chars[index++];
@@ -41031,7 +41048,7 @@ var require_dist = __commonJS({
             if (index === chars.length) {
               throw new PathError(`Unexpected end after \\ at index ${index}`, str);
             }
-            path2 += chars[index++];
+            path3 += chars[index++];
             continue;
           }
           if (value === ":" || value === "*") {
@@ -41075,7 +41092,7 @@ var require_dist = __commonJS({
           if (value === "}" || value === "(" || value === ")" || value === "[" || value === "]" || value === "+" || value === "?" || value === "!") {
             throw new PathError(`Unexpected ${value} at index ${index - 1}`, str);
           }
-          path2 += value;
+          path3 += value;
         }
         if (end) {
           throw new PathError(`Unexpected end at index ${index}, expected ${end}`, str);
@@ -41085,17 +41102,17 @@ var require_dist = __commonJS({
       }
       return new TokenData(consumeUntil(""), str);
     }
-    function compile(path2, options = {}) {
+    function compile(path3, options = {}) {
       const { encode = encodeURIComponent, delimiter = DEFAULT_DELIMITER } = options;
-      const data = typeof path2 === "object" ? path2 : parse(path2, options);
+      const data = typeof path3 === "object" ? path3 : parse(path3, options);
       const fn = tokensToFunction(data.tokens, delimiter, encode);
-      return function path3(params = {}) {
+      return function path4(params = {}) {
         const missing = [];
-        const path4 = fn(params, missing);
+        const path5 = fn(params, missing);
         if (missing.length) {
           throw new TypeError(`Missing parameters: ${missing.join(", ")}`);
         }
-        return path4;
+        return path5;
       };
     }
     function tokensToFunction(tokens, delimiter, encode) {
@@ -41157,9 +41174,9 @@ var require_dist = __commonJS({
         return encodeValue(value);
       };
     }
-    function match(path2, options = {}) {
+    function match(path3, options = {}) {
       const { decode: decode2 = decodeURIComponent, delimiter = DEFAULT_DELIMITER } = options;
-      const { regexp, keys } = pathToRegexp5(path2, options);
+      const { regexp, keys } = pathToRegexp5(path3, options);
       const decoders = keys.map((key) => {
         if (decode2 === false)
           return NOOP_VALUE;
@@ -41171,7 +41188,7 @@ var require_dist = __commonJS({
         const m = regexp.exec(input);
         if (!m)
           return false;
-        const path3 = m[0];
+        const path4 = m[0];
         const params = /* @__PURE__ */ Object.create(null);
         for (let i = 1; i < m.length; i++) {
           if (m[i] === void 0)
@@ -41180,21 +41197,21 @@ var require_dist = __commonJS({
           const decoder = decoders[i - 1];
           params[key.name] = decoder(m[i]);
         }
-        return { path: path3, params };
+        return { path: path4, params };
       };
     }
-    function pathToRegexp5(path2, options = {}) {
+    function pathToRegexp5(path3, options = {}) {
       const { delimiter = DEFAULT_DELIMITER, end = true, sensitive = false, trailing = true } = options;
       const keys = [];
       let source = "";
       let combinations = 0;
-      function process2(path3) {
-        if (Array.isArray(path3)) {
-          for (const p of path3)
+      function process2(path4) {
+        if (Array.isArray(path4)) {
+          for (const p of path4)
             process2(p);
           return;
         }
-        const data = typeof path3 === "object" ? path3 : parse(path3, options);
+        const data = typeof path4 === "object" ? path4 : parse(path4, options);
         flatten2(data.tokens, 0, [], (tokens) => {
           if (combinations >= 256) {
             throw new PathError("Too many path combinations", data.originalPath);
@@ -41205,7 +41222,7 @@ var require_dist = __commonJS({
           combinations++;
         });
       }
-      process2(path2);
+      process2(path3);
       let pattern = `^(?:${source})`;
       if (trailing)
         pattern += "(?:" + escape2(delimiter) + "$)?";
@@ -41394,10 +41411,10 @@ var init_legacy_route_converter = __esm({
 });
 
 // node_modules/@nestjs/core/router/utils/exclude-route.util.js
-function isRouteExcluded(excludedRoutes, path2, requestMethod) {
+function isRouteExcluded(excludedRoutes, path3, requestMethod) {
   return excludedRoutes.some((route) => {
     if (isRequestMethodAll(route.requestMethod) || route.requestMethod === requestMethod) {
-      return route.pathRegex.exec(addLeadingSlash(path2));
+      return route.pathRegex.exec(addLeadingSlash(path3));
     }
     return false;
   });
@@ -41484,19 +41501,19 @@ var init_utils5 = __esm({
     mapToExcludeRoute = (routes) => {
       return routes.map((route) => {
         const originalPath = isString(route) ? route : route.path;
-        const path2 = LegacyRouteConverter.tryConvert(originalPath);
+        const path3 = LegacyRouteConverter.tryConvert(originalPath);
         try {
           if (isString(route)) {
             return {
-              path: path2,
+              path: path3,
               requestMethod: RequestMethod.ALL,
-              pathRegex: (0, import_path_to_regexp.pathToRegexp)(addLeadingSlash(path2)).regexp
+              pathRegex: (0, import_path_to_regexp.pathToRegexp)(addLeadingSlash(path3)).regexp
             };
           }
           return {
-            path: path2,
+            path: path3,
             requestMethod: route.method,
-            pathRegex: (0, import_path_to_regexp.pathToRegexp)(addLeadingSlash(path2)).regexp
+            pathRegex: (0, import_path_to_regexp.pathToRegexp)(addLeadingSlash(path3)).regexp
           };
         } catch (e) {
           if (e instanceof TypeError) {
@@ -41924,13 +41941,13 @@ var init_route_path_factory = __esm({
         if (versionOrVersions && metadata.versioningOptions?.type === VersioningType.URI) {
           const versionPrefix = this.getVersionPrefix(metadata.versioningOptions);
           if (Array.isArray(versionOrVersions)) {
-            paths = flatten(paths.map((path2) => versionOrVersions.map((version2) => (
+            paths = flatten(paths.map((path3) => versionOrVersions.map((version2) => (
               // Version Neutral - Do not include version in URL
-              version2 === VERSION_NEUTRAL ? path2 : `${path2}/${versionPrefix}${version2}`
+              version2 === VERSION_NEUTRAL ? path3 : `${path3}/${versionPrefix}${version2}`
             ))));
           } else {
             if (versionOrVersions !== VERSION_NEUTRAL) {
-              paths = paths.map((path2) => `${path2}/${versionPrefix}${versionOrVersions}`);
+              paths = paths.map((path3) => `${path3}/${versionPrefix}${versionOrVersions}`);
             }
           }
         }
@@ -41938,14 +41955,14 @@ var init_route_path_factory = __esm({
         paths = this.appendToAllIfDefined(paths, metadata.ctrlPath);
         paths = this.appendToAllIfDefined(paths, metadata.methodPath);
         if (metadata.globalPrefix) {
-          paths = paths.map((path2) => {
-            if (this.isExcludedFromGlobalPrefix(path2, requestMethod, versionOrVersions, metadata.versioningOptions)) {
-              return path2;
+          paths = paths.map((path3) => {
+            if (this.isExcludedFromGlobalPrefix(path3, requestMethod, versionOrVersions, metadata.versioningOptions)) {
+              return path3;
             }
-            return stripEndSlash(metadata.globalPrefix || "") + path2;
+            return stripEndSlash(metadata.globalPrefix || "") + path3;
           });
         }
-        return paths.map((path2) => addLeadingSlash(path2 || "/")).map((path2) => path2 !== "/" ? stripEndSlash(path2) : path2);
+        return paths.map((path3) => addLeadingSlash(path3 || "/")).map((path3) => path3 !== "/" ? stripEndSlash(path3) : path3);
       }
       getVersion(metadata) {
         return metadata.methodVersion || metadata.controllerVersion;
@@ -41967,33 +41984,33 @@ var init_route_path_factory = __esm({
         }
         const concatPaths = (a, b) => stripEndSlash(a) + addLeadingSlash(b);
         if (Array.isArray(fragmentToAppend)) {
-          const paths2dArray = paths.map((path2) => fragmentToAppend.map((fragment) => concatPaths(path2, fragment)));
+          const paths2dArray = paths.map((path3) => fragmentToAppend.map((fragment) => concatPaths(path3, fragment)));
           return flatten(paths2dArray);
         }
-        return paths.map((path2) => concatPaths(path2, fragmentToAppend));
+        return paths.map((path3) => concatPaths(path3, fragmentToAppend));
       }
-      isExcludedFromGlobalPrefix(path2, requestMethod, versionOrVersions, versioningOptions) {
+      isExcludedFromGlobalPrefix(path3, requestMethod, versionOrVersions, versioningOptions) {
         if (isUndefined(requestMethod)) {
           return false;
         }
         const options = this.applicationConfig.getGlobalPrefixOptions();
         const excludedRoutes = options.exclude;
         if (versionOrVersions && versionOrVersions !== VERSION_NEUTRAL && versioningOptions?.type === VersioningType.URI) {
-          path2 = this.truncateVersionPrefixFromPath(path2, versionOrVersions, versioningOptions);
+          path3 = this.truncateVersionPrefixFromPath(path3, versionOrVersions, versioningOptions);
         }
-        return Array.isArray(excludedRoutes) && isRouteExcluded(excludedRoutes, path2, requestMethod);
+        return Array.isArray(excludedRoutes) && isRouteExcluded(excludedRoutes, path3, requestMethod);
       }
-      truncateVersionPrefixFromPath(path2, versionValue, versioningOptions) {
+      truncateVersionPrefixFromPath(path3, versionValue, versioningOptions) {
         if (typeof versionValue !== "string") {
           versionValue.forEach((version2) => {
             if (typeof version2 === "string") {
-              path2 = this.truncateVersionPrefixFromPath(path2, version2, versioningOptions);
+              path3 = this.truncateVersionPrefixFromPath(path3, version2, versioningOptions);
             }
           });
-          return path2;
+          return path3;
         }
         const prefix = `/${this.getVersionPrefix(versioningOptions)}${versionValue}`;
-        return path2.startsWith(prefix) ? path2.replace(prefix, "") : path2;
+        return path3.startsWith(prefix) ? path3.replace(prefix, "") : path3;
       }
     };
   }
@@ -42020,19 +42037,19 @@ var init_route_info_path_extractor = __esm({
         this.excludedGlobalPrefixRoutes = this.applicationConfig.getGlobalPrefixOptions().exclude;
         this.versioningConfig = this.applicationConfig.getVersioning();
       }
-      extractPathsFrom({ path: path2, method, version: version2 }) {
+      extractPathsFrom({ path: path3, method, version: version2 }) {
         const versionPaths = this.extractVersionPathFrom(version2);
-        if (this.isAWildcard(path2)) {
+        if (this.isAWildcard(path3)) {
           const entries = versionPaths.length > 0 ? versionPaths.map((versionPath) => [
             this.prefixPath + versionPath + "$",
-            this.prefixPath + versionPath + addLeadingSlash(path2)
-          ]).flat() : this.prefixPath ? [this.prefixPath + "$", this.prefixPath + addLeadingSlash(path2)] : [addLeadingSlash(path2)];
+            this.prefixPath + versionPath + addLeadingSlash(path3)
+          ]).flat() : this.prefixPath ? [this.prefixPath + "$", this.prefixPath + addLeadingSlash(path3)] : [addLeadingSlash(path3)];
           return Array.isArray(this.excludedGlobalPrefixRoutes) ? [
             ...entries,
             ...this.excludedGlobalPrefixRoutes.map((route) => Array.isArray(versionPaths) && versionPaths.length > 0 ? versionPaths.map((v) => v + addLeadingSlash(route.path)) : addLeadingSlash(route.path)).flat()
           ] : entries;
         }
-        return this.extractNonWildcardPathsFrom({ path: path2, method, version: version2 });
+        return this.extractNonWildcardPathsFrom({ path: path3, method, version: version2 });
       }
       extractPathFrom(route) {
         if (this.isAWildcard(route.path) && !route.version) {
@@ -42040,26 +42057,26 @@ var init_route_info_path_extractor = __esm({
         }
         return this.extractNonWildcardPathsFrom(route);
       }
-      isAWildcard(path2) {
+      isAWildcard(path3) {
         const isSimpleWildcard = ["*", "/*", "/*/", "(.*)", "/(.*)"];
-        if (isSimpleWildcard.includes(path2)) {
+        if (isSimpleWildcard.includes(path3)) {
           return true;
         }
         const wildcardRegexp = /^\/\{.*\}.*|^\/\*.*$/;
-        return wildcardRegexp.test(path2);
+        return wildcardRegexp.test(path3);
       }
-      extractNonWildcardPathsFrom({ path: path2, method, version: version2 }) {
+      extractNonWildcardPathsFrom({ path: path3, method, version: version2 }) {
         const versionPaths = this.extractVersionPathFrom(version2);
-        if (Array.isArray(this.excludedGlobalPrefixRoutes) && isRouteExcluded(this.excludedGlobalPrefixRoutes, path2, method)) {
+        if (Array.isArray(this.excludedGlobalPrefixRoutes) && isRouteExcluded(this.excludedGlobalPrefixRoutes, path3, method)) {
           if (!versionPaths.length) {
-            return [addLeadingSlash(path2)];
+            return [addLeadingSlash(path3)];
           }
-          return versionPaths.map((versionPath) => versionPath + addLeadingSlash(path2));
+          return versionPaths.map((versionPath) => versionPath + addLeadingSlash(path3));
         }
         if (!versionPaths.length) {
-          return [this.prefixPath + addLeadingSlash(path2)];
+          return [this.prefixPath + addLeadingSlash(path3)];
         }
-        return versionPaths.map((versionPath) => this.prefixPath + versionPath + addLeadingSlash(path2));
+        return versionPaths.map((versionPath) => this.prefixPath + versionPath + addLeadingSlash(path3));
       }
       extractVersionPathFrom(versionValue) {
         if (!versionValue || this.versioningConfig?.type !== VersioningType.URI)
@@ -42103,9 +42120,9 @@ var init_paths_explorer = __esm({
         }
         const requestMethod = Reflect.getMetadata(METHOD_METADATA, prototypeCallback);
         const version2 = Reflect.getMetadata(VERSION_METADATA, prototypeCallback);
-        const path2 = isString(routePath) ? [addLeadingSlash(routePath)] : routePath.map((p) => addLeadingSlash(p));
+        const path3 = isString(routePath) ? [addLeadingSlash(routePath)] : routePath.map((p) => addLeadingSlash(p));
         return {
-          path: path2,
+          path: path3,
           requestMethod,
           targetCallback: instanceCallback,
           methodName,
@@ -42271,11 +42288,11 @@ var init_routes_mapper = __esm({
         });
         return [].concat(routePath).map((routePath2) => controllerPaths.map((item) => toRouteInfo2(item, routePath2)).reduce(concatPaths, [])).reduce(concatPaths, []);
       }
-      isRouteInfo(path2, objectOrClass) {
-        return isUndefined(path2);
+      isRouteInfo(path3, objectOrClass) {
+        return isUndefined(path3);
       }
-      normalizeGlobalPath(path2) {
-        const prefix = addLeadingSlash(path2);
+      normalizeGlobalPath(path3) {
+        const prefix = addLeadingSlash(path3);
         return prefix === "/" ? "" : prefix;
       }
       getRoutePath(route) {
@@ -42496,8 +42513,8 @@ var init_middleware_module = __esm({
           return next();
         };
         const pathsToApplyMiddleware = [];
-        paths.some((path2) => path2.match(/^\/?$/)) ? pathsToApplyMiddleware.push("/") : pathsToApplyMiddleware.push(...paths);
-        pathsToApplyMiddleware.forEach((path2) => router(path2, middlewareFunction));
+        paths.some((path3) => path3.match(/^\/?$/)) ? pathsToApplyMiddleware.push("/") : pathsToApplyMiddleware.push(...paths);
+        pathsToApplyMiddleware.forEach((path3) => router(path3, middlewareFunction));
       }
       getContextId(request, isTreeDurable) {
         const contextId = ContextIdFactory.getByRequest(request);
@@ -43058,17 +43075,17 @@ var init_messages2 = __esm({
   "node_modules/@nestjs/core/helpers/messages.js"() {
     init_common();
     MODULE_INIT_MESSAGE = (text, module2) => `${module2} dependencies initialized`;
-    ROUTE_MAPPED_MESSAGE = (path2, method) => `Mapped {${path2}, ${RequestMethod[method]}} route`;
-    VERSIONED_ROUTE_MAPPED_MESSAGE = (path2, method, version2) => {
+    ROUTE_MAPPED_MESSAGE = (path3, method) => `Mapped {${path3}, ${RequestMethod[method]}} route`;
+    VERSIONED_ROUTE_MAPPED_MESSAGE = (path3, method, version2) => {
       const controllerVersions = Array.isArray(version2) ? version2 : [version2];
       const versions = controllerVersions.map((version3) => version3 === VERSION_NEUTRAL ? "Neutral" : version3).join(",");
-      return `Mapped {${path2}, ${RequestMethod[method]}} (version: ${versions}) route`;
+      return `Mapped {${path3}, ${RequestMethod[method]}} (version: ${versions}) route`;
     };
-    CONTROLLER_MAPPING_MESSAGE = (name, path2) => `${name} {${path2}}:`;
-    VERSIONED_CONTROLLER_MAPPING_MESSAGE = (name, path2, version2) => {
+    CONTROLLER_MAPPING_MESSAGE = (name, path3) => `${name} {${path3}}:`;
+    VERSIONED_CONTROLLER_MAPPING_MESSAGE = (name, path3, version2) => {
       const controllerVersions = Array.isArray(version2) ? version2 : [version2];
       const versions = controllerVersions.map((version3) => version3 === VERSION_NEUTRAL ? "Neutral" : version3).join(",");
-      return `${name} {${path2}} (version: ${versions}):`;
+      return `${name} {${path3}} (version: ${versions}):`;
     };
   }
 });
@@ -43877,14 +43894,14 @@ var init_router_explorer = __esm({
         this.applyPathsToRouterProxy(httpAdapterRef, routerPaths, instanceWrapper, moduleKey, routePathMetadata, host, options);
       }
       extractRouterPath(metatype) {
-        const path2 = Reflect.getMetadata(PATH_METADATA, metatype);
-        if (isUndefined(path2)) {
+        const path3 = Reflect.getMetadata(PATH_METADATA, metatype);
+        if (isUndefined(path3)) {
           throw new UnknownRequestMappingException(metatype);
         }
-        if (Array.isArray(path2)) {
-          return path2.map((p) => addLeadingSlash(p));
+        if (Array.isArray(path3)) {
+          return path3.map((p) => addLeadingSlash(p));
         }
-        return [addLeadingSlash(path2)];
+        return [addLeadingSlash(path3)];
       }
       applyPathsToRouterProxy(router, routeDefinitions, instanceWrapper, moduleKey, routePathMetadata, host, options = {}) {
         (routeDefinitions || []).forEach((routeDefinition) => {
@@ -43902,22 +43919,22 @@ var init_router_explorer = __esm({
         const proxy = isRequestScoped ? this.createRequestScopedHandler(instanceWrapper, requestMethod, this.container.getModuleByKey(moduleKey), moduleKey, methodName) : this.createCallbackProxy(instance, targetCallback, methodName, moduleKey, requestMethod);
         const isVersioned = (routePathMetadata.methodVersion || routePathMetadata.controllerVersion) && routePathMetadata.versioningOptions;
         let routeHandler = this.applyHostFilter(host, proxy);
-        paths.forEach((path2) => {
+        paths.forEach((path3) => {
           if (isVersioned && routePathMetadata.versioningOptions.type !== VersioningType.URI) {
             routeHandler = this.applyVersionFilter(router, routePathMetadata, routeHandler);
           }
-          routePathMetadata.methodPath = path2;
+          routePathMetadata.methodPath = path3;
           const pathsToRegister = this.routePathFactory.create(routePathMetadata, requestMethod);
-          pathsToRegister.forEach((path3) => {
-            const normalizedPath = router.normalizePath ? router.normalizePath(path3) : path3;
+          pathsToRegister.forEach((path4) => {
+            const normalizedPath = router.normalizePath ? router.normalizePath(path4) : path4;
             const entrypointDefinition = {
               type: "http-endpoint",
               methodName,
               className: instanceWrapper.name,
               classNodeId: instanceWrapper.id,
               metadata: {
-                key: path3,
-                path: path3,
+                key: path4,
+                path: path4,
                 requestMethod: RequestMethod[requestMethod],
                 methodVersion: routePathMetadata.methodVersion,
                 controllerVersion: routePathMetadata.controllerVersion
@@ -43930,7 +43947,7 @@ var init_router_explorer = __esm({
               let handler2 = routeHandler;
               if (onRouteTriggered) {
                 handler2 = (...args) => {
-                  onRouteTriggered(requestMethod, path3);
+                  onRouteTriggered(requestMethod, path4);
                   return routeHandler(...args);
                 };
               }
@@ -43943,7 +43960,7 @@ var init_router_explorer = __esm({
             onRouteResolved?.({
               method: requestMethod,
               path: normalizedPath,
-              rawPath: path3,
+              rawPath: path4,
               host,
               version: routePathMetadata.methodVersion ?? routePathMetadata.controllerVersion,
               methodVersion: routePathMetadata.methodVersion,
@@ -43959,12 +43976,12 @@ var init_router_explorer = __esm({
             ...routePathMetadata,
             versioningOptions: void 0
           }, requestMethod);
-          pathsToLog.forEach((path3) => {
+          pathsToLog.forEach((path4) => {
             if (isVersioned) {
               const version2 = this.routePathFactory.getVersion(routePathMetadata);
-              this.logger.log(VERSIONED_ROUTE_MAPPED_MESSAGE(path3, requestMethod, version2));
+              this.logger.log(VERSIONED_ROUTE_MAPPED_MESSAGE(path4, requestMethod, version2));
             } else {
-              this.logger.log(ROUTE_MAPPED_MESSAGE(path3, requestMethod));
+              this.logger.log(ROUTE_MAPPED_MESSAGE(path4, requestMethod));
             }
           });
         });
@@ -44135,26 +44152,26 @@ var init_routes_resolver = __esm({
           const routerPaths = this.routerExplorer.extractRouterPath(metatype);
           const controllerVersion = this.getVersionMetadata(metatype);
           const controllerName = metatype.name;
-          routerPaths.forEach((path2) => {
+          routerPaths.forEach((path3) => {
             const pathsToLog = this.routePathFactory.create({
-              ctrlPath: path2,
+              ctrlPath: path3,
               modulePath,
               globalPrefix
             });
             if (!controllerVersion) {
-              pathsToLog.forEach((path3) => {
-                const logMessage = CONTROLLER_MAPPING_MESSAGE(controllerName, path3);
+              pathsToLog.forEach((path4) => {
+                const logMessage = CONTROLLER_MAPPING_MESSAGE(controllerName, path4);
                 this.logger.log(logMessage);
               });
             } else {
-              pathsToLog.forEach((path3) => {
-                const logMessage = VERSIONED_CONTROLLER_MAPPING_MESSAGE(controllerName, path3, controllerVersion);
+              pathsToLog.forEach((path4) => {
+                const logMessage = VERSIONED_CONTROLLER_MAPPING_MESSAGE(controllerName, path4, controllerVersion);
                 this.logger.log(logMessage);
               });
             }
             const versioningOptions = this.applicationConfig.getVersioning();
             const routePathMetadata = {
-              ctrlPath: path2,
+              ctrlPath: path3,
               modulePath,
               globalPrefix,
               controllerVersion,
@@ -44594,8 +44611,8 @@ function toRouteInfo(route) {
   }
   return { ...route, path: addLeadingSlash(route.path) };
 }
-function compileExclusion(path2, requestMethod, logs) {
-  const converted = LegacyRouteConverter.tryConvert(path2, { logs });
+function compileExclusion(path3, requestMethod, logs) {
+  const converted = LegacyRouteConverter.tryConvert(path3, { logs });
   const normalized = converted.length > 1 ? converted.replace(/\/+$/, "") : converted;
   return {
     path: normalized,
@@ -44676,7 +44693,7 @@ var init_cross_origin_protection = __esm({
        * and versioning are final; until then nothing is excluded.
        */
       resolveExclusions(pathExtractor) {
-        this.resolvedExclusions = this.excludedRoutes.flatMap((route) => pathExtractor.extractPathFrom(route).map((path2) => compileExclusion(path2, route.method, true)));
+        this.resolvedExclusions = this.excludedRoutes.flatMap((route) => pathExtractor.extractPathFrom(route).map((path3) => compileExclusion(path3, route.method, true)));
       }
       /**
        * Returns a `ForbiddenException` when the request must be rejected, and
@@ -45881,7 +45898,7 @@ var require_has_flag = __commonJS({
 var require_supports_color = __commonJS({
   "node_modules/supports-color/index.js"(exports2, module2) {
     "use strict";
-    var os = require("os");
+    var os2 = require("os");
     var tty = require("tty");
     var hasFlag = require_has_flag();
     var { env } = process;
@@ -45929,7 +45946,7 @@ var require_supports_color = __commonJS({
         return min;
       }
       if (process.platform === "win32") {
-        const osRelease = os.release().split(".");
+        const osRelease = os2.release().split(".");
         if (Number(osRelease[0]) >= 10 && Number(osRelease[2]) >= 10586) {
           return Number(osRelease[2]) >= 14931 ? 3 : 2;
         }
@@ -60714,11 +60731,11 @@ var require_mime_types = __commonJS({
       }
       return exts[0];
     }
-    function lookup(path2) {
-      if (!path2 || typeof path2 !== "string") {
+    function lookup(path3) {
+      if (!path3 || typeof path3 !== "string") {
         return false;
       }
-      var extension2 = extname("x." + path2).toLowerCase().slice(1);
+      var extension2 = extname("x." + path3).toLowerCase().slice(1);
       if (!extension2) {
         return false;
       }
@@ -64399,13 +64416,13 @@ var require_view = __commonJS({
   "node_modules/express/lib/view.js"(exports2, module2) {
     "use strict";
     var debug = require_src()("express:view");
-    var path2 = require("node:path");
-    var fs2 = require("node:fs");
-    var dirname = path2.dirname;
-    var basename = path2.basename;
-    var extname = path2.extname;
-    var join2 = path2.join;
-    var resolve = path2.resolve;
+    var path3 = require("node:path");
+    var fs3 = require("node:fs");
+    var dirname2 = path3.dirname;
+    var basename = path3.basename;
+    var extname = path3.extname;
+    var join3 = path3.join;
+    var resolve = path3.resolve;
     module2.exports = View;
     function View(name, options) {
       var opts = options || {};
@@ -64434,17 +64451,17 @@ var require_view = __commonJS({
       this.path = this.lookup(fileName);
     }
     View.prototype.lookup = function lookup(name) {
-      var path3;
+      var path4;
       var roots = [].concat(this.root);
       debug('lookup "%s"', name);
-      for (var i = 0; i < roots.length && !path3; i++) {
+      for (var i = 0; i < roots.length && !path4; i++) {
         var root = roots[i];
         var loc = resolve(root, name);
-        var dir = dirname(loc);
+        var dir = dirname2(loc);
         var file = basename(loc);
-        path3 = this.resolve(dir, file);
+        path4 = this.resolve(dir, file);
       }
-      return path3;
+      return path4;
     };
     View.prototype.render = function render2(options, callback) {
       var sync = true;
@@ -64466,21 +64483,21 @@ var require_view = __commonJS({
     };
     View.prototype.resolve = function resolve2(dir, file) {
       var ext = this.ext;
-      var path3 = join2(dir, file);
-      var stat = tryStat(path3);
+      var path4 = join3(dir, file);
+      var stat = tryStat(path4);
       if (stat && stat.isFile()) {
-        return path3;
+        return path4;
       }
-      path3 = join2(dir, basename(file, ext), "index" + ext);
-      stat = tryStat(path3);
+      path4 = join3(dir, basename(file, ext), "index" + ext);
+      stat = tryStat(path4);
       if (stat && stat.isFile()) {
-        return path3;
+        return path4;
       }
     };
-    function tryStat(path3) {
-      debug('stat "%s"', path3);
+    function tryStat(path4) {
+      debug('stat "%s"', path4);
       try {
-        return fs2.statSync(path3);
+        return fs3.statSync(path4);
       } catch (e) {
         return void 0;
       }
@@ -64597,14 +64614,14 @@ var require_etag = __commonJS({
   "node_modules/etag/index.js"(exports2, module2) {
     "use strict";
     module2.exports = etag;
-    var crypto2 = require("crypto");
+    var crypto4 = require("crypto");
     var Stats = require("fs").Stats;
     var toString2 = Object.prototype.toString;
     function entitytag(entity) {
       if (entity.length === 0) {
         return '"0-2jmj7l5rSw0yVb/vlWAYkK/YBwk"';
       }
-      var hash2 = crypto2.createHash("sha1").update(entity, "utf8").digest("base64").substring(0, 27);
+      var hash2 = crypto4.createHash("sha1").update(entity, "utf8").digest("base64").substring(0, 27);
       var len = typeof entity === "string" ? Buffer.byteLength(entity, "utf8") : entity.length;
       return '"' + len.toString(16) + "-" + hash2 + '"';
     }
@@ -65701,18 +65718,18 @@ var require_layer = __commonJS({
     var TRAILING_SLASH_REGEXP = /\/+$/;
     var MATCHING_GROUP_REGEXP = /\((?:\?<(.*?)>)?(?!\?)/g;
     module2.exports = Layer;
-    function Layer(path2, options, fn) {
+    function Layer(path3, options, fn) {
       if (!(this instanceof Layer)) {
-        return new Layer(path2, options, fn);
+        return new Layer(path3, options, fn);
       }
-      debug("new %o", path2);
+      debug("new %o", path3);
       const opts = options || {};
       this.handle = fn;
       this.keys = [];
       this.name = fn.name || "<anonymous>";
       this.params = void 0;
       this.path = void 0;
-      this.slash = path2 === "/" && opts.end === false;
+      this.slash = path3 === "/" && opts.end === false;
       function matcher(_path) {
         if (_path instanceof RegExp) {
           const keys = [];
@@ -65751,7 +65768,7 @@ var require_layer = __commonJS({
           decode: decodeParam
         });
       }
-      this.matchers = Array.isArray(path2) ? path2.map(matcher) : [matcher(path2)];
+      this.matchers = Array.isArray(path3) ? path3.map(matcher) : [matcher(path3)];
     }
     Layer.prototype.handleError = function handleError(error, req, res, next) {
       const fn = this.handle;
@@ -65791,9 +65808,9 @@ var require_layer = __commonJS({
         next(err);
       }
     };
-    Layer.prototype.match = function match(path2) {
+    Layer.prototype.match = function match(path3) {
       let match2;
-      if (path2 != null) {
+      if (path3 != null) {
         if (this.slash) {
           this.params = {};
           this.path = "";
@@ -65801,7 +65818,7 @@ var require_layer = __commonJS({
         }
         let i = 0;
         while (!match2 && i < this.matchers.length) {
-          match2 = this.matchers[i](path2);
+          match2 = this.matchers[i](path3);
           i++;
         }
       }
@@ -65829,13 +65846,13 @@ var require_layer = __commonJS({
         throw err;
       }
     }
-    function loosen(path2) {
-      if (path2 instanceof RegExp || path2 === "/") {
-        return path2;
+    function loosen(path3) {
+      if (path3 instanceof RegExp || path3 === "/") {
+        return path3;
       }
-      return Array.isArray(path2) ? path2.map(function(p) {
+      return Array.isArray(path3) ? path3.map(function(p) {
         return loosen(p);
-      }) : String(path2).replace(TRAILING_SLASH_REGEXP, "");
+      }) : String(path3).replace(TRAILING_SLASH_REGEXP, "");
     }
   }
 });
@@ -65851,9 +65868,9 @@ var require_route = __commonJS({
     var flatten2 = Array.prototype.flat;
     var methods = METHODS.map((method) => method.toLowerCase());
     module2.exports = Route;
-    function Route(path2) {
-      debug("new %o", path2);
-      this.path = path2;
+    function Route(path3) {
+      debug("new %o", path3);
+      this.path = path3;
       this.stack = [];
       this.methods = /* @__PURE__ */ Object.create(null);
     }
@@ -66061,8 +66078,8 @@ var require_router = __commonJS({
         if (++sync > 100) {
           return setImmediate(next, err);
         }
-        const path2 = getPathname(req);
-        if (path2 == null) {
+        const path3 = getPathname(req);
+        if (path3 == null) {
           return done(layerError);
         }
         let layer;
@@ -66070,7 +66087,7 @@ var require_router = __commonJS({
         let route;
         while (match !== true && idx < stack.length) {
           layer = stack[idx++];
-          match = matchLayer(layer, path2);
+          match = matchLayer(layer, path3);
           route = layer.route;
           if (typeof match !== "boolean") {
             layerError = layerError || match;
@@ -66108,18 +66125,18 @@ var require_router = __commonJS({
           } else if (route) {
             layer.handleRequest(req, res, next);
           } else {
-            trimPrefix(layer, layerError, layerPath, path2);
+            trimPrefix(layer, layerError, layerPath, path3);
           }
           sync = 0;
         });
       }
-      function trimPrefix(layer, layerError, layerPath, path2) {
+      function trimPrefix(layer, layerError, layerPath, path3) {
         if (layerPath.length !== 0) {
-          if (layerPath !== path2.substring(0, layerPath.length)) {
+          if (layerPath !== path3.substring(0, layerPath.length)) {
             next(layerError);
             return;
           }
-          const c = path2[layerPath.length];
+          const c = path3[layerPath.length];
           if (c && c !== "/") {
             next(layerError);
             return;
@@ -66143,7 +66160,7 @@ var require_router = __commonJS({
     };
     Router.prototype.use = function use(handler2) {
       let offset = 0;
-      let path2 = "/";
+      let path3 = "/";
       if (typeof handler2 !== "function") {
         let arg = handler2;
         while (Array.isArray(arg) && arg.length !== 0) {
@@ -66151,7 +66168,7 @@ var require_router = __commonJS({
         }
         if (typeof arg !== "function") {
           offset = 1;
-          path2 = handler2;
+          path3 = handler2;
         }
       }
       const callbacks = flatten2.call(slice.call(arguments, offset), Infinity);
@@ -66163,8 +66180,8 @@ var require_router = __commonJS({
         if (typeof fn !== "function") {
           throw new TypeError("argument handler must be a function");
         }
-        debug("use %o %s", path2, fn.name || "<anonymous>");
-        const layer = new Layer(path2, {
+        debug("use %o %s", path3, fn.name || "<anonymous>");
+        const layer = new Layer(path3, {
           sensitive: this.caseSensitive,
           strict: false,
           end: false
@@ -66174,9 +66191,9 @@ var require_router = __commonJS({
       }
       return this;
     };
-    Router.prototype.route = function route(path2) {
-      const route2 = new Route(path2);
-      const layer = new Layer(path2, {
+    Router.prototype.route = function route(path3) {
+      const route2 = new Route(path3);
+      const layer = new Layer(path3, {
         sensitive: this.caseSensitive,
         strict: this.strict,
         end: true
@@ -66189,8 +66206,8 @@ var require_router = __commonJS({
       return route2;
     };
     methods.concat("all").forEach(function(method) {
-      Router.prototype[method] = function(path2) {
-        const route = this.route(path2);
+      Router.prototype[method] = function(path3) {
+        const route = this.route(path3);
         route[method].apply(route, slice.call(arguments, 1));
         return this;
       };
@@ -66219,9 +66236,9 @@ var require_router = __commonJS({
       const fqdnIndex = url.substring(0, pathLength).indexOf("://");
       return fqdnIndex !== -1 ? url.substring(0, url.indexOf("/", 3 + fqdnIndex)) : void 0;
     }
-    function matchLayer(layer, path2) {
+    function matchLayer(layer, path3) {
       try {
-        return layer.match(path2);
+        return layer.match(path3);
       } catch (err) {
         return err;
       }
@@ -66365,7 +66382,7 @@ var require_application = __commonJS({
     var finalhandler = require_finalhandler();
     var debug = require_src()("express:application");
     var View = require_view();
-    var http2 = require("node:http");
+    var http3 = require("node:http");
     var methods = require_utils6().methods;
     var compileETag = require_utils6().compileETag;
     var compileQueryParser = require_utils6().compileQueryParser;
@@ -66449,7 +66466,7 @@ var require_application = __commonJS({
     };
     app.use = function use(fn) {
       var offset = 0;
-      var path2 = "/";
+      var path3 = "/";
       if (typeof fn !== "function") {
         var arg = fn;
         while (Array.isArray(arg) && arg.length !== 0) {
@@ -66457,7 +66474,7 @@ var require_application = __commonJS({
         }
         if (typeof arg !== "function") {
           offset = 1;
-          path2 = fn;
+          path3 = fn;
         }
       }
       var fns = flatten2.call(slice.call(arguments, offset), Infinity);
@@ -66467,12 +66484,12 @@ var require_application = __commonJS({
       var router = this.router;
       fns.forEach(function(fn2) {
         if (!fn2 || !fn2.handle || !fn2.set) {
-          return router.use(path2, fn2);
+          return router.use(path3, fn2);
         }
-        debug(".use app under %s", path2);
-        fn2.mountpath = path2;
+        debug(".use app under %s", path3);
+        fn2.mountpath = path3;
         fn2.parent = this;
-        router.use(path2, function mounted_app(req, res, next) {
+        router.use(path3, function mounted_app(req, res, next) {
           var orig = req.app;
           fn2.handle(req, res, function(err) {
             Object.setPrototypeOf(req, orig.request);
@@ -66484,8 +66501,8 @@ var require_application = __commonJS({
       }, this);
       return this;
     };
-    app.route = function route(path2) {
-      return this.router.route(path2);
+    app.route = function route(path3) {
+      return this.router.route(path3);
     };
     app.engine = function engine(ext, fn) {
       if (typeof fn !== "function") {
@@ -66528,7 +66545,7 @@ var require_application = __commonJS({
       }
       return this;
     };
-    app.path = function path2() {
+    app.path = function path3() {
       return this.parent ? this.parent.path() + this.mountpath : "";
     };
     app.enabled = function enabled(setting) {
@@ -66544,17 +66561,17 @@ var require_application = __commonJS({
       return this.set(setting, false);
     };
     methods.forEach(function(method) {
-      app[method] = function(path2) {
+      app[method] = function(path3) {
         if (method === "get" && arguments.length === 1) {
-          return this.set(path2);
+          return this.set(path3);
         }
-        var route = this.route(path2);
+        var route = this.route(path3);
         route[method].apply(route, slice.call(arguments, 1));
         return this;
       };
     });
-    app.all = function all(path2) {
-      var route = this.route(path2);
+    app.all = function all(path3) {
+      var route = this.route(path3);
       var args = slice.call(arguments, 1);
       for (var i = 0; i < methods.length; i++) {
         route[methods[i]].apply(route, args);
@@ -66598,7 +66615,7 @@ var require_application = __commonJS({
       tryRender(view, renderOptions, done);
     };
     app.listen = function listen() {
-      var server2 = http2.createServer(this);
+      var server2 = http3.createServer(this);
       var args = slice.call(arguments);
       if (typeof args[args.length - 1] === "function") {
         var done = args[args.length - 1] = once(args[args.length - 1]);
@@ -67448,12 +67465,12 @@ var require_request = __commonJS({
     var accepts = require_accepts();
     var isIP = require("node:net").isIP;
     var typeis = require_type_is();
-    var http2 = require("node:http");
+    var http3 = require("node:http");
     var fresh = require_fresh();
     var parseRange = require_range_parser();
     var parse = require_parseurl();
     var proxyaddr = require_proxy_addr();
-    var req = Object.create(http2.IncomingMessage.prototype);
+    var req = Object.create(http3.IncomingMessage.prototype);
     module2.exports = req;
     req.get = req.header = function header(name) {
       if (!name) {
@@ -67539,7 +67556,7 @@ var require_request = __commonJS({
       var subdomains2 = !isIP(hostname) ? hostname.split(".").reverse() : [hostname];
       return subdomains2.slice(offset);
     });
-    defineGetter(req, "path", function path2() {
+    defineGetter(req, "path", function path3() {
       return parse(this).pathname;
     });
     defineGetter(req, "host", function host() {
@@ -67750,8 +67767,8 @@ var require_content_disposition = __commonJS({
       this.type = type;
       this.parameters = parameters;
     }
-    function basename(path2) {
-      const normalized = path2.replaceAll("\\", "/");
+    function basename(path3) {
+      const normalized = path3.replaceAll("\\", "/");
       let end = normalized.length;
       while (end > 0 && normalized[end - 1] === "/") {
         end--;
@@ -67801,17 +67818,17 @@ var require_content_disposition = __commonJS({
 // node_modules/cookie-signature/index.js
 var require_cookie_signature = __commonJS({
   "node_modules/cookie-signature/index.js"(exports2) {
-    var crypto2 = require("crypto");
+    var crypto4 = require("crypto");
     exports2.sign = function(val, secret) {
       if ("string" != typeof val) throw new TypeError("Cookie value must be provided as a string.");
       if (null == secret) throw new TypeError("Secret key must be provided.");
-      return val + "." + crypto2.createHmac("sha256", secret).update(val).digest("base64").replace(/\=+$/, "");
+      return val + "." + crypto4.createHmac("sha256", secret).update(val).digest("base64").replace(/\=+$/, "");
     };
     exports2.unsign = function(input, secret) {
       if ("string" != typeof input) throw new TypeError("Signed cookie string must be provided.");
       if (null == secret) throw new TypeError("Secret key must be provided.");
       var tentativeValue = input.slice(0, input.lastIndexOf(".")), expectedInput = exports2.sign(tentativeValue, secret), expectedBuffer = Buffer.from(expectedInput), inputBuffer = Buffer.from(input);
-      return expectedBuffer.length === inputBuffer.length && crypto2.timingSafeEqual(expectedBuffer, inputBuffer) ? tentativeValue : false;
+      return expectedBuffer.length === inputBuffer.length && crypto4.timingSafeEqual(expectedBuffer, inputBuffer) ? tentativeValue : false;
     };
   }
 });
@@ -67992,32 +68009,32 @@ var require_send = __commonJS({
     var escapeHtml2 = require_escape_html();
     var etag = require_etag();
     var fresh = require_fresh();
-    var fs2 = require("fs");
+    var fs3 = require("fs");
     var mime = require_mime_types();
     var ms = require_ms();
     var onFinished = require_on_finished();
     var parseRange = require_range_parser();
-    var path2 = require("path");
+    var path3 = require("path");
     var statuses = require_statuses();
     var Stream = require("stream");
     var util2 = require("util");
-    var extname = path2.extname;
-    var join2 = path2.join;
-    var normalize = path2.normalize;
-    var resolve = path2.resolve;
-    var sep = path2.sep;
+    var extname = path3.extname;
+    var join3 = path3.join;
+    var normalize = path3.normalize;
+    var resolve = path3.resolve;
+    var sep = path3.sep;
     var BYTES_RANGE_REGEXP = /^ *bytes=/;
     var MAX_MAXAGE = 60 * 60 * 24 * 365 * 1e3;
     var UP_PATH_REGEXP = /(?:^|[\\/])\.\.(?:[\\/]|$)/;
     module2.exports = send;
-    function send(req, path3, options) {
-      return new SendStream(req, path3, options);
+    function send(req, path4, options) {
+      return new SendStream(req, path4, options);
     }
-    function SendStream(req, path3, options) {
+    function SendStream(req, path4, options) {
       Stream.call(this);
       var opts = options || {};
       this.options = opts;
-      this.path = path3;
+      this.path = path4;
       this.req = req;
       this._acceptRanges = opts.acceptRanges !== void 0 ? Boolean(opts.acceptRanges) : true;
       this._cacheControl = opts.cacheControl !== void 0 ? Boolean(opts.cacheControl) : true;
@@ -68131,10 +68148,10 @@ var require_send = __commonJS({
       var lastModified = this.res.getHeader("Last-Modified");
       return parseHttpDate(lastModified) <= parseHttpDate(ifRange);
     };
-    SendStream.prototype.redirect = function redirect(path3) {
+    SendStream.prototype.redirect = function redirect(path4) {
       var res = this.res;
       if (hasListeners(this, "directory")) {
-        this.emit("directory", res, path3);
+        this.emit("directory", res, path4);
         return;
       }
       if (this.hasTrailingSlash()) {
@@ -68154,38 +68171,38 @@ var require_send = __commonJS({
     SendStream.prototype.pipe = function pipe(res) {
       var root = this._root;
       this.res = res;
-      var path3 = decode2(this.path);
-      if (path3 === -1) {
+      var path4 = decode2(this.path);
+      if (path4 === -1) {
         this.error(400);
         return res;
       }
-      if (~path3.indexOf("\0")) {
+      if (~path4.indexOf("\0")) {
         this.error(400);
         return res;
       }
       var parts;
       if (root !== null) {
-        if (path3) {
-          path3 = normalize("." + sep + path3);
+        if (path4) {
+          path4 = normalize("." + sep + path4);
         }
-        if (UP_PATH_REGEXP.test(path3)) {
-          debug('malicious path "%s"', path3);
+        if (UP_PATH_REGEXP.test(path4)) {
+          debug('malicious path "%s"', path4);
           this.error(403);
           return res;
         }
-        parts = path3.split(sep);
-        path3 = normalize(join2(root, path3));
+        parts = path4.split(sep);
+        path4 = normalize(join3(root, path4));
       } else {
-        if (UP_PATH_REGEXP.test(path3)) {
-          debug('malicious path "%s"', path3);
+        if (UP_PATH_REGEXP.test(path4)) {
+          debug('malicious path "%s"', path4);
           this.error(403);
           return res;
         }
-        parts = normalize(path3).split(sep);
-        path3 = resolve(path3);
+        parts = normalize(path4).split(sep);
+        path4 = resolve(path4);
       }
       if (containsDotFile(parts)) {
-        debug('%s dotfile "%s"', this._dotfiles, path3);
+        debug('%s dotfile "%s"', this._dotfiles, path4);
         switch (this._dotfiles) {
           case "allow":
             break;
@@ -68199,13 +68216,13 @@ var require_send = __commonJS({
         }
       }
       if (this._index.length && this.hasTrailingSlash()) {
-        this.sendIndex(path3);
+        this.sendIndex(path4);
         return res;
       }
-      this.sendFile(path3);
+      this.sendFile(path4);
       return res;
     };
-    SendStream.prototype.send = function send2(path3, stat) {
+    SendStream.prototype.send = function send2(path4, stat) {
       var len = stat.size;
       var options = this.options;
       var opts = {};
@@ -68217,9 +68234,9 @@ var require_send = __commonJS({
         this.headersAlreadySent();
         return;
       }
-      debug('pipe "%s"', path3);
-      this.setHeader(path3, stat);
-      this.type(path3);
+      debug('pipe "%s"', path4);
+      this.setHeader(path4, stat);
+      this.type(path4);
       if (this.isConditionalGET()) {
         if (this.isPreconditionFailure()) {
           this.error(412);
@@ -68268,30 +68285,30 @@ var require_send = __commonJS({
         res.end();
         return;
       }
-      this.stream(path3, opts);
+      this.stream(path4, opts);
     };
-    SendStream.prototype.sendFile = function sendFile(path3) {
+    SendStream.prototype.sendFile = function sendFile(path4) {
       var i = 0;
       var self2 = this;
-      debug('stat "%s"', path3);
-      fs2.stat(path3, function onstat(err, stat) {
-        var pathEndsWithSep = path3[path3.length - 1] === sep;
-        if (err && err.code === "ENOENT" && !extname(path3) && !pathEndsWithSep) {
+      debug('stat "%s"', path4);
+      fs3.stat(path4, function onstat(err, stat) {
+        var pathEndsWithSep = path4[path4.length - 1] === sep;
+        if (err && err.code === "ENOENT" && !extname(path4) && !pathEndsWithSep) {
           return next(err);
         }
         if (err) return self2.onStatError(err);
-        if (stat.isDirectory()) return self2.redirect(path3);
+        if (stat.isDirectory()) return self2.redirect(path4);
         if (pathEndsWithSep) return self2.error(404);
-        self2.emit("file", path3, stat);
-        self2.send(path3, stat);
+        self2.emit("file", path4, stat);
+        self2.send(path4, stat);
       });
       function next(err) {
         if (self2._extensions.length <= i) {
           return err ? self2.onStatError(err) : self2.error(404);
         }
-        var p = path3 + "." + self2._extensions[i++];
+        var p = path4 + "." + self2._extensions[i++];
         debug('stat "%s"', p);
-        fs2.stat(p, function(err2, stat) {
+        fs3.stat(p, function(err2, stat) {
           if (err2) return next(err2);
           if (stat.isDirectory()) return next();
           self2.emit("file", p, stat);
@@ -68299,7 +68316,7 @@ var require_send = __commonJS({
         });
       }
     };
-    SendStream.prototype.sendIndex = function sendIndex(path3) {
+    SendStream.prototype.sendIndex = function sendIndex(path4) {
       var i = -1;
       var self2 = this;
       function next(err) {
@@ -68307,9 +68324,9 @@ var require_send = __commonJS({
           if (err) return self2.onStatError(err);
           return self2.error(404);
         }
-        var p = join2(path3, self2._index[i]);
+        var p = join3(path4, self2._index[i]);
         debug('stat "%s"', p);
-        fs2.stat(p, function(err2, stat) {
+        fs3.stat(p, function(err2, stat) {
           if (err2) return next(err2);
           if (stat.isDirectory()) return next();
           self2.emit("file", p, stat);
@@ -68318,10 +68335,10 @@ var require_send = __commonJS({
       }
       next();
     };
-    SendStream.prototype.stream = function stream(path3, options) {
+    SendStream.prototype.stream = function stream(path4, options) {
       var self2 = this;
       var res = this.res;
-      var stream2 = fs2.createReadStream(path3, options);
+      var stream2 = fs3.createReadStream(path4, options);
       this.emit("stream", stream2);
       stream2.pipe(res);
       function cleanup() {
@@ -68336,17 +68353,17 @@ var require_send = __commonJS({
         self2.emit("end");
       });
     };
-    SendStream.prototype.type = function type(path3) {
+    SendStream.prototype.type = function type(path4) {
       var res = this.res;
       if (res.getHeader("Content-Type")) return;
-      var ext = extname(path3);
+      var ext = extname(path4);
       var type2 = mime.contentType(ext) || "application/octet-stream";
       debug("content-type %s", type2);
       res.setHeader("Content-Type", type2);
     };
-    SendStream.prototype.setHeader = function setHeader(path3, stat) {
+    SendStream.prototype.setHeader = function setHeader(path4, stat) {
       var res = this.res;
-      this.emit("headers", res, path3, stat);
+      this.emit("headers", res, path4, stat);
       if (this._acceptRanges && !res.getHeader("Accept-Ranges")) {
         debug("accept ranges");
         res.setHeader("Accept-Ranges", "bytes");
@@ -68404,9 +68421,9 @@ var require_send = __commonJS({
       }
       return err instanceof Error ? createError(status, err, { expose: false }) : createError(status, err);
     }
-    function decode2(path3) {
+    function decode2(path4) {
       try {
-        return decodeURIComponent(path3);
+        return decodeURIComponent(path4);
       } catch (err) {
         return -1;
       }
@@ -68474,10 +68491,10 @@ var require_response = __commonJS({
     var deprecate = require_depd()("express");
     var encodeUrl = require_encodeurl();
     var escapeHtml2 = require_escape_html();
-    var http2 = require("node:http");
+    var http3 = require("node:http");
     var onFinished = require_on_finished();
     var mime = require_mime_types();
-    var path2 = require("node:path");
+    var path3 = require("node:path");
     var pathIsAbsolute = require("node:path").isAbsolute;
     var statuses = require_statuses();
     var sign = require_cookie_signature().sign;
@@ -68486,11 +68503,11 @@ var require_response = __commonJS({
     var setCharset = require_utils6().setCharset;
     var cookie = require_cookie();
     var send = require_send();
-    var extname = path2.extname;
-    var resolve = path2.resolve;
+    var extname = path3.extname;
+    var resolve = path3.resolve;
     var vary = require_vary();
     var { Buffer: Buffer2 } = require("node:buffer");
-    var res = Object.create(http2.ServerResponse.prototype);
+    var res = Object.create(http3.ServerResponse.prototype);
     module2.exports = res;
     res.status = function status(code) {
       if (!Number.isInteger(code)) {
@@ -68632,26 +68649,26 @@ var require_response = __commonJS({
       this.type("txt");
       return this.send(body);
     };
-    res.sendFile = function sendFile(path3, options, callback) {
+    res.sendFile = function sendFile(path4, options, callback) {
       var done = callback;
       var req = this.req;
       var res2 = this;
       var next = req.next;
       var opts = options || {};
-      if (!path3) {
+      if (!path4) {
         throw new TypeError("path argument is required to res.sendFile");
       }
-      if (typeof path3 !== "string") {
+      if (typeof path4 !== "string") {
         throw new TypeError("path must be a string to res.sendFile");
       }
       if (typeof options === "function") {
         done = options;
         opts = {};
       }
-      if (!opts.root && !pathIsAbsolute(path3)) {
+      if (!opts.root && !pathIsAbsolute(path4)) {
         throw new TypeError("path must be absolute or specify root to res.sendFile");
       }
-      var pathname = encodeURI(path3);
+      var pathname = encodeURI(path4);
       opts.etag = this.app.enabled("etag");
       var file = send(req, pathname, opts);
       sendfile(res2, file, opts, function(err) {
@@ -68662,7 +68679,7 @@ var require_response = __commonJS({
         }
       });
     };
-    res.download = function download(path3, filename, options, callback) {
+    res.download = function download(path4, filename, options, callback) {
       var done = callback;
       var name = filename;
       var opts = options || null;
@@ -68679,7 +68696,7 @@ var require_response = __commonJS({
         opts = filename;
       }
       var headers = {
-        "Content-Disposition": contentDisposition(name || path3)
+        "Content-Disposition": contentDisposition(name || path4)
       };
       if (opts && opts.headers) {
         var keys = Object.keys(opts.headers);
@@ -68692,7 +68709,7 @@ var require_response = __commonJS({
       }
       opts = Object.create(opts);
       opts.headers = headers;
-      var fullPath = !opts.root ? resolve(path3) : path3;
+      var fullPath = !opts.root ? resolve(path4) : path4;
       return this.sendFile(fullPath, opts, done);
     };
     res.contentType = res.type = function contentType(type) {
@@ -68974,11 +68991,11 @@ var require_serve_static = __commonJS({
         }
         var forwardError = !fallthrough;
         var originalUrl = parseUrl.original(req);
-        var path2 = parseUrl(req).pathname;
-        if (path2 === "/" && originalUrl.pathname.substr(-1) !== "/") {
-          path2 = "";
+        var path3 = parseUrl(req).pathname;
+        if (path3 === "/" && originalUrl.pathname.substr(-1) !== "/") {
+          path3 = "";
         }
-        var stream = send(req, path2, opts);
+        var stream = send(req, path3, opts);
         stream.on("directory", onDirectory);
         if (setHeaders) {
           stream.on("headers", setHeaders);
@@ -69042,7 +69059,7 @@ var require_express = __commonJS({
   "node_modules/express/lib/express.js"(exports2, module2) {
     "use strict";
     var bodyParser = require_body_parser();
-    var EventEmitter = require("node:events").EventEmitter;
+    var EventEmitter2 = require("node:events").EventEmitter;
     var mixin2 = require_merge_descriptors();
     var proto = require_application();
     var Router = require_router();
@@ -69053,7 +69070,7 @@ var require_express = __commonJS({
       var app = function(req2, res2, next) {
         app.handle(req2, res2, next);
       };
-      mixin2(app, EventEmitter.prototype, false);
+      mixin2(app, EventEmitter2.prototype, false);
       mixin2(app, proto, false);
       app.request = Object.create(req, {
         app: { configurable: true, enumerable: true, writable: true, value: app }
@@ -70000,9 +70017,9 @@ var init_express_adapter = __esm({
           return this.use(normalizedPrefix, router);
         }
         return this.use((req, res, next) => {
-          const path2 = req.originalUrl.split(/[?#]/)[0];
+          const path3 = req.originalUrl.split(/[?#]/)[0];
           for (const registeredPrefix of this.registeredPrefixes) {
-            if (path2 === registeredPrefix || path2.startsWith(`${registeredPrefix}/`)) {
+            if (path3 === registeredPrefix || path3.startsWith(`${registeredPrefix}/`)) {
               return next();
             }
           }
@@ -70021,14 +70038,14 @@ var init_express_adapter = __esm({
       appendHeader(response, name, value) {
         return response.append(name, value);
       }
-      normalizePath(path2) {
+      normalizePath(path3) {
         try {
-          const convertedPath = LegacyRouteConverter.tryConvert(path2);
+          const convertedPath = LegacyRouteConverter.tryConvert(path3);
           (0, import_path_to_regexp4.pathToRegexp)(convertedPath);
           return convertedPath;
         } catch (e) {
           if (e instanceof TypeError) {
-            LegacyRouteConverter.printError(path2);
+            LegacyRouteConverter.printError(path3);
           }
           throw e;
         }
@@ -70059,14 +70076,14 @@ var init_express_adapter = __esm({
       engine(...args) {
         return this.instance.engine(...args);
       }
-      useStaticAssets(path2, options) {
+      useStaticAssets(path3, options) {
         if (options && options.prefix) {
-          return this.use(options.prefix, import_express.default.static(path2, options));
+          return this.use(options.prefix, import_express.default.static(path3, options));
         }
-        return this.use(import_express.default.static(path2, options));
+        return this.use(import_express.default.static(path3, options));
       }
-      setBaseViewsDir(path2) {
-        return this.set("views", path2);
+      setBaseViewsDir(path3) {
+        return this.set("views", path3);
       }
       setViewEngine(engine) {
         return this.set("view engine", engine);
@@ -70084,13 +70101,13 @@ var init_express_adapter = __esm({
         return this.use((0, import_cors.default)(options));
       }
       createMiddlewareFactory(requestMethod) {
-        return (path2, callback) => {
+        return (path3, callback) => {
           try {
-            const convertedPath = LegacyRouteConverter.tryConvert(path2);
+            const convertedPath = LegacyRouteConverter.tryConvert(path3);
             return this.routerMethodFactory.get(this.instance, requestMethod).call(this.instance, convertedPath, callback);
           } catch (e) {
             if (e instanceof TypeError) {
-              LegacyRouteConverter.printError(path2);
+              LegacyRouteConverter.printError(path3);
             }
             throw e;
           }
@@ -79009,11 +79026,11 @@ var require_mime_types2 = __commonJS({
       }
       return exts[0];
     }
-    function lookup(path2) {
-      if (!path2 || typeof path2 !== "string") {
+    function lookup(path3) {
+      if (!path3 || typeof path3 !== "string") {
         return false;
       }
-      var extension2 = extname("x." + path2).toLowerCase().substr(1);
+      var extension2 = extname("x." + path3).toLowerCase().substr(1);
       if (!extension2) {
         return false;
       }
@@ -79521,18 +79538,18 @@ var require_utils7 = __commonJS({
       if (decode2)
         return decode2(data, hint);
     }
-    function basename(path2) {
-      if (typeof path2 !== "string")
+    function basename(path3) {
+      if (typeof path3 !== "string")
         return "";
-      for (let i = path2.length - 1; i >= 0; --i) {
-        switch (path2.charCodeAt(i)) {
+      for (let i = path3.length - 1; i >= 0; --i) {
+        switch (path3.charCodeAt(i)) {
           case 47:
           case 92:
-            path2 = path2.slice(i + 1);
-            return path2 === ".." || path2 === "." ? "" : path2;
+            path3 = path3.slice(i + 1);
+            return path3 === ".." || path3 === "." ? "" : path3;
         }
       }
-      return path2 === ".." || path2 === "." ? "" : path2;
+      return path3 === ".." || path3 === "." ? "" : path3;
     }
     var TOKEN = [
       0,
@@ -83007,12 +83024,12 @@ var require_append_field = __commonJS({
 // node_modules/multer/lib/counter.js
 var require_counter = __commonJS({
   "node_modules/multer/lib/counter.js"(exports2, module2) {
-    var EventEmitter = require("events").EventEmitter;
+    var EventEmitter2 = require("events").EventEmitter;
     function Counter() {
-      EventEmitter.call(this);
+      EventEmitter2.call(this);
       this.value = 0;
     }
-    Counter.prototype = Object.create(EventEmitter.prototype);
+    Counter.prototype = Object.create(EventEmitter2.prototype);
     Counter.prototype.increment = function increment() {
       this.value++;
     };
@@ -83511,10 +83528,10 @@ var require_make_middleware = __commonJS({
 // node_modules/multer/storage/disk.js
 var require_disk = __commonJS({
   "node_modules/multer/storage/disk.js"(exports2, module2) {
-    var fs2 = require("fs");
-    var os = require("os");
-    var path2 = require("path");
-    var crypto2 = require("crypto");
+    var fs3 = require("fs");
+    var os2 = require("os");
+    var path3 = require("path");
+    var crypto4 = require("crypto");
     var pipeline = require("stream").pipeline;
     var MulterError = require_multer_error();
     var openStreams = /* @__PURE__ */ new WeakMap();
@@ -83526,19 +83543,19 @@ var require_disk = __commonJS({
       if (flush.onClosed) flush.onClosed();
     }
     function getFilename(req, file, cb) {
-      crypto2.randomBytes(16, function(err, raw) {
+      crypto4.randomBytes(16, function(err, raw) {
         cb(err, err ? void 0 : raw.toString("hex"));
       });
     }
     function getDestination(req, file, cb) {
-      cb(null, os.tmpdir());
+      cb(null, os2.tmpdir());
     }
     function DiskStorage(opts) {
       opts = opts || {};
       this.getFilename = opts.filename || getFilename;
       this.flush = opts.flush;
       if (typeof opts.destination === "string") {
-        fs2.mkdirSync(opts.destination, { recursive: true });
+        fs3.mkdirSync(opts.destination, { recursive: true });
         this.getDestination = function($0, $1, cb) {
           cb(null, opts.destination);
         };
@@ -83552,9 +83569,9 @@ var require_disk = __commonJS({
         if (err) return cb(err);
         that.getFilename(req, file, function(err2, filename) {
           if (err2) return cb(err2);
-          var finalPath = path2.join(destination, filename);
+          var finalPath = path3.join(destination, filename);
           if (file.stream.destroyed) return cb(new MulterError("STREAM_DESTROYED"));
-          var outStream = fs2.createWriteStream(finalPath);
+          var outStream = fs3.createWriteStream(finalPath);
           file.path = finalPath;
           openStreams.set(file, outStream);
           outStream.once("close", function() {
@@ -83576,13 +83593,13 @@ var require_disk = __commonJS({
               });
             };
             if (!that.flush) return done();
-            fs2.open(finalPath, "r+", function(err4, fd) {
+            fs3.open(finalPath, "r+", function(err4, fd) {
               if (err4) {
                 endFlush(file);
                 return done(err4);
               }
-              fs2.fsync(fd, function(syncErr) {
-                fs2.close(fd, function(closeErr) {
+              fs3.fsync(fd, function(syncErr) {
+                fs3.close(fd, function(closeErr) {
                   endFlush(file);
                   done(syncErr || closeErr);
                 });
@@ -83593,15 +83610,15 @@ var require_disk = __commonJS({
       });
     };
     DiskStorage.prototype._removeFile = function _removeFile(req, file, cb) {
-      var path3 = file.path;
+      var path4 = file.path;
       delete file.destination;
       delete file.filename;
       delete file.path;
       function unlink() {
         var flush = flushingFiles.get(file);
-        if (!flush) return fs2.unlink(path3, cb);
+        if (!flush) return fs3.unlink(path4, cb);
         flush.onClosed = function() {
-          fs2.unlink(path3, cb);
+          fs3.unlink(path4, cb);
         };
       }
       var outStream = openStreams.get(file);
@@ -84541,8 +84558,8 @@ var init_nest_application = __esm({
         this.httpAdapter.useStaticAssets?.(pathOrOptions, options);
         return this;
       }
-      setBaseViewsDir(path2) {
-        this.httpAdapter.setBaseViewsDir?.(path2);
+      setBaseViewsDir(path3) {
+        this.httpAdapter.setBaseViewsDir?.(path3);
         return this;
       }
       setViewEngine(engineOrOptions) {
@@ -88201,14 +88218,14 @@ var require_buffer_equal_constant_time = __commonJS({
 var require_jwa = __commonJS({
   "node_modules/jwa/index.js"(exports2, module2) {
     var Buffer2 = require_safe_buffer().Buffer;
-    var crypto2 = require("crypto");
+    var crypto4 = require("crypto");
     var formatEcdsa = require_ecdsa_sig_formatter();
     var util2 = require("util");
     var MSG_INVALID_ALGORITHM = '"%s" is not a valid algorithm.\n  Supported algorithms are:\n  "HS256", "HS384", "HS512", "RS256", "RS384", "RS512", "PS256", "PS384", "PS512", "ES256", "ES384", "ES512" and "none".';
     var MSG_INVALID_SECRET = "secret must be a string or buffer";
     var MSG_INVALID_VERIFIER_KEY = "key must be a string or a buffer";
     var MSG_INVALID_SIGNER_KEY = "key must be a string, a buffer or an object";
-    var supportsKeyObjects = typeof crypto2.createPublicKey === "function";
+    var supportsKeyObjects = typeof crypto4.createPublicKey === "function";
     if (supportsKeyObjects) {
       MSG_INVALID_VERIFIER_KEY += " or a KeyObject";
       MSG_INVALID_SECRET += "or a KeyObject";
@@ -88298,18 +88315,18 @@ var require_jwa = __commonJS({
       return function sign(thing, secret) {
         checkIsSecretKey(secret);
         thing = normalizeInput(thing);
-        var hmac = crypto2.createHmac("sha" + bits, secret);
+        var hmac = crypto4.createHmac("sha" + bits, secret);
         var sig = (hmac.update(thing), hmac.digest("base64"));
         return fromBase64(sig);
       };
     }
     var bufferEqual;
-    var timingSafeEqual2 = "timingSafeEqual" in crypto2 ? function timingSafeEqual3(a, b) {
+    var timingSafeEqual3 = "timingSafeEqual" in crypto4 ? function timingSafeEqual4(a, b) {
       if (a.byteLength !== b.byteLength) {
         return false;
       }
-      return crypto2.timingSafeEqual(a, b);
-    } : function timingSafeEqual3(a, b) {
+      return crypto4.timingSafeEqual(a, b);
+    } : function timingSafeEqual4(a, b) {
       if (!bufferEqual) {
         bufferEqual = require_buffer_equal_constant_time();
       }
@@ -88318,14 +88335,14 @@ var require_jwa = __commonJS({
     function createHmacVerifier(bits) {
       return function verify(thing, signature, secret) {
         var computedSig = createHmacSigner(bits)(thing, secret);
-        return timingSafeEqual2(Buffer2.from(signature), Buffer2.from(computedSig));
+        return timingSafeEqual3(Buffer2.from(signature), Buffer2.from(computedSig));
       };
     }
     function createKeySigner(bits) {
       return function sign(thing, privateKey) {
         checkIsPrivateKey(privateKey);
         thing = normalizeInput(thing);
-        var signer = crypto2.createSign("RSA-SHA" + bits);
+        var signer = crypto4.createSign("RSA-SHA" + bits);
         var sig = (signer.update(thing), signer.sign(privateKey, "base64"));
         return fromBase64(sig);
       };
@@ -88335,7 +88352,7 @@ var require_jwa = __commonJS({
         checkIsPublicKey(publicKey);
         thing = normalizeInput(thing);
         signature = toBase64(signature);
-        var verifier = crypto2.createVerify("RSA-SHA" + bits);
+        var verifier = crypto4.createVerify("RSA-SHA" + bits);
         verifier.update(thing);
         return verifier.verify(publicKey, signature, "base64");
       };
@@ -88344,11 +88361,11 @@ var require_jwa = __commonJS({
       return function sign(thing, privateKey) {
         checkIsPrivateKey(privateKey);
         thing = normalizeInput(thing);
-        var signer = crypto2.createSign("RSA-SHA" + bits);
+        var signer = crypto4.createSign("RSA-SHA" + bits);
         var sig = (signer.update(thing), signer.sign({
           key: privateKey,
-          padding: crypto2.constants.RSA_PKCS1_PSS_PADDING,
-          saltLength: crypto2.constants.RSA_PSS_SALTLEN_DIGEST
+          padding: crypto4.constants.RSA_PKCS1_PSS_PADDING,
+          saltLength: crypto4.constants.RSA_PSS_SALTLEN_DIGEST
         }, "base64"));
         return fromBase64(sig);
       };
@@ -88358,12 +88375,12 @@ var require_jwa = __commonJS({
         checkIsPublicKey(publicKey);
         thing = normalizeInput(thing);
         signature = toBase64(signature);
-        var verifier = crypto2.createVerify("RSA-SHA" + bits);
+        var verifier = crypto4.createVerify("RSA-SHA" + bits);
         verifier.update(thing);
         return verifier.verify({
           key: publicKey,
-          padding: crypto2.constants.RSA_PKCS1_PSS_PADDING,
-          saltLength: crypto2.constants.RSA_PSS_SALTLEN_DIGEST
+          padding: crypto4.constants.RSA_PKCS1_PSS_PADDING,
+          saltLength: crypto4.constants.RSA_PSS_SALTLEN_DIGEST
         }, signature, "base64");
       };
     }
@@ -88520,11 +88537,11 @@ var require_verify_stream = __commonJS({
     var toString2 = require_tostring();
     var util2 = require("util");
     var JWS_REGEX = /^[a-zA-Z0-9\-_]+?\.[a-zA-Z0-9\-_]+?\.([a-zA-Z0-9\-_]+)?$/;
-    function isObject2(thing) {
+    function isObject3(thing) {
       return Object.prototype.toString.call(thing) === "[object Object]";
     }
     function safeJsonParse(thing) {
-      if (isObject2(thing))
+      if (isObject3(thing))
         return thing;
       try {
         return JSON.parse(thing);
@@ -89108,8 +89125,8 @@ var require_semver = __commonJS({
       }
       // preminor will bump the version up to the next minor release, and immediately
       // down to pre-release. premajor and prepatch work the same way.
-      inc(release, identifier, identifierBase) {
-        if (release.startsWith("pre")) {
+      inc(release2, identifier, identifierBase) {
+        if (release2.startsWith("pre")) {
           if (!identifier && identifierBase === false) {
             throw new Error("invalid increment argument: identifier is empty");
           }
@@ -89120,7 +89137,7 @@ var require_semver = __commonJS({
             }
           }
         }
-        switch (release) {
+        switch (release2) {
           case "premajor":
             this.prerelease.length = 0;
             this.patch = 0;
@@ -89208,7 +89225,7 @@ var require_semver = __commonJS({
             break;
           }
           default:
-            throw new Error(`invalid increment argument: ${release}`);
+            throw new Error(`invalid increment argument: ${release2}`);
         }
         this.raw = this.format();
         if (this.build.length) {
@@ -89274,7 +89291,7 @@ var require_inc = __commonJS({
   "node_modules/semver/functions/inc.js"(exports2, module2) {
     "use strict";
     var SemVer = require_semver();
-    var inc = (version2, release, options, identifier, identifierBase) => {
+    var inc = (version2, release2, options, identifier, identifierBase) => {
       if (typeof options === "string") {
         identifierBase = identifier;
         identifier = options;
@@ -89284,7 +89301,7 @@ var require_inc = __commonJS({
         return new SemVer(
           version2 instanceof SemVer ? version2.version : version2,
           options
-        ).inc(release, identifier, identifierBase).version;
+        ).inc(release2, identifier, identifierBase).version;
       } catch (er) {
         return null;
       }
@@ -91161,13 +91178,13 @@ var require_lodash = __commonJS({
       return isObjectLike(value) && isArrayLike(value);
     }
     function isFunction2(value) {
-      var tag = isObject2(value) ? objectToString.call(value) : "";
+      var tag = isObject3(value) ? objectToString.call(value) : "";
       return tag == funcTag || tag == genTag;
     }
     function isLength(value) {
       return typeof value == "number" && value > -1 && value % 1 == 0 && value <= MAX_SAFE_INTEGER;
     }
-    function isObject2(value) {
+    function isObject3(value) {
       var type = typeof value;
       return !!value && (type == "object" || type == "function");
     }
@@ -91202,9 +91219,9 @@ var require_lodash = __commonJS({
       if (isSymbol2(value)) {
         return NAN;
       }
-      if (isObject2(value)) {
+      if (isObject3(value)) {
         var other = typeof value.valueOf == "function" ? value.valueOf() : value;
-        value = isObject2(other) ? other + "" : other;
+        value = isObject3(other) ? other + "" : other;
       }
       if (typeof value != "string") {
         return value === 0 ? value : +value;
@@ -91256,7 +91273,7 @@ var require_lodash3 = __commonJS({
     function isInteger(value) {
       return typeof value == "number" && value == toInteger(value);
     }
-    function isObject2(value) {
+    function isObject3(value) {
       var type = typeof value;
       return !!value && (type == "object" || type == "function");
     }
@@ -91288,9 +91305,9 @@ var require_lodash3 = __commonJS({
       if (isSymbol2(value)) {
         return NAN;
       }
-      if (isObject2(value)) {
+      if (isObject3(value)) {
         var other = typeof value.valueOf == "function" ? value.valueOf() : value;
-        value = isObject2(other) ? other + "" : other;
+        value = isObject3(other) ? other + "" : other;
       }
       if (typeof value != "string") {
         return value === 0 ? value : +value;
@@ -91414,7 +91431,7 @@ var require_lodash7 = __commonJS({
     function once(func) {
       return before(2, func);
     }
-    function isObject2(value) {
+    function isObject3(value) {
       var type = typeof value;
       return !!value && (type == "object" || type == "function");
     }
@@ -91446,9 +91463,9 @@ var require_lodash7 = __commonJS({
       if (isSymbol2(value)) {
         return NAN;
       }
-      if (isObject2(value)) {
+      if (isObject3(value)) {
         var other = typeof value.valueOf == "function" ? value.valueOf() : value;
-        value = isObject2(other) ? other + "" : other;
+        value = isObject3(other) ? other + "" : other;
       }
       if (typeof value != "string") {
         return value === 0 ? value : +value;
@@ -92342,13 +92359,13 @@ var require_timing_safe_equal = __commonJS({
   "node_modules/standardwebhooks/dist/timing_safe_equal.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
-    exports2.timingSafeEqual = timingSafeEqual2;
+    exports2.timingSafeEqual = timingSafeEqual3;
     function assert(expr, msg = "") {
       if (!expr) {
         throw new Error(msg);
       }
     }
-    function timingSafeEqual2(a, b) {
+    function timingSafeEqual3(a, b) {
       if (a.byteLength !== b.byteLength) {
         return false;
       }
@@ -92485,6 +92502,3179 @@ var require_dist5 = __commonJS({
     };
     exports2.Webhook = Webhook2;
     Webhook2.prefix = "whsec_";
+  }
+});
+
+// node_modules/mercadopago/dist/mercadoPagoConfig.js
+var require_mercadoPagoConfig = __commonJS({
+  "node_modules/mercadopago/dist/mercadoPagoConfig.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.MercadoPagoConfig = void 0;
+    var MercadoPagoConfig2 = class {
+      /**
+       * Creates a new SDK configuration.
+       *
+       * @param config - Access token and optional global request settings.
+       */
+      constructor(config) {
+        this.accessToken = config.accessToken;
+        this.options = config.options;
+      }
+    };
+    exports2.MercadoPagoConfig = MercadoPagoConfig2;
+  }
+});
+
+// node_modules/mercadopago/dist/utils/config/index.js
+var require_config2 = __commonJS({
+  "node_modules/mercadopago/dist/utils/config/index.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.AppConfig = void 0;
+    var AppConfig = class {
+      /** Returns the running Node.js version (e.g. `v18.17.0`). */
+      static getNodeVersion() {
+        return process.version;
+      }
+      /** Returns the CPU architecture (e.g. `x64`, `arm64`). */
+      static getNodeArchitecture() {
+        return process.arch;
+      }
+      /** Returns the operating system platform (e.g. `darwin`, `linux`). */
+      static getNodePlatform() {
+        return process.platform;
+      }
+      /**
+       * Builds the `X-Tracking-Id` header value.
+       *
+       * Encodes the Node.js major version, full version, and SDK version
+       * so the API team can correlate requests with specific environments.
+       */
+      static getTrackingId() {
+        return "platform:" + this.getNodeVersion().substring(0, this.getNodeVersion().indexOf(".")) + "|" + this.getNodeVersion() + ",type:SDK" + this.SDK_VERSION + ",so;";
+      }
+      /**
+       * Builds the `User-Agent` header value.
+       *
+       * Follows the pattern:
+       * `MercadoPago Node.js SDK v{SDK_VERSION} (node {version}-{arch}-{platform})`
+       */
+      static getUserAgent() {
+        return "MercadoPago Node.js SDK v" + this.SDK_VERSION + " (node " + this.getNodeVersion() + "-" + this.getNodeArchitecture() + "-" + this.getNodePlatform() + ")";
+      }
+    };
+    exports2.AppConfig = AppConfig;
+    AppConfig.DEFAULT_TIMEOUT = 6e4;
+    AppConfig.DEFAULT_RETRIES = 3;
+    AppConfig.BASE_DELAY_MS = 1e3;
+    AppConfig.DEFAULT_MAX_DELAY_MS = 3e4;
+    AppConfig.DEFAULT_RETRY_ON = [429, 500, 502, 503, 504];
+    AppConfig.BASE_URL = "https://api.mercadopago.com";
+    AppConfig.PRODUCT_ID = "bc32b6ntrpp001u8nhkg";
+    AppConfig.SDK_VERSION = "3.6.1";
+    AppConfig.Headers = {
+      AUTHORIZATION: "Authorization",
+      CONTENT_TYPE: "Content-Type",
+      USER_AGENT: "User-Agent",
+      /** Ensures write operations are executed at most once. */
+      IDEMPOTENCY_KEY: "X-Idempotency-Key",
+      /** Internal MercadoPago product identifier for telemetry. */
+      PRODUCT_ID: "X-Product-Id",
+      /** SDK + Node.js version string for server-side analytics. */
+      TRACKING_ID: "X-Tracking-Id",
+      /** Corporation identifier for multi-account setups. */
+      CORPORATION_ID: "X-Corporation-Id",
+      /** Certified integrator identifier. */
+      INTEGRATOR_ID: "X-Integrator-Id",
+      /** Platform identifier assigned by MercadoPago. */
+      PLATFORM_ID: "X-Platform-Id",
+      /** MELI session identifier for session-level tracking. */
+      MELI_SESSION_ID: "X-Meli-Session-Id",
+      /** Comma-separated response nodes to expand. */
+      EXPAND_RESPONDE_NODES: "X-Expand-Responde-Nodes",
+      /** Card validation mode header. */
+      CARD_VALIDATION: "X-Card-Validation",
+      /** Signals the API to treat the request as a test transaction. */
+      TEST_TOKEN: "X-Test-Token"
+    };
+  }
+});
+
+// node_modules/mercadopago/dist/utils/errors/index.js
+var require_errors = __commonJS({
+  "node_modules/mercadopago/dist/utils/errors/index.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.MPConnectionError = exports2.MPServerError = exports2.MPRateLimitError = exports2.MPDependencyError = exports2.MPResourceLockedError = exports2.MPValidationError = exports2.MPIdempotencyError = exports2.MPNotFoundError = exports2.MPForbiddenError = exports2.MPPaymentError = exports2.MPAuthenticationError = exports2.MPBadRequestError = exports2.MercadoPagoError = void 0;
+    exports2.buildError = buildError;
+    var MercadoPagoError = class extends Error {
+      constructor(body) {
+        var _a, _b, _c;
+        const msg = body.message || body.error || "MercadoPago API error";
+        super(msg);
+        this.name = this.constructor.name;
+        this.status = (_a = body.status) !== null && _a !== void 0 ? _a : 0;
+        this.error = (_b = body.error) !== null && _b !== void 0 ? _b : "";
+        this.causes = (_c = body.cause) !== null && _c !== void 0 ? _c : [];
+        Object.setPrototypeOf(this, new.target.prototype);
+      }
+    };
+    exports2.MercadoPagoError = MercadoPagoError;
+    var MPBadRequestError = class extends MercadoPagoError {
+    };
+    exports2.MPBadRequestError = MPBadRequestError;
+    var MPAuthenticationError = class extends MercadoPagoError {
+    };
+    exports2.MPAuthenticationError = MPAuthenticationError;
+    var MPPaymentError = class extends MercadoPagoError {
+    };
+    exports2.MPPaymentError = MPPaymentError;
+    var MPForbiddenError = class extends MercadoPagoError {
+    };
+    exports2.MPForbiddenError = MPForbiddenError;
+    var MPNotFoundError = class extends MercadoPagoError {
+    };
+    exports2.MPNotFoundError = MPNotFoundError;
+    var MPIdempotencyError = class extends MercadoPagoError {
+    };
+    exports2.MPIdempotencyError = MPIdempotencyError;
+    var MPValidationError = class extends MercadoPagoError {
+    };
+    exports2.MPValidationError = MPValidationError;
+    var MPResourceLockedError = class extends MercadoPagoError {
+    };
+    exports2.MPResourceLockedError = MPResourceLockedError;
+    var MPDependencyError = class extends MercadoPagoError {
+    };
+    exports2.MPDependencyError = MPDependencyError;
+    var MPRateLimitError = class extends MercadoPagoError {
+      constructor(body, retryAfter = null) {
+        super(body);
+        this.retryAfter = retryAfter;
+      }
+    };
+    exports2.MPRateLimitError = MPRateLimitError;
+    var MPServerError = class extends MercadoPagoError {
+    };
+    exports2.MPServerError = MPServerError;
+    var MPConnectionError = class extends MercadoPagoError {
+      constructor(cause) {
+        const msg = cause instanceof Error ? cause.message : String(cause);
+        super({ message: msg, error: "connection_error" });
+        this.__cause__ = cause;
+      }
+    };
+    exports2.MPConnectionError = MPConnectionError;
+    var STATUS_MAP = {
+      400: MPBadRequestError,
+      401: MPAuthenticationError,
+      402: MPPaymentError,
+      403: MPForbiddenError,
+      404: MPNotFoundError,
+      409: MPIdempotencyError,
+      422: MPValidationError,
+      423: MPResourceLockedError,
+      424: MPDependencyError
+    };
+    function buildError(status, body, retryAfter = null) {
+      if (status === 429)
+        return new MPRateLimitError(Object.assign(Object.assign({}, body), { status }), retryAfter);
+      const Cls = STATUS_MAP[status];
+      if (Cls)
+        return new Cls(Object.assign(Object.assign({}, body), { status }));
+      if (status >= 500)
+        return new MPServerError(Object.assign(Object.assign({}, body), { status }));
+      return new MercadoPagoError(Object.assign(Object.assign({}, body), { status }));
+    }
+  }
+});
+
+// node_modules/mercadopago/dist/utils/restClient/index.js
+var require_restClient = __commonJS({
+  "node_modules/mercadopago/dist/utils/restClient/index.js"(exports2) {
+    "use strict";
+    var __rest = exports2 && exports2.__rest || function(s, e) {
+      var t = {};
+      for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
+        t[p] = s[p];
+      if (s != null && typeof Object.getOwnPropertySymbols === "function")
+        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+          if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
+            t[p[i]] = s[p[i]];
+        }
+      return t;
+    };
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.RestClient = void 0;
+    var crypto_1 = require("crypto");
+    var config_1 = require_config2();
+    var errors_1 = require_errors();
+    var crypto_2 = require("crypto");
+    var NO_CONTENT = 204;
+    function headersToRecord(headers) {
+      const out = {};
+      headers.forEach((value, key) => {
+        if (!out[key])
+          out[key] = [];
+        out[key].push(value);
+      });
+      return out;
+    }
+    var RestClient = class _RestClient {
+      /** Generates a UUID v4 idempotency key for write operations. */
+      static generateIdempotencyKey() {
+        return (0, crypto_2.randomUUID)();
+      }
+      /**
+       * Appends query-string parameters to a URL.
+       *
+       * Skips `undefined` values so callers don't need to pre-filter.
+       * Handles URLs that already contain a `?` by appending with `&`.
+       *
+       * @param url - Base URL (may already include a query string).
+       * @param queryParams - Key-value pairs to append.
+       * @returns The URL with the encoded query string.
+       */
+      static appendQueryParamsToUrl(url, queryParams) {
+        if (!queryParams)
+          return url;
+        const searchParams = new URLSearchParams();
+        for (const key in queryParams) {
+          if (Object.prototype.hasOwnProperty.call(queryParams, key) && typeof queryParams[key] !== "undefined") {
+            searchParams.append(key, queryParams[key].toString());
+          }
+        }
+        return url.includes("?") ? `${url}&${searchParams.toString()}` : `${url}?${searchParams.toString()}`;
+      }
+      static computeDelay(attempt, initialDelay, maxDelay, useJitter) {
+        const exponential = Math.min(initialDelay * Math.pow(2, attempt), maxDelay);
+        if (!useJitter || exponential <= 0)
+          return exponential;
+        return (0, crypto_1.randomInt)(0, exponential + 1);
+      }
+      static parseRetryAfterMs(response) {
+        const header = response.headers.get("Retry-After");
+        if (!header)
+          return null;
+        const seconds = parseInt(header, 10);
+        return isNaN(seconds) ? null : seconds * 1e3;
+      }
+      static async retryWithExponentialBackoff(fn, retries, retryOn, initialDelay, maxDelay, useJitter, onRetry) {
+        let lastError = new Error("Retry loop exited without result");
+        for (let attempt = 0; attempt <= retries; attempt++) {
+          try {
+            const response = await fn();
+            if (response.ok)
+              return response;
+            if (response.status === 204)
+              return response;
+            if (attempt < retries && retryOn.includes(response.status)) {
+              const retryAfterMs = response.status === 429 ? _RestClient.parseRetryAfterMs(response) : null;
+              const delay = retryAfterMs !== null ? Math.min(retryAfterMs, maxDelay) : _RestClient.computeDelay(attempt, initialDelay, maxDelay, useJitter);
+              const errorBody = await response.json().catch(() => ({}));
+              const err = (0, errors_1.buildError)(response.status, errorBody);
+              lastError = err;
+              onRetry === null || onRetry === void 0 ? void 0 : onRetry(attempt + 1, err);
+              await new Promise((resolve) => setTimeout(resolve, delay));
+              continue;
+            }
+            return response;
+          } catch (networkError) {
+            if (attempt >= retries) {
+              throw new errors_1.MPConnectionError(networkError);
+            }
+            const err = new errors_1.MPConnectionError(networkError);
+            lastError = err;
+            onRetry === null || onRetry === void 0 ? void 0 : onRetry(attempt + 1, err);
+            const delay = _RestClient.computeDelay(attempt, initialDelay, maxDelay, useJitter);
+            await new Promise((resolve) => setTimeout(resolve, delay));
+          }
+        }
+        throw lastError;
+      }
+      /**
+       * Performs an HTTP request against the MercadoPago API.
+       *
+       * This is the single exit point for all network I/O in the SDK.
+       * It merges SDK defaults with caller-provided overrides, injects
+       * required headers, and normalises the JSON response.
+       *
+       * - **204 No Content** → returns `{ api_response }` with no body.
+       * - **2xx with body** → returns the parsed JSON with `api_response` appended.
+       * - **Non-2xx** → throws a typed {@link MercadoPagoError} subtype.
+       *
+       * @typeParam T - Expected shape of the parsed JSON response.
+       * @param endpoint - API path relative to the base URL (e.g. `/v1/payments`).
+       * @param config - Merged request settings (headers, body, method, options, etc.).
+       * @returns Parsed API response with an `api_response` envelope.
+       */
+      static async fetch(endpoint, config) {
+        const _a = config || {}, { timeout = config_1.AppConfig.DEFAULT_TIMEOUT, idempotencyKey = _RestClient.generateIdempotencyKey(), queryParams, method = "GET", retries = config_1.AppConfig.DEFAULT_RETRIES, maxRetries, retryOn = config_1.AppConfig.DEFAULT_RETRY_ON, initialDelay = config_1.AppConfig.BASE_DELAY_MS, maxDelay = config_1.AppConfig.DEFAULT_MAX_DELAY_MS, jitter = false, onRetry, corporationId, integratorId, platformId, meliSessionId, expandResponseNodes, cardValidation, testToken } = _a, customConfig = __rest(_a, ["timeout", "idempotencyKey", "queryParams", "method", "retries", "maxRetries", "retryOn", "initialDelay", "maxDelay", "jitter", "onRetry", "corporationId", "integratorId", "platformId", "meliSessionId", "expandResponseNodes", "cardValidation", "testToken"]);
+        const effectiveRetries = maxRetries !== void 0 ? maxRetries : retries;
+        const url = _RestClient.appendQueryParamsToUrl(`${config_1.AppConfig.BASE_URL}${endpoint}`, queryParams);
+        customConfig.headers = Object.assign(Object.assign(Object.assign(Object.assign(Object.assign(Object.assign(Object.assign(Object.assign(Object.assign({}, customConfig.headers), { [config_1.AppConfig.Headers.CONTENT_TYPE]: "application/json", [config_1.AppConfig.Headers.PRODUCT_ID]: config_1.AppConfig.PRODUCT_ID, [config_1.AppConfig.Headers.TRACKING_ID]: config_1.AppConfig.getTrackingId(), [config_1.AppConfig.Headers.USER_AGENT]: config_1.AppConfig.getUserAgent() }), corporationId ? { [config_1.AppConfig.Headers.CORPORATION_ID]: corporationId } : {}), integratorId ? { [config_1.AppConfig.Headers.INTEGRATOR_ID]: integratorId } : {}), platformId ? { [config_1.AppConfig.Headers.PLATFORM_ID]: platformId } : {}), meliSessionId ? { [config_1.AppConfig.Headers.MELI_SESSION_ID]: meliSessionId } : {}), expandResponseNodes ? { [config_1.AppConfig.Headers.EXPAND_RESPONDE_NODES]: expandResponseNodes } : {}), cardValidation ? { [config_1.AppConfig.Headers.CARD_VALIDATION]: cardValidation } : {}), testToken ? { [config_1.AppConfig.Headers.TEST_TOKEN]: testToken.toString() } : {});
+        if (method && method !== "GET") {
+          customConfig.headers = Object.assign(Object.assign({}, customConfig.headers), { [config_1.AppConfig.Headers.IDEMPOTENCY_KEY]: idempotencyKey });
+        }
+        const fetchFn = async () => {
+          const controller = new AbortController();
+          const timeoutId = setTimeout(() => controller.abort(), timeout);
+          try {
+            return await fetch(url, Object.assign(Object.assign({}, customConfig), { method, signal: controller.signal }));
+          } finally {
+            clearTimeout(timeoutId);
+          }
+        };
+        const response = await _RestClient.retryWithExponentialBackoff(fetchFn, effectiveRetries, retryOn, initialDelay, maxDelay, jitter, onRetry);
+        if (response.status === NO_CONTENT) {
+          return {
+            api_response: {
+              status: response.status,
+              headers: headersToRecord(response.headers)
+            }
+          };
+        }
+        const body = await response.json().catch(() => ({}));
+        if (!response.ok) {
+          const retryAfter = response.status === 429 ? _RestClient.parseRetryAfterMs(response) : null;
+          const seconds = retryAfter !== null ? retryAfter / 1e3 : null;
+          throw (0, errors_1.buildError)(response.status, body, seconds);
+        }
+        const api_response = {
+          status: response.status,
+          headers: headersToRecord(response.headers)
+        };
+        body.api_response = api_response;
+        return body;
+      }
+    };
+    exports2.RestClient = RestClient;
+  }
+});
+
+// node_modules/mercadopago/dist/clients/cardToken/create/index.js
+var require_create = __commonJS({
+  "node_modules/mercadopago/dist/clients/cardToken/create/index.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.default = create;
+    var restClient_1 = require_restClient();
+    function create({ body, config }) {
+      return restClient_1.RestClient.fetch("/v1/card_tokens", Object.assign({ headers: {
+        "Authorization": `Bearer ${config.accessToken}`
+      }, body: JSON.stringify(body), method: "POST" }, config.options));
+    }
+  }
+});
+
+// node_modules/mercadopago/dist/utils/path.js
+var require_path = __commonJS({
+  "node_modules/mercadopago/dist/utils/path.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.encodePathParam = encodePathParam;
+    function encodePathParam(value) {
+      return encodeURIComponent(value.toString());
+    }
+  }
+});
+
+// node_modules/mercadopago/dist/clients/cardToken/get/index.js
+var require_get2 = __commonJS({
+  "node_modules/mercadopago/dist/clients/cardToken/get/index.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.default = get;
+    var restClient_1 = require_restClient();
+    var path_1 = require_path();
+    function get({ id, config }) {
+      return restClient_1.RestClient.fetch(`/v1/card_tokens/${(0, path_1.encodePathParam)(id)}`, Object.assign({ headers: {
+        "Authorization": `Bearer ${config.accessToken}`
+      } }, config.options));
+    }
+  }
+});
+
+// node_modules/mercadopago/dist/clients/cardToken/index.js
+var require_cardToken = __commonJS({
+  "node_modules/mercadopago/dist/clients/cardToken/index.js"(exports2) {
+    "use strict";
+    var __importDefault = exports2 && exports2.__importDefault || function(mod) {
+      return mod && mod.__esModule ? mod : { "default": mod };
+    };
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.CardToken = void 0;
+    var create_1 = __importDefault(require_create());
+    var get_1 = __importDefault(require_get2());
+    var CardToken = class {
+      constructor(mercadoPagoConfig) {
+        this.config = mercadoPagoConfig;
+      }
+      /**
+       * Create a card token from card details or a saved card ID.
+       *
+       * The returned token ID should be used in the `token` field when
+       * creating a payment.
+       *
+       * @see {@link https://github.com/mercadopago/sdk-nodejs/blob/master/examples/cardtoken/create.ts Usage Example }.
+       */
+      create({ body, requestOptions }) {
+        this.config.options = Object.assign(Object.assign({}, this.config.options), requestOptions);
+        return (0, create_1.default)({ body, config: this.config });
+      }
+      /**
+       * Retrieve a single card token by its unique identifier.
+       *
+       * Calls `GET /v1/card_tokens/:id` and returns the full card token resource.
+       *
+       * @see {@link https://github.com/mercadopago/sdk-nodejs/blob/master/examples/cardtoken/get.ts Usage Example }.
+       */
+      get({ id, requestOptions }) {
+        this.config.options = Object.assign(Object.assign({}, this.config.options), requestOptions);
+        return (0, get_1.default)({ id, config: this.config });
+      }
+    };
+    exports2.CardToken = CardToken;
+  }
+});
+
+// node_modules/mercadopago/dist/clients/customerCard/get/index.js
+var require_get3 = __commonJS({
+  "node_modules/mercadopago/dist/clients/customerCard/get/index.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.default = get;
+    var path_1 = require_path();
+    var restClient_1 = require_restClient();
+    function get({ customerId, cardId, config }) {
+      return restClient_1.RestClient.fetch(`/v1/customers/${(0, path_1.encodePathParam)(customerId)}/cards/${(0, path_1.encodePathParam)(cardId)}`, Object.assign({ headers: {
+        "Authorization": `Bearer ${config.accessToken}`
+      } }, config.options));
+    }
+  }
+});
+
+// node_modules/mercadopago/dist/clients/customerCard/create/index.js
+var require_create2 = __commonJS({
+  "node_modules/mercadopago/dist/clients/customerCard/create/index.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.default = create;
+    var path_1 = require_path();
+    var restClient_1 = require_restClient();
+    function create({ customerId, body, config }) {
+      return restClient_1.RestClient.fetch(`/v1/customers/${(0, path_1.encodePathParam)(customerId)}/cards`, Object.assign({ headers: {
+        "Authorization": `Bearer ${config.accessToken}`
+      }, body: JSON.stringify(body), method: "POST" }, config.options));
+    }
+  }
+});
+
+// node_modules/mercadopago/dist/clients/customerCard/remove/index.js
+var require_remove = __commonJS({
+  "node_modules/mercadopago/dist/clients/customerCard/remove/index.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.default = remove;
+    var path_1 = require_path();
+    var restClient_1 = require_restClient();
+    function remove({ customerId, cardId, config }) {
+      return restClient_1.RestClient.fetch(`/v1/customers/${(0, path_1.encodePathParam)(customerId)}/cards/${(0, path_1.encodePathParam)(cardId)}`, Object.assign({ headers: {
+        "Authorization": `Bearer ${config.accessToken}`
+      }, method: "DELETE" }, config.options));
+    }
+  }
+});
+
+// node_modules/mercadopago/dist/clients/customerCard/update/index.js
+var require_update = __commonJS({
+  "node_modules/mercadopago/dist/clients/customerCard/update/index.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.default = update;
+    var path_1 = require_path();
+    var restClient_1 = require_restClient();
+    function update({ customerId, cardId, body, config }) {
+      return restClient_1.RestClient.fetch(`/v1/customers/${(0, path_1.encodePathParam)(customerId)}/cards/${(0, path_1.encodePathParam)(cardId)}`, Object.assign({ headers: {
+        "Authorization": `Bearer ${config.accessToken}`
+      }, body: JSON.stringify(body), method: "PUT" }, config.options));
+    }
+  }
+});
+
+// node_modules/mercadopago/dist/clients/customerCard/list/index.js
+var require_list = __commonJS({
+  "node_modules/mercadopago/dist/clients/customerCard/list/index.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.default = list;
+    var path_1 = require_path();
+    var restClient_1 = require_restClient();
+    function list({ customerId, config }) {
+      return restClient_1.RestClient.fetch(`/v1/customers/${(0, path_1.encodePathParam)(customerId)}/cards`, Object.assign({ headers: {
+        "Authorization": `Bearer ${config.accessToken}`
+      } }, config.options));
+    }
+  }
+});
+
+// node_modules/mercadopago/dist/clients/customerCard/index.js
+var require_customerCard = __commonJS({
+  "node_modules/mercadopago/dist/clients/customerCard/index.js"(exports2) {
+    "use strict";
+    var __importDefault = exports2 && exports2.__importDefault || function(mod) {
+      return mod && mod.__esModule ? mod : { "default": mod };
+    };
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.CustomerCard = void 0;
+    var get_1 = __importDefault(require_get3());
+    var create_1 = __importDefault(require_create2());
+    var remove_1 = __importDefault(require_remove());
+    var update_1 = __importDefault(require_update());
+    var list_1 = __importDefault(require_list());
+    var CustomerCard = class {
+      constructor(mercadoPagoConfig) {
+        this.config = mercadoPagoConfig;
+      }
+      /**
+       * Save a new payment card for a customer using a card token.
+       *
+       * @see {@link https://github.com/mercadopago/sdk-nodejs/blob/master/src/examples/customer/create.ts Usage Example  }.
+       */
+      create({ customerId, body, requestOptions }) {
+        this.config.options = Object.assign(Object.assign({}, this.config.options), requestOptions);
+        return (0, create_1.default)({ customerId, body, config: this.config });
+      }
+      /**
+       * Retrieve a specific saved card for a customer.
+       *
+       * @see {@link https://github.com/mercadopago/sdk-nodejs/blob/master/src/examples/customer/get.ts Usage Example  }.
+      */
+      get({ customerId, cardId, requestOptions }) {
+        this.config.options = Object.assign(Object.assign({}, this.config.options), requestOptions);
+        return (0, get_1.default)({ customerId, cardId, config: this.config });
+      }
+      /**
+       * Remove a saved card from a customer's wallet.
+       *
+       * @see {@link https://github.com/mercadopago/sdk-nodejs/blob/master/src/examples/customer/remove.ts Usage Example  }.
+       */
+      remove({ customerId, cardId, requestOptions }) {
+        this.config.options = Object.assign(Object.assign({}, this.config.options), requestOptions);
+        return (0, remove_1.default)({ customerId, cardId, config: this.config });
+      }
+      /**
+       * Update the details of an existing saved card (e.g. expiration date or cardholder info).
+       *
+       * @see {@link https://github.com/mercadopago/sdk-nodejs/blob/master/src/examples/customer/update.ts Usage Example  }.
+       */
+      update({ customerId, cardId, body, requestOptions }) {
+        this.config.options = Object.assign(Object.assign({}, this.config.options), requestOptions);
+        return (0, update_1.default)({ customerId, cardId, body, config: this.config });
+      }
+      /**
+       * List all saved payment cards for a customer.
+       *
+       * @see {@link https://github.com/mercadopago/sdk-nodejs/blob/master/src/examples/customer/list.ts Usage Example  }.
+       */
+      list({ customerId, requestOptions }) {
+        this.config.options = Object.assign(Object.assign({}, this.config.options), requestOptions);
+        return (0, list_1.default)({ customerId, config: this.config });
+      }
+    };
+    exports2.CustomerCard = CustomerCard;
+  }
+});
+
+// node_modules/mercadopago/dist/clients/customer/get/index.js
+var require_get4 = __commonJS({
+  "node_modules/mercadopago/dist/clients/customer/get/index.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.default = get;
+    var path_1 = require_path();
+    var restClient_1 = require_restClient();
+    function get({ customerId, config }) {
+      return restClient_1.RestClient.fetch(`/v1/customers/${(0, path_1.encodePathParam)(customerId)}`, Object.assign({ headers: {
+        "Authorization": `Bearer ${config.accessToken}`
+      } }, config.options));
+    }
+  }
+});
+
+// node_modules/mercadopago/dist/clients/customer/create/index.js
+var require_create3 = __commonJS({
+  "node_modules/mercadopago/dist/clients/customer/create/index.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.default = create;
+    var restClient_1 = require_restClient();
+    function create({ body, config }) {
+      return restClient_1.RestClient.fetch("/v1/customers", Object.assign({ headers: {
+        "Authorization": `Bearer ${config.accessToken}`
+      }, body: JSON.stringify(body), method: "POST" }, config.options));
+    }
+  }
+});
+
+// node_modules/mercadopago/dist/clients/customer/remove/index.js
+var require_remove2 = __commonJS({
+  "node_modules/mercadopago/dist/clients/customer/remove/index.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.default = remove;
+    var path_1 = require_path();
+    var restClient_1 = require_restClient();
+    function remove({ customerId, config }) {
+      return restClient_1.RestClient.fetch(`/v1/customers/${(0, path_1.encodePathParam)(customerId)}`, Object.assign({ headers: {
+        "Authorization": `Bearer ${config.accessToken}`
+      }, method: "DELETE" }, config.options));
+    }
+  }
+});
+
+// node_modules/mercadopago/dist/clients/customer/update/index.js
+var require_update2 = __commonJS({
+  "node_modules/mercadopago/dist/clients/customer/update/index.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.default = update;
+    var path_1 = require_path();
+    var restClient_1 = require_restClient();
+    function update({ customerId, body, config }) {
+      return restClient_1.RestClient.fetch(`/v1/customers/${(0, path_1.encodePathParam)(customerId)}`, Object.assign({ headers: {
+        "Authorization": `Bearer ${config.accessToken}`
+      }, body: JSON.stringify(body), method: "PUT" }, config.options));
+    }
+  }
+});
+
+// node_modules/mercadopago/dist/clients/customer/search/index.js
+var require_search = __commonJS({
+  "node_modules/mercadopago/dist/clients/customer/search/index.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.default = search;
+    var restClient_1 = require_restClient();
+    function search({ options, config }) {
+      return restClient_1.RestClient.fetch("/v1/customers/search", Object.assign({ headers: {
+        "Authorization": `Bearer ${config.accessToken}`
+      }, queryParams: Object.assign({}, options) }, config.options));
+    }
+  }
+});
+
+// node_modules/mercadopago/dist/utils/pagination/index.js
+var require_pagination = __commonJS({
+  "node_modules/mercadopago/dist/utils/pagination/index.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.createAutoPagingIterable = createAutoPagingIterable;
+    var DEFAULT_PAGE_SIZE = 100;
+    function createAutoPagingIterable(searchFn, baseOptions, pageSize = DEFAULT_PAGE_SIZE) {
+      return {
+        [Symbol.asyncIterator]() {
+          var _a;
+          let offset = (_a = baseOptions === null || baseOptions === void 0 ? void 0 : baseOptions.offset) !== null && _a !== void 0 ? _a : 0;
+          let page = 1;
+          let buffer = [];
+          let bufferIndex = 0;
+          let done = false;
+          let total = null;
+          const fetchNextPage = async () => {
+            var _a2, _b, _c, _d, _e;
+            if (done)
+              return;
+            const options = Object.assign(Object.assign({}, baseOptions), { limit: pageSize, offset });
+            const result = await searchFn(options);
+            if (result.results !== void 0) {
+              const items = (_a2 = result.results) !== null && _a2 !== void 0 ? _a2 : [];
+              buffer = items;
+              bufferIndex = 0;
+              if (total === null && result.paging) {
+                total = result.paging.total;
+              }
+              offset += items.length;
+              if (items.length === 0 || total !== null && offset >= total) {
+                done = true;
+              }
+              return;
+            }
+            if (result.elements !== void 0) {
+              const items = (_b = result.elements) !== null && _b !== void 0 ? _b : [];
+              buffer = items;
+              bufferIndex = 0;
+              if (total === null)
+                total = (_c = result.total) !== null && _c !== void 0 ? _c : 0;
+              page++;
+              offset = (page - 1) * pageSize;
+              if (items.length === 0 || offset >= (total !== null && total !== void 0 ? total : 0)) {
+                done = true;
+              }
+              return;
+            }
+            if (result.data !== void 0) {
+              const items = (_d = result.data) !== null && _d !== void 0 ? _d : [];
+              buffer = items;
+              bufferIndex = 0;
+              if (total === null && result.paging) {
+                total = parseInt(String((_e = result.paging.total) !== null && _e !== void 0 ? _e : "0"), 10);
+              }
+              offset += items.length;
+              if (items.length === 0 || total !== null && offset >= total) {
+                done = true;
+              }
+              return;
+            }
+            done = true;
+          };
+          return {
+            async next() {
+              if (bufferIndex < buffer.length) {
+                return { value: buffer[bufferIndex++], done: false };
+              }
+              if (done) {
+                return { value: void 0, done: true };
+              }
+              await fetchNextPage();
+              if (bufferIndex < buffer.length) {
+                return { value: buffer[bufferIndex++], done: false };
+              }
+              return { value: void 0, done: true };
+            }
+          };
+        }
+      };
+    }
+  }
+});
+
+// node_modules/mercadopago/dist/clients/customer/index.js
+var require_customer = __commonJS({
+  "node_modules/mercadopago/dist/clients/customer/index.js"(exports2) {
+    "use strict";
+    var __importDefault = exports2 && exports2.__importDefault || function(mod) {
+      return mod && mod.__esModule ? mod : { "default": mod };
+    };
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.Customer = void 0;
+    var get_1 = __importDefault(require_get4());
+    var create_1 = __importDefault(require_create3());
+    var remove_1 = __importDefault(require_remove2());
+    var update_1 = __importDefault(require_update2());
+    var search_1 = __importDefault(require_search());
+    var customerCard_1 = require_customerCard();
+    var pagination_1 = require_pagination();
+    var Customer = class {
+      constructor(mercadoPagoConfig) {
+        this.config = mercadoPagoConfig;
+        this.customerCard = new customerCard_1.CustomerCard(mercadoPagoConfig);
+      }
+      /**
+       * Create a new customer in MercadoPago.
+       *
+       * @see {@link https://github.com/mercadopago/sdk-nodejs/blob/master/src/examples/customer/create.ts Usage Example  }.
+       */
+      create({ body, requestOptions }) {
+        this.config.options = Object.assign(Object.assign({}, this.config.options), requestOptions);
+        return (0, create_1.default)({ body, config: this.config });
+      }
+      /**
+       * Retrieve a single customer by its unique identifier.
+       *
+       * @see {@link https://github.com/mercadopago/sdk-nodejs/blob/master/src/examples/customer/get.ts Usage Example  }.
+       */
+      get({ customerId, requestOptions }) {
+        this.config.options = Object.assign(Object.assign({}, this.config.options), requestOptions);
+        return (0, get_1.default)({ customerId, config: this.config });
+      }
+      /**
+       * Remove an existing customer by its unique identifier.
+       *
+       * @see {@link https://github.com/mercadopago/sdk-nodejs/blob/master/src/examples/customer/remove.ts Usage Example  }.
+       */
+      remove({ customerId, requestOptions }) {
+        this.config.options = Object.assign(Object.assign({}, this.config.options), requestOptions);
+        return (0, remove_1.default)({ customerId, config: this.config });
+      }
+      /**
+       * Update an existing customer's information.
+       *
+       * @see {@link https://github.com/mercadopago/sdk-nodejs/blob/master/src/examples/customer/update.ts Usage Example  }.
+       */
+      update({ customerId, body, requestOptions }) {
+        this.config.options = Object.assign(Object.assign({}, this.config.options), requestOptions);
+        return (0, update_1.default)({ customerId, body, config: this.config });
+      }
+      /**
+       * Search for customers using optional filters and pagination.
+       *
+       * @see {@link https://github.com/mercadopago/sdk-nodejs/blob/master/src/examples/customer/search.ts Usage Example  }.
+       */
+      search(CustomerSearchOptions = {}) {
+        const { options, requestOptions } = CustomerSearchOptions;
+        this.config.options = Object.assign(Object.assign({}, this.config.options), requestOptions);
+        return (0, search_1.default)({ options, config: this.config });
+      }
+      /**
+       * Save a new payment card for a customer using a card token.
+       *
+       * @see {@link https://github.com/mercadopago/sdk-nodejs/blob/master/src/examples/customer/createCard.ts Usage Example  }.
+       */
+      createCard({ customerId, body, requestOptions }) {
+        this.config.options = Object.assign(Object.assign({}, this.config.options), requestOptions);
+        return this.customerCard.create({ customerId, body });
+      }
+      /**
+       * Retrieve a specific saved card for a customer.
+       *
+       * @see {@link https://github.com/mercadopago/sdk-nodejs/blob/master/src/examples/customer/getCard.ts Usage Example  }.
+       */
+      getCard({ customerId, cardId, requestOptions }) {
+        this.config.options = Object.assign(Object.assign({}, this.config.options), requestOptions);
+        return this.customerCard.get({ customerId, cardId });
+      }
+      /**
+       * Remove a saved card from a customer's account.
+       *
+       * @see {@link https://github.com/mercadopago/sdk-nodejs/blob/master/src/examples/customer/removeCard.ts Usage Example  }.
+       */
+      removeCard({ customerId, cardId, requestOptions }) {
+        this.config.options = Object.assign(Object.assign({}, this.config.options), requestOptions);
+        return this.customerCard.remove({ customerId, cardId });
+      }
+      /**
+       * List all saved payment cards for a customer.
+       *
+       * @see {@link https://github.com/mercadopago/sdk-nodejs/blob/master/src/examples/customer/listCards.ts Usage Example  }.
+       */
+      listCards({ customerId, requestOptions }) {
+        this.config.options = Object.assign(Object.assign({}, this.config.options), requestOptions);
+        return this.customerCard.list({ customerId });
+      }
+      /** Lazily iterates over every customer matching the search criteria. */
+      searchAll(searchData = {}) {
+        const { options, requestOptions } = searchData;
+        return (0, pagination_1.createAutoPagingIterable)((opts) => {
+          this.config.options = Object.assign(Object.assign({}, this.config.options), requestOptions);
+          return (0, search_1.default)({ options: Object.assign(Object.assign({}, options), opts), config: this.config });
+        }, options);
+      }
+    };
+    exports2.Customer = Customer;
+  }
+});
+
+// node_modules/mercadopago/dist/clients/advancedPayment/create/index.js
+var require_create4 = __commonJS({
+  "node_modules/mercadopago/dist/clients/advancedPayment/create/index.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.default = create;
+    var restClient_1 = require_restClient();
+    function create({ body, config }) {
+      return restClient_1.RestClient.fetch("/v1/advanced_payments", Object.assign({ method: "POST", headers: {
+        "Authorization": `Bearer ${config.accessToken}`
+      }, body: JSON.stringify(body) }, config.options));
+    }
+  }
+});
+
+// node_modules/mercadopago/dist/clients/advancedPayment/get/index.js
+var require_get5 = __commonJS({
+  "node_modules/mercadopago/dist/clients/advancedPayment/get/index.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.default = get;
+    var restClient_1 = require_restClient();
+    var path_1 = require_path();
+    function get({ id, config }) {
+      return restClient_1.RestClient.fetch(`/v1/advanced_payments/${(0, path_1.encodePathParam)(id)}`, Object.assign({ method: "GET", headers: {
+        "Authorization": `Bearer ${config.accessToken}`
+      } }, config.options));
+    }
+  }
+});
+
+// node_modules/mercadopago/dist/clients/advancedPayment/search/index.js
+var require_search2 = __commonJS({
+  "node_modules/mercadopago/dist/clients/advancedPayment/search/index.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.default = search;
+    var restClient_1 = require_restClient();
+    function search({ options, config }) {
+      return restClient_1.RestClient.fetch("/v1/advanced_payments/search", Object.assign({ headers: {
+        "Authorization": `Bearer ${config.accessToken}`
+      }, queryParams: Object.assign({}, options) }, config.options));
+    }
+  }
+});
+
+// node_modules/mercadopago/dist/clients/advancedPayment/update/index.js
+var require_update3 = __commonJS({
+  "node_modules/mercadopago/dist/clients/advancedPayment/update/index.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.default = update;
+    var restClient_1 = require_restClient();
+    var path_1 = require_path();
+    function update({ id, body, config }) {
+      return restClient_1.RestClient.fetch(`/v1/advanced_payments/${(0, path_1.encodePathParam)(id)}`, Object.assign({ method: "PUT", headers: {
+        "Authorization": `Bearer ${config.accessToken}`
+      }, body: JSON.stringify(body) }, config.options));
+    }
+  }
+});
+
+// node_modules/mercadopago/dist/clients/advancedPayment/cancel/index.js
+var require_cancel = __commonJS({
+  "node_modules/mercadopago/dist/clients/advancedPayment/cancel/index.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.default = cancel;
+    var restClient_1 = require_restClient();
+    var path_1 = require_path();
+    function cancel({ id, config }) {
+      return restClient_1.RestClient.fetch(`/v1/advanced_payments/${(0, path_1.encodePathParam)(id)}`, Object.assign({ method: "PUT", headers: {
+        "Authorization": `Bearer ${config.accessToken}`
+      }, body: JSON.stringify({ status: "cancelled" }) }, config.options));
+    }
+  }
+});
+
+// node_modules/mercadopago/dist/clients/advancedPayment/capture/index.js
+var require_capture = __commonJS({
+  "node_modules/mercadopago/dist/clients/advancedPayment/capture/index.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.default = capture;
+    var restClient_1 = require_restClient();
+    var path_1 = require_path();
+    function capture({ id, config }) {
+      return restClient_1.RestClient.fetch(`/v1/advanced_payments/${(0, path_1.encodePathParam)(id)}`, Object.assign({ method: "PUT", headers: {
+        "Authorization": `Bearer ${config.accessToken}`
+      }, body: JSON.stringify({ capture: true }) }, config.options));
+    }
+  }
+});
+
+// node_modules/mercadopago/dist/clients/advancedPayment/updateReleaseDate/index.js
+var require_updateReleaseDate = __commonJS({
+  "node_modules/mercadopago/dist/clients/advancedPayment/updateReleaseDate/index.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.default = updateReleaseDate;
+    var restClient_1 = require_restClient();
+    var path_1 = require_path();
+    function updateReleaseDate({ id, releaseDate, config }) {
+      return restClient_1.RestClient.fetch(`/v1/advanced_payments/${(0, path_1.encodePathParam)(id)}/disburses`, Object.assign({ method: "POST", headers: {
+        "Authorization": `Bearer ${config.accessToken}`
+      }, body: JSON.stringify({ money_release_date: releaseDate }) }, config.options));
+    }
+  }
+});
+
+// node_modules/mercadopago/dist/clients/advancedPayment/index.js
+var require_advancedPayment = __commonJS({
+  "node_modules/mercadopago/dist/clients/advancedPayment/index.js"(exports2) {
+    "use strict";
+    var __importDefault = exports2 && exports2.__importDefault || function(mod) {
+      return mod && mod.__esModule ? mod : { "default": mod };
+    };
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.AdvancedPayment = void 0;
+    var create_1 = __importDefault(require_create4());
+    var get_1 = __importDefault(require_get5());
+    var search_1 = __importDefault(require_search2());
+    var update_1 = __importDefault(require_update3());
+    var cancel_1 = __importDefault(require_cancel());
+    var capture_1 = __importDefault(require_capture());
+    var updateReleaseDate_1 = __importDefault(require_updateReleaseDate());
+    var AdvancedPayment = class {
+      constructor(mercadoPagoConfig) {
+        this.config = mercadoPagoConfig;
+      }
+      /**
+       * Create a new advanced (split) payment distributed among multiple sellers.
+       */
+      create({ body, requestOptions }) {
+        this.config.options = Object.assign(Object.assign({}, this.config.options), requestOptions);
+        return (0, create_1.default)({ body, config: this.config });
+      }
+      /**
+       * Retrieve an advanced payment by its ID.
+       */
+      get({ id, requestOptions }) {
+        this.config.options = Object.assign(Object.assign({}, this.config.options), requestOptions);
+        return (0, get_1.default)({ id, config: this.config });
+      }
+      /**
+       * Search advanced payments with optional filters and pagination.
+       */
+      search(advancedPaymentSearchOptions = {}) {
+        const { options, requestOptions } = advancedPaymentSearchOptions;
+        this.config.options = Object.assign(Object.assign({}, this.config.options), requestOptions);
+        return (0, search_1.default)({ options, config: this.config });
+      }
+      /**
+       * Update an existing advanced payment with arbitrary fields.
+       */
+      update({ id, body, requestOptions }) {
+        this.config.options = Object.assign(Object.assign({}, this.config.options), requestOptions);
+        return (0, update_1.default)({ id, body, config: this.config });
+      }
+      /**
+       * Cancel a pending advanced payment by setting its status to `cancelled`.
+       */
+      cancel({ id, requestOptions }) {
+        this.config.options = Object.assign(Object.assign({}, this.config.options), requestOptions);
+        return (0, cancel_1.default)({ id, config: this.config });
+      }
+      /**
+       * Capture a previously authorised advanced payment.
+       */
+      capture({ id, requestOptions }) {
+        this.config.options = Object.assign(Object.assign({}, this.config.options), requestOptions);
+        return (0, capture_1.default)({ id, config: this.config });
+      }
+      /**
+       * Change the money release date for all disbursements of an advanced payment.
+       */
+      updateReleaseDate({ id, releaseDate, requestOptions }) {
+        this.config.options = Object.assign(Object.assign({}, this.config.options), requestOptions);
+        return (0, updateReleaseDate_1.default)({ id, releaseDate, config: this.config });
+      }
+    };
+    exports2.AdvancedPayment = AdvancedPayment;
+  }
+});
+
+// node_modules/mercadopago/dist/clients/chargeback/get/index.js
+var require_get6 = __commonJS({
+  "node_modules/mercadopago/dist/clients/chargeback/get/index.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.default = get;
+    var path_1 = require_path();
+    var restClient_1 = require_restClient();
+    function get({ id, config }) {
+      return restClient_1.RestClient.fetch(`/v1/chargebacks/${(0, path_1.encodePathParam)(id)}`, Object.assign({ method: "GET", headers: {
+        "Authorization": `Bearer ${config.accessToken}`
+      } }, config.options));
+    }
+  }
+});
+
+// node_modules/mercadopago/dist/clients/chargeback/search/index.js
+var require_search3 = __commonJS({
+  "node_modules/mercadopago/dist/clients/chargeback/search/index.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.default = search;
+    var restClient_1 = require_restClient();
+    function search({ options, config }) {
+      return restClient_1.RestClient.fetch("/v1/chargebacks/search", Object.assign({ headers: {
+        "Authorization": `Bearer ${config.accessToken}`
+      }, queryParams: Object.assign({}, options) }, config.options));
+    }
+  }
+});
+
+// node_modules/mercadopago/dist/clients/chargeback/index.js
+var require_chargeback = __commonJS({
+  "node_modules/mercadopago/dist/clients/chargeback/index.js"(exports2) {
+    "use strict";
+    var __importDefault = exports2 && exports2.__importDefault || function(mod) {
+      return mod && mod.__esModule ? mod : { "default": mod };
+    };
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.Chargeback = void 0;
+    var get_1 = __importDefault(require_get6());
+    var search_1 = __importDefault(require_search3());
+    var Chargeback = class {
+      constructor(mercadoPagoConfig) {
+        this.config = mercadoPagoConfig;
+      }
+      /**
+       * Retrieve a single chargeback by its ID.
+       */
+      get({ id, requestOptions }) {
+        this.config.options = Object.assign(Object.assign({}, this.config.options), requestOptions);
+        return (0, get_1.default)({ id, config: this.config });
+      }
+      /**
+       * Search chargebacks with optional filters.
+       */
+      search(chargebackSearchOptions = {}) {
+        const { options, requestOptions } = chargebackSearchOptions;
+        this.config.options = Object.assign(Object.assign({}, this.config.options), requestOptions);
+        return (0, search_1.default)({ options, config: this.config });
+      }
+    };
+    exports2.Chargeback = Chargeback;
+  }
+});
+
+// node_modules/mercadopago/dist/clients/disbursementRefund/listAll/index.js
+var require_listAll = __commonJS({
+  "node_modules/mercadopago/dist/clients/disbursementRefund/listAll/index.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.default = listAll;
+    var restClient_1 = require_restClient();
+    var path_1 = require_path();
+    function listAll({ advancedPaymentId, config }) {
+      return restClient_1.RestClient.fetch(`/v1/advanced_payments/${(0, path_1.encodePathParam)(advancedPaymentId)}/refunds`, Object.assign({ method: "GET", headers: {
+        "Authorization": `Bearer ${config.accessToken}`
+      } }, config.options));
+    }
+  }
+});
+
+// node_modules/mercadopago/dist/clients/disbursementRefund/createAll/index.js
+var require_createAll = __commonJS({
+  "node_modules/mercadopago/dist/clients/disbursementRefund/createAll/index.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.default = createAll;
+    var restClient_1 = require_restClient();
+    var path_1 = require_path();
+    function createAll({ advancedPaymentId, body, config }) {
+      return restClient_1.RestClient.fetch(`/v1/advanced_payments/${(0, path_1.encodePathParam)(advancedPaymentId)}/refunds`, Object.assign({ method: "POST", headers: {
+        "Authorization": `Bearer ${config.accessToken}`
+      }, body: JSON.stringify(body) }, config.options));
+    }
+  }
+});
+
+// node_modules/mercadopago/dist/clients/disbursementRefund/create/index.js
+var require_create5 = __commonJS({
+  "node_modules/mercadopago/dist/clients/disbursementRefund/create/index.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.default = create;
+    var restClient_1 = require_restClient();
+    var path_1 = require_path();
+    function create({ advancedPaymentId, disbursementId, body, config }) {
+      return restClient_1.RestClient.fetch(`/v1/advanced_payments/${(0, path_1.encodePathParam)(advancedPaymentId)}/disbursements/${(0, path_1.encodePathParam)(disbursementId)}/refunds`, Object.assign({ method: "POST", headers: {
+        "Authorization": `Bearer ${config.accessToken}`
+      }, body: JSON.stringify(body) }, config.options));
+    }
+  }
+});
+
+// node_modules/mercadopago/dist/clients/disbursementRefund/index.js
+var require_disbursementRefund = __commonJS({
+  "node_modules/mercadopago/dist/clients/disbursementRefund/index.js"(exports2) {
+    "use strict";
+    var __importDefault = exports2 && exports2.__importDefault || function(mod) {
+      return mod && mod.__esModule ? mod : { "default": mod };
+    };
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.DisbursementRefund = void 0;
+    var listAll_1 = __importDefault(require_listAll());
+    var createAll_1 = __importDefault(require_createAll());
+    var create_1 = __importDefault(require_create5());
+    var DisbursementRefund = class {
+      constructor(mercadoPagoConfig) {
+        this.config = mercadoPagoConfig;
+      }
+      /**
+       * List all refunds for an advanced payment.
+       */
+      listAll({ advancedPaymentId, requestOptions }) {
+        this.config.options = Object.assign(Object.assign({}, this.config.options), requestOptions);
+        return (0, listAll_1.default)({ advancedPaymentId, config: this.config });
+      }
+      /**
+       * Refund all disbursements of an advanced payment at once.
+       */
+      createAll({ advancedPaymentId, body, requestOptions }) {
+        this.config.options = Object.assign(Object.assign({}, this.config.options), requestOptions);
+        return (0, createAll_1.default)({ advancedPaymentId, body, config: this.config });
+      }
+      /**
+       * Refund a specific disbursement by amount.
+       */
+      create({ advancedPaymentId, disbursementId, body, requestOptions }) {
+        this.config.options = Object.assign(Object.assign({}, this.config.options), requestOptions);
+        return (0, create_1.default)({ advancedPaymentId, disbursementId, body, config: this.config });
+      }
+    };
+    exports2.DisbursementRefund = DisbursementRefund;
+  }
+});
+
+// node_modules/mercadopago/dist/clients/invoice/get/index.js
+var require_get7 = __commonJS({
+  "node_modules/mercadopago/dist/clients/invoice/get/index.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.default = get;
+    var path_1 = require_path();
+    var restClient_1 = require_restClient();
+    function get({ id, config }) {
+      return restClient_1.RestClient.fetch(`/authorized_payments/${(0, path_1.encodePathParam)(id)}`, Object.assign({ method: "GET", headers: {
+        "Authorization": `Bearer ${config.accessToken}`
+      } }, config.options));
+    }
+  }
+});
+
+// node_modules/mercadopago/dist/clients/invoice/search/index.js
+var require_search4 = __commonJS({
+  "node_modules/mercadopago/dist/clients/invoice/search/index.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.default = search;
+    var restClient_1 = require_restClient();
+    function search({ options, config }) {
+      return restClient_1.RestClient.fetch("/authorized_payments/search", Object.assign({ headers: {
+        "Authorization": `Bearer ${config.accessToken}`
+      }, queryParams: Object.assign({}, options) }, config.options));
+    }
+  }
+});
+
+// node_modules/mercadopago/dist/clients/invoice/index.js
+var require_invoice = __commonJS({
+  "node_modules/mercadopago/dist/clients/invoice/index.js"(exports2) {
+    "use strict";
+    var __importDefault = exports2 && exports2.__importDefault || function(mod) {
+      return mod && mod.__esModule ? mod : { "default": mod };
+    };
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.Invoice = void 0;
+    var get_1 = __importDefault(require_get7());
+    var search_1 = __importDefault(require_search4());
+    var Invoice = class {
+      constructor(mercadoPagoConfig) {
+        this.config = mercadoPagoConfig;
+      }
+      /**
+       * Retrieve a single subscription invoice by its ID.
+       *
+       * @see {@link https://github.com/mercadopago/sdk-nodejs/blob/master/src/examples/invoice/get.ts Usage Example }.
+       */
+      get({ id, requestOptions }) {
+        this.config.options = Object.assign(Object.assign({}, this.config.options), requestOptions);
+        return (0, get_1.default)({ id, config: this.config });
+      }
+      /**
+       * Search subscription invoices with optional filters.
+       *
+       * Filters include preapproval ID, payer ID, payment ID, and pagination.
+       *
+       * @see {@link https://github.com/mercadopago/sdk-nodejs/blob/master/src/examples/invoice/search.ts Usage Example }.
+       */
+      search(ivoicesSearchOptions = {}) {
+        const { options, requestOptions } = ivoicesSearchOptions;
+        this.config.options = Object.assign(Object.assign({}, this.config.options), requestOptions);
+        return (0, search_1.default)({ options, config: this.config });
+      }
+    };
+    exports2.Invoice = Invoice;
+  }
+});
+
+// node_modules/mercadopago/dist/clients/identificationType/list/index.js
+var require_list2 = __commonJS({
+  "node_modules/mercadopago/dist/clients/identificationType/list/index.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.default = list;
+    var restClient_1 = require_restClient();
+    function list({ config }) {
+      return restClient_1.RestClient.fetch("/v1/identification_types", Object.assign({ headers: {
+        "Authorization": `Bearer ${config.accessToken}`
+      } }, config.options));
+    }
+  }
+});
+
+// node_modules/mercadopago/dist/clients/identificationType/index.js
+var require_identificationType = __commonJS({
+  "node_modules/mercadopago/dist/clients/identificationType/index.js"(exports2) {
+    "use strict";
+    var __importDefault = exports2 && exports2.__importDefault || function(mod) {
+      return mod && mod.__esModule ? mod : { "default": mod };
+    };
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.IdentificationType = void 0;
+    var list_1 = __importDefault(require_list2());
+    var IdentificationType = class {
+      constructor(mercadoPagoConfig) {
+        this.config = mercadoPagoConfig;
+      }
+      /**
+       * List all accepted identification document types for the account's country.
+       *
+       * @see {@link https://github.com/mercadopago/sdk-nodejs/blob/master/examples/identificationtype/list.ts Usage Example }.
+       */
+      list(identificationTypeListOptions = {}) {
+        const { requestOptions } = identificationTypeListOptions;
+        this.config.options = Object.assign(Object.assign({}, this.config.options), requestOptions);
+        return (0, list_1.default)({ config: this.config });
+      }
+    };
+    exports2.IdentificationType = IdentificationType;
+  }
+});
+
+// node_modules/mercadopago/dist/clients/paymentRefund/get/index.js
+var require_get8 = __commonJS({
+  "node_modules/mercadopago/dist/clients/paymentRefund/get/index.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.default = get;
+    var restClient_1 = require_restClient();
+    var path_1 = require_path();
+    function get({ payment_id, refund_id, config }) {
+      return restClient_1.RestClient.fetch(`/v1/payments/${(0, path_1.encodePathParam)(payment_id)}/refunds/${(0, path_1.encodePathParam)(refund_id)}`, Object.assign({ headers: {
+        "Authorization": `Bearer ${config.accessToken}`
+      } }, config.options));
+    }
+  }
+});
+
+// node_modules/mercadopago/dist/clients/paymentRefund/create/index.js
+var require_create6 = __commonJS({
+  "node_modules/mercadopago/dist/clients/paymentRefund/create/index.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.default = create;
+    var restClient_1 = require_restClient();
+    var path_1 = require_path();
+    function create({ payment_id, body, config }) {
+      return restClient_1.RestClient.fetch(`/v1/payments/${(0, path_1.encodePathParam)(payment_id)}/refunds`, Object.assign({ method: "POST", headers: {
+        "Authorization": `Bearer ${config.accessToken}`
+      }, body: JSON.stringify(body) }, config.options));
+    }
+  }
+});
+
+// node_modules/mercadopago/dist/clients/paymentRefund/list/index.js
+var require_list3 = __commonJS({
+  "node_modules/mercadopago/dist/clients/paymentRefund/list/index.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.default = list;
+    var restClient_1 = require_restClient();
+    var path_1 = require_path();
+    function list({ payment_id, config }) {
+      return restClient_1.RestClient.fetch(`/v1/payments/${(0, path_1.encodePathParam)(payment_id)}/refunds/`, Object.assign({ headers: {
+        "Authorization": `Bearer ${config.accessToken}`
+      } }, config.options));
+    }
+  }
+});
+
+// node_modules/mercadopago/dist/clients/paymentRefund/total/index.js
+var require_total = __commonJS({
+  "node_modules/mercadopago/dist/clients/paymentRefund/total/index.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.default = total;
+    var restClient_1 = require_restClient();
+    var path_1 = require_path();
+    function total({ payment_id, config }) {
+      return restClient_1.RestClient.fetch(`/v1/payments/${(0, path_1.encodePathParam)(payment_id)}/refunds`, Object.assign({ method: "POST", headers: {
+        "Authorization": `Bearer ${config.accessToken}`
+      }, body: JSON.stringify({}) }, config.options));
+    }
+  }
+});
+
+// node_modules/mercadopago/dist/clients/paymentRefund/index.js
+var require_paymentRefund = __commonJS({
+  "node_modules/mercadopago/dist/clients/paymentRefund/index.js"(exports2) {
+    "use strict";
+    var __importDefault = exports2 && exports2.__importDefault || function(mod) {
+      return mod && mod.__esModule ? mod : { "default": mod };
+    };
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.PaymentRefund = void 0;
+    var get_1 = __importDefault(require_get8());
+    var create_1 = __importDefault(require_create6());
+    var list_1 = __importDefault(require_list3());
+    var total_1 = __importDefault(require_total());
+    var PaymentRefund = class {
+      constructor(mercadoPagoConfig) {
+        this.config = mercadoPagoConfig;
+      }
+      /**
+       * Retrieve a specific refund by payment ID and refund ID.
+       *
+       * @see {@link https://github.com/mercadopago/sdk-nodejs/blob/master/src/examples/paymentRefund/get.ts Usage Example }.
+       */
+      get({ payment_id, refund_id, requestOptions }) {
+        this.config.options = Object.assign(Object.assign({}, this.config.options), requestOptions);
+        return (0, get_1.default)({ payment_id, refund_id, config: this.config });
+      }
+      /**
+       * Create a partial refund on a payment.
+       *
+       * To refund a specific amount, include the `amount` field in the body.
+       * For a full refund, use the {@link total} method instead.
+       *
+       * @see {@link https://github.com/mercadopago/sdk-nodejs/blob/master/src/examples/paymentRefund/create.ts Usage Example }.
+       */
+      create({ payment_id, body, requestOptions }) {
+        this.config.options = Object.assign(Object.assign({}, this.config.options), requestOptions);
+        return (0, create_1.default)({ payment_id, body, config: this.config });
+      }
+      /**
+       * Create a total (full-amount) refund on a payment.
+       *
+       * Refunds the entire payment amount. No request body is required.
+       *
+       * @see {@link https://github.com/mercadopago/sdk-nodejs/blob/master/src/examples/paymentRefund/create.ts Usage Example }.
+       */
+      total({ payment_id, requestOptions }) {
+        this.config.options = Object.assign(Object.assign({}, this.config.options), requestOptions);
+        return (0, total_1.default)({ payment_id, config: this.config });
+      }
+      /**
+       * List all refunds associated with a payment.
+       *
+       * @see {@link https://github.com/mercadopago/sdk-nodejs/blob/master/src/examples/paymentRefund/list.ts Usage Example }.
+       */
+      list({ payment_id, requestOptions }) {
+        this.config.options = Object.assign(Object.assign({}, this.config.options), requestOptions);
+        return (0, list_1.default)({ payment_id, config: this.config });
+      }
+    };
+    exports2.PaymentRefund = PaymentRefund;
+  }
+});
+
+// node_modules/mercadopago/dist/clients/paymentMethod/get/index.js
+var require_get9 = __commonJS({
+  "node_modules/mercadopago/dist/clients/paymentMethod/get/index.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.default = get;
+    var restClient_1 = require_restClient();
+    function get({ config }) {
+      return restClient_1.RestClient.fetch("/v1/payment_methods", Object.assign({ headers: {
+        "Authorization": `Bearer ${config.accessToken}`
+      } }, config.options));
+    }
+  }
+});
+
+// node_modules/mercadopago/dist/clients/paymentMethod/index.js
+var require_paymentMethod = __commonJS({
+  "node_modules/mercadopago/dist/clients/paymentMethod/index.js"(exports2) {
+    "use strict";
+    var __importDefault = exports2 && exports2.__importDefault || function(mod) {
+      return mod && mod.__esModule ? mod : { "default": mod };
+    };
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.PaymentMethod = void 0;
+    var get_1 = __importDefault(require_get9());
+    var PaymentMethod = class {
+      constructor(mercadoPagoConfig) {
+        this.config = mercadoPagoConfig;
+      }
+      /**
+       * Retrieve all payment methods available for the authenticated account.
+       *
+       * Returns an array of payment methods with their settings, amount
+       * constraints, and processing modes.
+       *
+       * @see {@link https://github.com/mercadopago/sdk-nodejs/blob/master/examples/paymentmethod/get.ts Usage Example }.
+       */
+      get(paymentMethodsGetOptions = {}) {
+        const { requestOptions } = paymentMethodsGetOptions;
+        this.config.options = Object.assign(Object.assign({}, this.config.options), requestOptions);
+        return (0, get_1.default)({ config: this.config });
+      }
+    };
+    exports2.PaymentMethod = PaymentMethod;
+  }
+});
+
+// node_modules/mercadopago/dist/clients/payment/capture/index.js
+var require_capture2 = __commonJS({
+  "node_modules/mercadopago/dist/clients/payment/capture/index.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.default = capture;
+    var restClient_1 = require_restClient();
+    var path_1 = require_path();
+    function capture({ id, transaction_amount, config }) {
+      const captureBody = {
+        capture: true,
+        transaction_amount
+      };
+      return restClient_1.RestClient.fetch(`/v1/payments/${(0, path_1.encodePathParam)(id)}`, Object.assign({ method: "PUT", headers: {
+        "Authorization": `Bearer ${config.accessToken}`
+      }, body: JSON.stringify(captureBody) }, config.options));
+    }
+  }
+});
+
+// node_modules/mercadopago/dist/clients/payment/search/index.js
+var require_search5 = __commonJS({
+  "node_modules/mercadopago/dist/clients/payment/search/index.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.default = search;
+    var restClient_1 = require_restClient();
+    function search({ options, config }) {
+      return restClient_1.RestClient.fetch("/v1/payments/search", Object.assign({ headers: {
+        "Authorization": `Bearer ${config.accessToken}`
+      }, queryParams: Object.assign({}, options) }, config.options));
+    }
+  }
+});
+
+// node_modules/mercadopago/dist/clients/payment/cancel/index.js
+var require_cancel2 = __commonJS({
+  "node_modules/mercadopago/dist/clients/payment/cancel/index.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.default = cancel;
+    var restClient_1 = require_restClient();
+    var path_1 = require_path();
+    function cancel({ id, config }) {
+      const cancelBody = {
+        status: "cancelled"
+      };
+      return restClient_1.RestClient.fetch(`/v1/payments/${(0, path_1.encodePathParam)(id)}`, Object.assign({ method: "PUT", headers: {
+        "Authorization": `Bearer ${config.accessToken}`
+      }, body: JSON.stringify(cancelBody) }, config.options));
+    }
+  }
+});
+
+// node_modules/mercadopago/dist/clients/payment/create/index.js
+var require_create7 = __commonJS({
+  "node_modules/mercadopago/dist/clients/payment/create/index.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.default = create;
+    var restClient_1 = require_restClient();
+    function create({ body, config }) {
+      return restClient_1.RestClient.fetch("/v1/payments", Object.assign({ method: "POST", headers: {
+        "Authorization": `Bearer ${config.accessToken}`
+      }, body: JSON.stringify(body) }, config.options));
+    }
+  }
+});
+
+// node_modules/mercadopago/dist/clients/payment/get/index.js
+var require_get10 = __commonJS({
+  "node_modules/mercadopago/dist/clients/payment/get/index.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.default = get;
+    var restClient_1 = require_restClient();
+    var path_1 = require_path();
+    function get({ id, config }) {
+      return restClient_1.RestClient.fetch(`/v1/payments/${(0, path_1.encodePathParam)(id)}`, Object.assign({ headers: {
+        "Authorization": `Bearer ${config.accessToken}`
+      } }, config.options));
+    }
+  }
+});
+
+// node_modules/mercadopago/dist/clients/payment/update/index.js
+var require_update4 = __commonJS({
+  "node_modules/mercadopago/dist/clients/payment/update/index.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.default = update;
+    var restClient_1 = require_restClient();
+    var path_1 = require_path();
+    function update({ id, body, config }) {
+      return restClient_1.RestClient.fetch(`/v1/payments/${(0, path_1.encodePathParam)(id)}`, Object.assign({ method: "PUT", headers: {
+        "Authorization": `Bearer ${config.accessToken}`
+      }, body: JSON.stringify(body) }, config.options));
+    }
+  }
+});
+
+// node_modules/mercadopago/dist/clients/payment/index.js
+var require_payment = __commonJS({
+  "node_modules/mercadopago/dist/clients/payment/index.js"(exports2) {
+    "use strict";
+    var __importDefault = exports2 && exports2.__importDefault || function(mod) {
+      return mod && mod.__esModule ? mod : { "default": mod };
+    };
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.Payment = void 0;
+    var capture_1 = __importDefault(require_capture2());
+    var search_1 = __importDefault(require_search5());
+    var cancel_1 = __importDefault(require_cancel2());
+    var create_1 = __importDefault(require_create7());
+    var get_1 = __importDefault(require_get10());
+    var update_1 = __importDefault(require_update4());
+    var pagination_1 = require_pagination();
+    var Payment2 = class {
+      constructor(mercadoPagoConfig) {
+        this.config = mercadoPagoConfig;
+      }
+      /**
+       * Search payments that belong to the authenticated collector.
+       *
+       * Supports pagination, sorting, date-range filtering, and arbitrary
+       * query-parameter filters forwarded to `GET /v1/payments/search`.
+       *
+       * @see {@link https://github.com/mercadopago/sdk-nodejs/blob/master/src/examples/payment/search.ts Usage Example}
+       */
+      search(paymentSearchOptions = {}) {
+        const { options, requestOptions } = paymentSearchOptions;
+        this.config.options = Object.assign(Object.assign({}, this.config.options), requestOptions);
+        return (0, search_1.default)({ options, config: this.config });
+      }
+      /**
+       * Cancel a pending or in-process payment by setting its status to `cancelled`.
+       *
+       * Only payments that have not yet been approved can be cancelled.
+       *
+       * @see {@link https://github.com/mercadopago/sdk-nodejs/blob/master/src/examples/payment/cancel.ts Usage Example}
+       */
+      cancel({ id, requestOptions }) {
+        this.config.options = Object.assign(Object.assign({}, this.config.options), requestOptions);
+        return (0, cancel_1.default)({ id, config: this.config });
+      }
+      /**
+       * Capture a previously authorized (pre-auth) payment.
+       *
+       * When the payment was created with `capture: false`, this method finalizes
+       * the charge.  An optional `transaction_amount` allows partial captures.
+       *
+       * @see {@link https://github.com/mercadopago/sdk-nodejs/blob/master/src/examples/payment/capture.ts Usage Example}
+       */
+      capture({ id, transaction_amount, requestOptions }) {
+        this.config.options = Object.assign(Object.assign({}, this.config.options), requestOptions);
+        return (0, capture_1.default)({ id, transaction_amount, config: this.config });
+      }
+      /**
+       * Create a new payment via `POST /v1/payments`.
+       *
+       * The request body must contain at least a `transaction_amount`, a `payer`,
+       * and a `payment_method_id` (or a card `token`).
+       *
+       * @see {@link https://github.com/mercadopago/sdk-nodejs/blob/master/src/examples/payment/create.ts Usage Example}
+       */
+      create({ body, requestOptions }) {
+        this.config.options = Object.assign(Object.assign({}, this.config.options), requestOptions);
+        return (0, create_1.default)({ body, config: this.config });
+      }
+      /**
+       * Retrieve a single payment by its unique identifier.
+       *
+       * Calls `GET /v1/payments/:id` and returns the full payment resource.
+       *
+       * @see {@link https://github.com/mercadopago/sdk-nodejs/blob/master/src/examples/payment/get.ts Usage Example}
+       */
+      get({ id, requestOptions }) {
+        this.config.options = Object.assign(Object.assign({}, this.config.options), requestOptions);
+        return (0, get_1.default)({ id, config: this.config });
+      }
+      /**
+       * Update an existing payment via `PUT /v1/payments/:id`.
+       *
+       * Accepts any subset of payment fields to modify on the existing resource.
+       */
+      update({ id, body, requestOptions }) {
+        this.config.options = Object.assign(Object.assign({}, this.config.options), requestOptions);
+        return (0, update_1.default)({ id, body, config: this.config });
+      }
+      /**
+       * Lazily iterates over every payment matching the search criteria.
+       *
+       * Pages are fetched on demand as the async iterator advances.
+       *
+       * @example
+       * ```ts
+       * for await (const payment of new Payment(config).searchAll({ options: { status: 'approved' } })) {
+       *   console.log(payment.id);
+       * }
+       * ```
+       */
+      searchAll(searchData = {}) {
+        const { options, requestOptions } = searchData;
+        return (0, pagination_1.createAutoPagingIterable)((opts) => {
+          this.config.options = Object.assign(Object.assign({}, this.config.options), requestOptions);
+          return (0, search_1.default)({ options: Object.assign(Object.assign({}, options), opts), config: this.config });
+        }, options);
+      }
+    };
+    exports2.Payment = Payment2;
+  }
+});
+
+// node_modules/mercadopago/dist/clients/preApproval/create/index.js
+var require_create8 = __commonJS({
+  "node_modules/mercadopago/dist/clients/preApproval/create/index.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.default = create;
+    var restClient_1 = require_restClient();
+    function create({ body, config }) {
+      return restClient_1.RestClient.fetch("/preapproval/", Object.assign({ method: "POST", headers: {
+        "Authorization": `Bearer ${config.accessToken}`
+      }, body: JSON.stringify(body) }, config.options));
+    }
+  }
+});
+
+// node_modules/mercadopago/dist/clients/preApproval/get/index.js
+var require_get11 = __commonJS({
+  "node_modules/mercadopago/dist/clients/preApproval/get/index.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.default = get;
+    var path_1 = require_path();
+    var restClient_1 = require_restClient();
+    function get({ id, config }) {
+      return restClient_1.RestClient.fetch(`/preapproval/${(0, path_1.encodePathParam)(id)}`, Object.assign({ method: "GET", headers: {
+        "Authorization": `Bearer ${config.accessToken}`
+      } }, config.options));
+    }
+  }
+});
+
+// node_modules/mercadopago/dist/clients/preApproval/search/index.js
+var require_search6 = __commonJS({
+  "node_modules/mercadopago/dist/clients/preApproval/search/index.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.default = search;
+    var restClient_1 = require_restClient();
+    function search({ options, config }) {
+      return restClient_1.RestClient.fetch("/preapproval/search", Object.assign({ headers: {
+        "Authorization": `Bearer ${config.accessToken}`
+      }, queryParams: Object.assign({}, options) }, config.options));
+    }
+  }
+});
+
+// node_modules/mercadopago/dist/clients/preApproval/update/index.js
+var require_update5 = __commonJS({
+  "node_modules/mercadopago/dist/clients/preApproval/update/index.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.default = update;
+    var path_1 = require_path();
+    var restClient_1 = require_restClient();
+    function update({ id, body, config }) {
+      return restClient_1.RestClient.fetch(`/preapproval/${(0, path_1.encodePathParam)(id)}`, Object.assign({ method: "PUT", headers: {
+        "Authorization": `Bearer ${config.accessToken}`
+      }, body: JSON.stringify(body) }, config.options));
+    }
+  }
+});
+
+// node_modules/mercadopago/dist/clients/preApproval/index.js
+var require_preApproval = __commonJS({
+  "node_modules/mercadopago/dist/clients/preApproval/index.js"(exports2) {
+    "use strict";
+    var __importDefault = exports2 && exports2.__importDefault || function(mod) {
+      return mod && mod.__esModule ? mod : { "default": mod };
+    };
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.PreApproval = void 0;
+    var create_1 = __importDefault(require_create8());
+    var get_1 = __importDefault(require_get11());
+    var search_1 = __importDefault(require_search6());
+    var update_1 = __importDefault(require_update5());
+    var PreApproval = class {
+      constructor(mercadoPagoConfig) {
+        this.config = mercadoPagoConfig;
+      }
+      /**
+       * Create a new subscription for a buyer.
+       *
+       * @see {@link https://github.com/mercadopago/sdk-nodejs/blob/master/src/examples/preApproval/create.ts Usage Example }.
+       */
+      create({ body, requestOptions }) {
+        this.config.options = Object.assign(Object.assign({}, this.config.options), requestOptions);
+        return (0, create_1.default)({ body, config: this.config });
+      }
+      /**
+       * Retrieve an existing subscription by its unique identifier.
+       *
+       * @see {@link https://github.com/mercadopago/sdk-nodejs/blob/master/src/examples/preApproval/get.ts Usage Example }.
+       */
+      get({ id, requestOptions }) {
+        this.config.options = Object.assign(Object.assign({}, this.config.options), requestOptions);
+        return (0, get_1.default)({ id, config: this.config });
+      }
+      /**
+       * Search subscriptions using filters such as status, payer, or plan.
+       *
+       * @see {@link https://github.com/mercadopago/sdk-nodejs/blob/master/src/examples/preApproval/search.ts Usage Example }.
+       */
+      search(preApprovalSearchData = {}) {
+        const { options, requestOptions } = preApprovalSearchData;
+        this.config.options = Object.assign(Object.assign({}, this.config.options), requestOptions);
+        return (0, search_1.default)({ options, config: this.config });
+      }
+      /**
+       * Update an existing subscription (e.g. change status, amount, or card token).
+       *
+       * @see {@link https://github.com/mercadopago/sdk-nodejs/blob/master/src/examples/preApproval/update.ts Usage Example }.
+       */
+      update({ id, body, requestOptions }) {
+        this.config.options = Object.assign(Object.assign({}, this.config.options), requestOptions);
+        return (0, update_1.default)({ id, body, config: this.config });
+      }
+    };
+    exports2.PreApproval = PreApproval;
+  }
+});
+
+// node_modules/mercadopago/dist/clients/preApprovalPlan/get/index.js
+var require_get12 = __commonJS({
+  "node_modules/mercadopago/dist/clients/preApprovalPlan/get/index.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.default = get;
+    var path_1 = require_path();
+    var restClient_1 = require_restClient();
+    function get({ id, config }) {
+      return restClient_1.RestClient.fetch(`/preapproval_plan/${(0, path_1.encodePathParam)(id)}`, Object.assign({ headers: {
+        "Authorization": `Bearer ${config.accessToken}`
+      } }, config.options));
+    }
+  }
+});
+
+// node_modules/mercadopago/dist/clients/preApprovalPlan/create/index.js
+var require_create9 = __commonJS({
+  "node_modules/mercadopago/dist/clients/preApprovalPlan/create/index.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.default = create;
+    var restClient_1 = require_restClient();
+    function create({ body, config }) {
+      return restClient_1.RestClient.fetch("/preapproval_plan/", Object.assign({ method: "POST", headers: {
+        "Authorization": `Bearer ${config.accessToken}`
+      }, body: JSON.stringify(body) }, config.options));
+    }
+  }
+});
+
+// node_modules/mercadopago/dist/clients/preApprovalPlan/update/index.js
+var require_update6 = __commonJS({
+  "node_modules/mercadopago/dist/clients/preApprovalPlan/update/index.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.default = update;
+    var path_1 = require_path();
+    var restClient_1 = require_restClient();
+    function update({ id, updatePreApprovalPlanRequest, config }) {
+      return restClient_1.RestClient.fetch(`/preapproval_plan/${(0, path_1.encodePathParam)(id)}`, Object.assign({ method: "PUT", headers: {
+        "Authorization": `Bearer ${config.accessToken}`
+      }, body: JSON.stringify(updatePreApprovalPlanRequest) }, config.options));
+    }
+  }
+});
+
+// node_modules/mercadopago/dist/clients/preApprovalPlan/search/index.js
+var require_search7 = __commonJS({
+  "node_modules/mercadopago/dist/clients/preApprovalPlan/search/index.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.default = search;
+    var restClient_1 = require_restClient();
+    function search({ options, config }) {
+      return restClient_1.RestClient.fetch("/preapproval_plan/search", Object.assign({ headers: {
+        "Authorization": `Bearer ${config.accessToken}`
+      }, queryParams: Object.assign({}, options) }, config.options));
+    }
+  }
+});
+
+// node_modules/mercadopago/dist/clients/preApprovalPlan/index.js
+var require_preApprovalPlan = __commonJS({
+  "node_modules/mercadopago/dist/clients/preApprovalPlan/index.js"(exports2) {
+    "use strict";
+    var __importDefault = exports2 && exports2.__importDefault || function(mod) {
+      return mod && mod.__esModule ? mod : { "default": mod };
+    };
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.PreApprovalPlan = void 0;
+    var get_1 = __importDefault(require_get12());
+    var create_1 = __importDefault(require_create9());
+    var update_1 = __importDefault(require_update6());
+    var search_1 = __importDefault(require_search7());
+    var PreApprovalPlan = class {
+      constructor(mercadoPagoConfig) {
+        this.config = mercadoPagoConfig;
+      }
+      /**
+       * Create a new subscription plan template.
+       *
+       * @see {@link https://github.com/mercadopago/sdk-nodejs/blob/master/src/examples/preapprovalplan/create.ts Usage Example }.
+       */
+      create({ body, requestOptions }) {
+        this.config.options = Object.assign(Object.assign({}, this.config.options), requestOptions);
+        return (0, create_1.default)({ body, config: this.config });
+      }
+      /**
+       * Retrieve an existing subscription plan by its unique identifier.
+       *
+       * @see {@link https://github.com/mercadopago/sdk-nodejs/blob/master/src/examples/preapprovalplan/get.ts Usage Example }.
+       */
+      get({ preApprovalPlanId, requestOptions }) {
+        this.config.options = Object.assign(Object.assign({}, this.config.options), requestOptions);
+        return (0, get_1.default)({ id: preApprovalPlanId, config: this.config });
+      }
+      /**
+       * Update an existing subscription plan (e.g. change amount, status, or allowed payment methods).
+       *
+       * @see {@link https://github.com/mercadopago/sdk-nodejs/blob/master/src/examples/preapprovalplan/update.ts Usage Example }.
+       */
+      update({ id, updatePreApprovalPlanRequest, requestOptions }) {
+        this.config.options = Object.assign(Object.assign({}, this.config.options), requestOptions);
+        return (0, update_1.default)({ id, updatePreApprovalPlanRequest, config: this.config });
+      }
+      /**
+       * Search subscription plans using filters such as status or free-text query.
+       *
+       * @see {@link https://github.com/mercadopago/sdk-nodejs/blob/master/src/examples/preapprovalplan/search.ts Usage Example }.
+       */
+      search(preApprovalPlanSearchData = {}) {
+        const { options, requestOptions } = preApprovalPlanSearchData;
+        this.config.options = Object.assign(Object.assign({}, this.config.options), requestOptions);
+        return (0, search_1.default)({ options, config: this.config });
+      }
+    };
+    exports2.PreApprovalPlan = PreApprovalPlan;
+  }
+});
+
+// node_modules/mercadopago/dist/clients/point/cancelPaymentIntent/index.js
+var require_cancelPaymentIntent = __commonJS({
+  "node_modules/mercadopago/dist/clients/point/cancelPaymentIntent/index.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.default = cancelPaymentIntent;
+    var path_1 = require_path();
+    var restClient_1 = require_restClient();
+    function cancelPaymentIntent({ device_id, payment_intent_id, config }) {
+      return restClient_1.RestClient.fetch(`/point/integration-api/devices/${(0, path_1.encodePathParam)(device_id)}/payment-intents/${(0, path_1.encodePathParam)(payment_intent_id)}`, Object.assign({ method: "DELETE", headers: {
+        Authorization: `Bearer ${config.accessToken}`
+      } }, config.options));
+    }
+  }
+});
+
+// node_modules/mercadopago/dist/clients/point/changeDeviceOperatingMode/index.js
+var require_changeDeviceOperatingMode = __commonJS({
+  "node_modules/mercadopago/dist/clients/point/changeDeviceOperatingMode/index.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.default = changeDeviceOperatingMode;
+    var path_1 = require_path();
+    var restClient_1 = require_restClient();
+    function changeDeviceOperatingMode({ device_id, request, config }) {
+      return restClient_1.RestClient.fetch(`/point/integration-api/devices/${(0, path_1.encodePathParam)(device_id)}`, Object.assign({ method: "PATCH", headers: {
+        Authorization: `Bearer ${config.accessToken}`
+      }, body: JSON.stringify(request) }, config.options));
+    }
+  }
+});
+
+// node_modules/mercadopago/dist/clients/point/createPaymentIntent/index.js
+var require_createPaymentIntent = __commonJS({
+  "node_modules/mercadopago/dist/clients/point/createPaymentIntent/index.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.default = createPaymentIntent;
+    var path_1 = require_path();
+    var restClient_1 = require_restClient();
+    function createPaymentIntent({ device_id, request, config }) {
+      return restClient_1.RestClient.fetch(`/point/integration-api/devices/${(0, path_1.encodePathParam)(device_id)}/payment-intents`, Object.assign({ method: "POST", headers: {
+        Authorization: `Bearer ${config.accessToken}`
+      }, body: JSON.stringify(request) }, config.options));
+    }
+  }
+});
+
+// node_modules/mercadopago/dist/clients/point/getDevices/index.js
+var require_getDevices = __commonJS({
+  "node_modules/mercadopago/dist/clients/point/getDevices/index.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.default = getDevices;
+    var restClient_1 = require_restClient();
+    function getDevices({ options, config }) {
+      return restClient_1.RestClient.fetch("/point/integration-api/devices", Object.assign({ method: "GET", headers: {
+        Authorization: `Bearer ${config.accessToken}`
+      }, queryParams: Object.assign({}, options) }, config.options));
+    }
+  }
+});
+
+// node_modules/mercadopago/dist/clients/point/getPaymentIntentList/index.js
+var require_getPaymentIntentList = __commonJS({
+  "node_modules/mercadopago/dist/clients/point/getPaymentIntentList/index.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.default = getPaymentIntentList;
+    var restClient_1 = require_restClient();
+    function getPaymentIntentList({ options, config }) {
+      return restClient_1.RestClient.fetch("/point/integration-api/payment-intents/events", Object.assign({ method: "GET", headers: {
+        Authorization: `Bearer ${config.accessToken}`
+      }, queryParams: Object.assign({}, options) }, config.options));
+    }
+  }
+});
+
+// node_modules/mercadopago/dist/clients/point/getPaymentIntentStatus/index.js
+var require_getPaymentIntentStatus = __commonJS({
+  "node_modules/mercadopago/dist/clients/point/getPaymentIntentStatus/index.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.default = getPaymentIntentStatus;
+    var path_1 = require_path();
+    var restClient_1 = require_restClient();
+    function getPaymentIntentStatus({ payment_intent_id, config }) {
+      return restClient_1.RestClient.fetch(`/point/integration-api/payment-intents/${(0, path_1.encodePathParam)(payment_intent_id)}/events`, Object.assign({ method: "GET", headers: {
+        Authorization: `Bearer ${config.accessToken}`
+      } }, config.options));
+    }
+  }
+});
+
+// node_modules/mercadopago/dist/clients/point/searchPaymentIntent/index.js
+var require_searchPaymentIntent = __commonJS({
+  "node_modules/mercadopago/dist/clients/point/searchPaymentIntent/index.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.default = searchPaymentIntent;
+    var path_1 = require_path();
+    var restClient_1 = require_restClient();
+    function searchPaymentIntent({ payment_intent_id, config }) {
+      return restClient_1.RestClient.fetch(`/point/integration-api/payment-intents/${(0, path_1.encodePathParam)(payment_intent_id)}`, Object.assign({ method: "GET", headers: {
+        Authorization: `Bearer ${config.accessToken}`
+      } }, config.options));
+    }
+  }
+});
+
+// node_modules/mercadopago/dist/clients/point/index.js
+var require_point = __commonJS({
+  "node_modules/mercadopago/dist/clients/point/index.js"(exports2) {
+    "use strict";
+    var __importDefault = exports2 && exports2.__importDefault || function(mod) {
+      return mod && mod.__esModule ? mod : { "default": mod };
+    };
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.Point = void 0;
+    var cancelPaymentIntent_1 = __importDefault(require_cancelPaymentIntent());
+    var changeDeviceOperatingMode_1 = __importDefault(require_changeDeviceOperatingMode());
+    var createPaymentIntent_1 = __importDefault(require_createPaymentIntent());
+    var getDevices_1 = __importDefault(require_getDevices());
+    var getPaymentIntentList_1 = __importDefault(require_getPaymentIntentList());
+    var getPaymentIntentStatus_1 = __importDefault(require_getPaymentIntentStatus());
+    var searchPaymentIntent_1 = __importDefault(require_searchPaymentIntent());
+    var Point = class {
+      constructor(mercadoPagoConfig) {
+        this.config = mercadoPagoConfig;
+      }
+      /**
+       * Create a new payment intent on a specific Point device.
+       *
+       * The intent is sent to the terminal, which will prompt the buyer to
+       * present a card or other payment method.
+       *
+       * @see {@link https://github.com/mercadopago/sdk-nodejs/blob/master/src/examples/point/createPaymentIntent.ts Usage Example }.
+       */
+      createPaymentIntent({ device_id, request, requestOptions }) {
+        this.config.options = Object.assign(Object.assign({}, this.config.options), requestOptions);
+        return (0, createPaymentIntent_1.default)({ device_id, request, config: this.config });
+      }
+      /**
+       * Retrieve the details of an existing payment intent by its ID.
+       *
+       * @see {@link https://github.com/mercadopago/sdk-nodejs/blob/master/src/examples/point/searchPaymentIntent.ts Usage Example }.
+       */
+      searchPaymentIntent({ payment_intent_id, requestOptions }) {
+        this.config.options = Object.assign(Object.assign({}, this.config.options), requestOptions);
+        return (0, searchPaymentIntent_1.default)({ payment_intent_id, config: this.config });
+      }
+      /**
+       * Cancel a pending payment intent on a specific Point device.
+       *
+       * Only intents that have not yet been completed can be cancelled.
+       *
+       * @see {@link https://github.com/mercadopago/sdk-nodejs/blob/master/src/examples/point/cancelPaymentIntent.ts Usage Example }.
+       */
+      cancelPaymentIntent({ device_id, payment_intent_id, requestOptions }) {
+        this.config.options = Object.assign(Object.assign({}, this.config.options), requestOptions);
+        return (0, cancelPaymentIntent_1.default)({ device_id, payment_intent_id, config: this.config });
+      }
+      /**
+       * List payment intent events, optionally filtered by date range.
+       *
+       * Returns the lifecycle events (creation, completion, cancellation) for
+       * all payment intents associated with the authenticated account.
+       *
+       * @see {@link https://github.com/mercadopago/sdk-nodejs/blob/master/src/examples/point/getPaymentIntentList.ts Usage Example }.
+       */
+      getPaymentIntentList(pointGetPaymentIntentListOptions = {}) {
+        const { body, requestOptions } = pointGetPaymentIntentListOptions;
+        this.config.options = Object.assign(Object.assign({}, this.config.options), requestOptions);
+        return (0, getPaymentIntentList_1.default)({ options: body === null || body === void 0 ? void 0 : body.options, config: this.config });
+      }
+      /**
+       * Get the latest status event for a specific payment intent.
+       *
+       * @see {@link https://github.com/mercadopago/sdk-nodejs/blob/master/src/examples/point/getPaymentIntentStatus.ts Usage Example }.
+       */
+      getPaymentIntentStatus({ payment_intent_id, requestOptions }) {
+        this.config.options = Object.assign(Object.assign({}, this.config.options), requestOptions);
+        return (0, getPaymentIntentStatus_1.default)({ payment_intent_id, config: this.config });
+      }
+      /**
+       * List Point devices registered to the authenticated account.
+       *
+       * Results can be filtered by store and POS identifiers.
+       *
+       * @see {@link https://github.com/mercadopago/sdk-nodejs/blob/master/src/examples/point/getDevices.ts Usage Example }.
+       */
+      getDevices({ request, requestOptions }) {
+        this.config.options = Object.assign(Object.assign({}, this.config.options), requestOptions);
+        return (0, getDevices_1.default)({ options: request === null || request === void 0 ? void 0 : request.options, config: this.config });
+      }
+      /**
+       * Change the operating mode of a Point device (e.g. `PDV` or `STANDALONE`).
+       *
+       * In `PDV` mode the device receives payment intents from the integration;
+       * in `STANDALONE` mode the seller operates the device manually.
+       *
+       * @see {@link https://github.com/mercadopago/sdk-nodejs/blob/master/src/examples/point/changeDeviceOperatingMode.ts Usage Example }.
+       */
+      changeDeviceOperatingMode({ device_id, request, requestOptions }) {
+        this.config.options = Object.assign(Object.assign({}, this.config.options), requestOptions);
+        return (0, changeDeviceOperatingMode_1.default)({ device_id, request, config: this.config });
+      }
+    };
+    exports2.Point = Point;
+  }
+});
+
+// node_modules/mercadopago/dist/clients/preference/get/index.js
+var require_get13 = __commonJS({
+  "node_modules/mercadopago/dist/clients/preference/get/index.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.default = get;
+    var path_1 = require_path();
+    var restClient_1 = require_restClient();
+    function get({ id, config }) {
+      return restClient_1.RestClient.fetch(`/checkout/preferences/${(0, path_1.encodePathParam)(id)}`, Object.assign({ headers: {
+        "Authorization": `Bearer ${config.accessToken}`
+      } }, config.options));
+    }
+  }
+});
+
+// node_modules/mercadopago/dist/clients/preference/create/index.js
+var require_create10 = __commonJS({
+  "node_modules/mercadopago/dist/clients/preference/create/index.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.default = create;
+    var restClient_1 = require_restClient();
+    function create({ body, config }) {
+      return restClient_1.RestClient.fetch("/checkout/preferences/", Object.assign({ method: "POST", headers: {
+        "Authorization": `Bearer ${config.accessToken}`
+      }, body: JSON.stringify(body) }, config.options));
+    }
+  }
+});
+
+// node_modules/mercadopago/dist/clients/preference/update/index.js
+var require_update7 = __commonJS({
+  "node_modules/mercadopago/dist/clients/preference/update/index.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.default = update;
+    var path_1 = require_path();
+    var restClient_1 = require_restClient();
+    function update({ id, updatePreferenceRequest, config }) {
+      return restClient_1.RestClient.fetch(`/checkout/preferences/${(0, path_1.encodePathParam)(id)}`, Object.assign({ method: "PUT", headers: {
+        "Authorization": `Bearer ${config.accessToken}`
+      }, body: JSON.stringify(updatePreferenceRequest) }, config.options));
+    }
+  }
+});
+
+// node_modules/mercadopago/dist/clients/preference/search/index.js
+var require_search8 = __commonJS({
+  "node_modules/mercadopago/dist/clients/preference/search/index.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.default = search;
+    var restClient_1 = require_restClient();
+    function search({ options, config }) {
+      return restClient_1.RestClient.fetch("/checkout/preferences/search", Object.assign({ headers: {
+        "Authorization": `Bearer ${config.accessToken}`
+      }, queryParams: Object.assign({}, options) }, config.options));
+    }
+  }
+});
+
+// node_modules/mercadopago/dist/clients/preference/index.js
+var require_preference = __commonJS({
+  "node_modules/mercadopago/dist/clients/preference/index.js"(exports2) {
+    "use strict";
+    var __importDefault = exports2 && exports2.__importDefault || function(mod) {
+      return mod && mod.__esModule ? mod : { "default": mod };
+    };
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.Preference = void 0;
+    var get_1 = __importDefault(require_get13());
+    var create_1 = __importDefault(require_create10());
+    var update_1 = __importDefault(require_update7());
+    var search_1 = __importDefault(require_search8());
+    var Preference2 = class {
+      constructor(mercadoPagoConfig) {
+        this.config = mercadoPagoConfig;
+      }
+      /**
+       * Retrieve a single preference by its unique identifier.
+       *
+       * @see {@link https://github.com/mercadopago/sdk-nodejs/blob/master/src/examples/preference/get.ts Usage Example }.
+       */
+      get({ preferenceId, requestOptions }) {
+        this.config.options = Object.assign(Object.assign({}, this.config.options), requestOptions);
+        return (0, get_1.default)({ id: preferenceId, config: this.config });
+      }
+      /**
+       * Create a new Checkout Pro preference and obtain an `init_point` URL.
+       *
+       * @see {@link https://github.com/mercadopago/sdk-nodejs/blob/master/src/examples/preference/create.ts Usage Example }.
+       */
+      create({ body, requestOptions }) {
+        this.config.options = Object.assign(Object.assign({}, this.config.options), requestOptions);
+        return (0, create_1.default)({ body, config: this.config });
+      }
+      /**
+       * Update an existing preference (e.g. change items, amounts, or expiration).
+       *
+       * @see {@link https://github.com/mercadopago/sdk-nodejs/blob/master/src/examples/preference/update.ts Usage Example }.
+       */
+      update({ id, updatePreferenceRequest, requestOptions }) {
+        this.config.options = Object.assign(Object.assign({}, this.config.options), requestOptions);
+        return (0, update_1.default)({ id, updatePreferenceRequest, config: this.config });
+      }
+      /**
+       * Search preferences using filters such as external reference or sponsor.
+       *
+       * @see {@link https://github.com/mercadopago/sdk-nodejs/blob/master/src/examples/preference/search.ts Usage Example }.
+       */
+      search(preferenceSearchData = {}) {
+        const { options, requestOptions } = preferenceSearchData;
+        this.config.options = Object.assign(Object.assign({}, this.config.options), requestOptions);
+        return (0, search_1.default)({ options, config: this.config });
+      }
+    };
+    exports2.Preference = Preference2;
+  }
+});
+
+// node_modules/mercadopago/dist/clients/oAuth/create/index.js
+var require_create11 = __commonJS({
+  "node_modules/mercadopago/dist/clients/oAuth/create/index.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.default = create;
+    var restClient_1 = require_restClient();
+    function create({ body, config }) {
+      const defaultRequest = Object.assign(Object.assign({}, body), { "grant_type": "authorization_code" });
+      return restClient_1.RestClient.fetch("/oauth/token", Object.assign({ method: "POST", headers: {
+        "Authorization": `Bearer ${config.accessToken}`
+      }, body: JSON.stringify(defaultRequest) }, config.options));
+    }
+  }
+});
+
+// node_modules/mercadopago/dist/clients/oAuth/refresh/index.js
+var require_refresh = __commonJS({
+  "node_modules/mercadopago/dist/clients/oAuth/refresh/index.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.default = refresh;
+    var restClient_1 = require_restClient();
+    function refresh({ body, config }) {
+      const defaultRequest = Object.assign(Object.assign({}, body), { "grant_type": "refresh_token" });
+      return restClient_1.RestClient.fetch("/oauth/token", Object.assign({ method: "POST", headers: {
+        "Authorization": `Bearer ${config.accessToken}`
+      }, body: JSON.stringify(defaultRequest) }, config.options));
+    }
+  }
+});
+
+// node_modules/mercadopago/dist/clients/oAuth/getAuthorizationURL/index.js
+var require_getAuthorizationURL = __commonJS({
+  "node_modules/mercadopago/dist/clients/oAuth/getAuthorizationURL/index.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.default = getAuthorizationURL;
+    var restClient_1 = require_restClient();
+    function getAuthorizationURL({ options }) {
+      const defaultOptions = Object.assign(Object.assign({}, options), { response_type: "code", platform_id: "mp" });
+      const AUTH_HOST = "https://auth.mercadopago.com/authorization";
+      return restClient_1.RestClient.appendQueryParamsToUrl(AUTH_HOST, defaultOptions);
+    }
+  }
+});
+
+// node_modules/mercadopago/dist/clients/oAuth/index.js
+var require_oAuth = __commonJS({
+  "node_modules/mercadopago/dist/clients/oAuth/index.js"(exports2) {
+    "use strict";
+    var __importDefault = exports2 && exports2.__importDefault || function(mod) {
+      return mod && mod.__esModule ? mod : { "default": mod };
+    };
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.OAuth = void 0;
+    var create_1 = __importDefault(require_create11());
+    var refresh_1 = __importDefault(require_refresh());
+    var getAuthorizationURL_1 = __importDefault(require_getAuthorizationURL());
+    var OAuth = class {
+      constructor(mercadoPagoConfig) {
+        this.config = mercadoPagoConfig;
+      }
+      /**
+       * Exchange an authorization code for an access token and refresh token.
+       *
+       * Call this after the seller is redirected back to your `redirect_uri`
+       * with a temporary `code` query parameter.
+       *
+       * @see {@link https://github.com/mercadopago/sdk-nodejs/blob/master/src/examples/oauth/create.ts Usage Example }.
+       */
+      create({ body, requestOptions }) {
+        this.config.options = Object.assign(Object.assign({}, this.config.options), requestOptions);
+        return (0, create_1.default)({ body, config: this.config });
+      }
+      /**
+       * Obtain a new access token using a previously issued refresh token.
+       *
+       * Access tokens have a limited lifetime; call this method to rotate
+       * credentials without requiring the seller to re-authorize.
+       *
+       * @see {@link https://github.com/mercadopago/sdk-nodejs/blob/master/src/examples/oauth/refresh.ts Usage Example }.
+       */
+      refresh({ body, requestOptions }) {
+        this.config.options = Object.assign(Object.assign({}, this.config.options), requestOptions);
+        return (0, refresh_1.default)({ body, config: this.config });
+      }
+      /**
+       * Build the MercadoPago authorization URL to which the seller should be redirected.
+       *
+       * The returned URL points to `auth.mercadopago.com` and includes the
+       * required OAuth query parameters. Redirect the seller to this URL so
+       * they can grant your application the requested permissions.
+       *
+       * @see {@link https://github.com/mercadopago/sdk-nodejs/blob/master/src/examples/oauth/getAuthorizationURL.ts Usage Example }.
+       */
+      getAuthorizationURL({ options }) {
+        return (0, getAuthorizationURL_1.default)({ options });
+      }
+    };
+    exports2.OAuth = OAuth;
+  }
+});
+
+// node_modules/mercadopago/dist/clients/merchantOrder/create/index.js
+var require_create12 = __commonJS({
+  "node_modules/mercadopago/dist/clients/merchantOrder/create/index.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.default = create;
+    var restClient_1 = require_restClient();
+    function create({ body, config }) {
+      return restClient_1.RestClient.fetch("/merchant_orders", Object.assign({ headers: {
+        "Authorization": `Bearer ${config.accessToken}`
+      }, body: JSON.stringify(body), method: "POST" }, config.options));
+    }
+  }
+});
+
+// node_modules/mercadopago/dist/clients/merchantOrder/get/index.js
+var require_get14 = __commonJS({
+  "node_modules/mercadopago/dist/clients/merchantOrder/get/index.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.default = get;
+    var restClient_1 = require_restClient();
+    var path_1 = require_path();
+    function get({ merchantOrderId, config }) {
+      return restClient_1.RestClient.fetch(`/merchant_orders/${(0, path_1.encodePathParam)(merchantOrderId)}`, Object.assign({ headers: {
+        "Authorization": `Bearer ${config.accessToken}`
+      } }, config.options));
+    }
+  }
+});
+
+// node_modules/mercadopago/dist/clients/merchantOrder/update/index.js
+var require_update8 = __commonJS({
+  "node_modules/mercadopago/dist/clients/merchantOrder/update/index.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.default = update;
+    var restClient_1 = require_restClient();
+    var path_1 = require_path();
+    function update({ merchantOrderId, body, config }) {
+      return restClient_1.RestClient.fetch(`/merchant_orders/${(0, path_1.encodePathParam)(merchantOrderId)}`, Object.assign({ headers: {
+        "Authorization": `Bearer ${config.accessToken}`
+      }, body: JSON.stringify(body), method: "PUT" }, config.options));
+    }
+  }
+});
+
+// node_modules/mercadopago/dist/clients/merchantOrder/search/index.js
+var require_search9 = __commonJS({
+  "node_modules/mercadopago/dist/clients/merchantOrder/search/index.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.default = search;
+    var restClient_1 = require_restClient();
+    function search({ options, config }) {
+      return restClient_1.RestClient.fetch("/merchant_orders/search", Object.assign({ headers: {
+        "Authorization": `Bearer ${config.accessToken}`
+      }, queryParams: Object.assign({}, options) }, config.options));
+    }
+  }
+});
+
+// node_modules/mercadopago/dist/clients/merchantOrder/index.js
+var require_merchantOrder = __commonJS({
+  "node_modules/mercadopago/dist/clients/merchantOrder/index.js"(exports2) {
+    "use strict";
+    var __importDefault = exports2 && exports2.__importDefault || function(mod) {
+      return mod && mod.__esModule ? mod : { "default": mod };
+    };
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.MerchantOrder = void 0;
+    var create_1 = __importDefault(require_create12());
+    var get_1 = __importDefault(require_get14());
+    var update_1 = __importDefault(require_update8());
+    var search_1 = __importDefault(require_search9());
+    var MerchantOrder = class {
+      constructor(mercadoPagoConfig) {
+        this.config = mercadoPagoConfig;
+      }
+      /**
+       * Create a new merchant order.
+       *
+       * @see {@link https://github.com/mercadopago/sdk-nodejs/blob/master/src/examples/merchantOrder/create.ts Usage Example }.
+       */
+      create({ body, requestOptions }) {
+        this.config.options = Object.assign(Object.assign({}, this.config.options), requestOptions);
+        return (0, create_1.default)({ body, config: this.config });
+      }
+      /**
+       * Retrieve a merchant order by its ID.
+       *
+       * @see {@link https://github.com/mercadopago/sdk-nodejs/blob/master/src/examples/merchantOrder/get.ts Usage Example }.
+       */
+      get({ merchantOrderId, requestOptions }) {
+        this.config.options = Object.assign(Object.assign({}, this.config.options), requestOptions);
+        return (0, get_1.default)({ merchantOrderId, config: this.config });
+      }
+      /**
+       * Update an existing merchant order (items, shipments, notification URL, etc.).
+       *
+       * @see {@link https://github.com/mercadopago/sdk-nodejs/blob/master/src/examples/merchantOrder/update.ts Usage Example }.
+       */
+      update({ merchantOrderId, body, requestOptions }) {
+        this.config.options = Object.assign(Object.assign({}, this.config.options), requestOptions);
+        return (0, update_1.default)({ merchantOrderId, body, config: this.config });
+      }
+      /**
+       * Search merchant orders with optional filters such as status, payer, or date range.
+       *
+       * @see {@link https://github.com/mercadopago/sdk-nodejs/blob/master/src/examples/merchantOrder/search.ts Usage Example }.
+       */
+      search(merchantOrderSearchOptions = {}) {
+        const { options, requestOptions } = merchantOrderSearchOptions;
+        this.config.options = Object.assign(Object.assign({}, this.config.options), requestOptions);
+        return (0, search_1.default)({ options, config: this.config });
+      }
+    };
+    exports2.MerchantOrder = MerchantOrder;
+  }
+});
+
+// node_modules/mercadopago/dist/clients/user/get/index.js
+var require_get15 = __commonJS({
+  "node_modules/mercadopago/dist/clients/user/get/index.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.default = get;
+    var restClient_1 = require_restClient();
+    function get({ config }) {
+      return restClient_1.RestClient.fetch("/users/me", Object.assign({ headers: {
+        "Authorization": `Bearer ${config.accessToken}`
+      } }, config.options));
+    }
+  }
+});
+
+// node_modules/mercadopago/dist/clients/user/index.js
+var require_user = __commonJS({
+  "node_modules/mercadopago/dist/clients/user/index.js"(exports2) {
+    "use strict";
+    var __importDefault = exports2 && exports2.__importDefault || function(mod) {
+      return mod && mod.__esModule ? mod : { "default": mod };
+    };
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.User = void 0;
+    var get_1 = __importDefault(require_get15());
+    var User = class {
+      constructor(mercadoPagoConfig) {
+        this.config = mercadoPagoConfig;
+      }
+      /**
+       * Retrieve the profile of the authenticated user.
+       *
+       * Calls the `GET /users/me` endpoint and returns comprehensive account
+       * information including personal data, reputation, and status.
+       *
+       * @see {@link https://github.com/mercadopago/sdk-nodejs/blob/master/examples/user/get/get.ts Usage Example }.
+       */
+      get(userGetData = {}) {
+        const { requestOptions } = userGetData;
+        this.config.options = Object.assign(Object.assign({}, this.config.options), requestOptions);
+        return (0, get_1.default)({ config: this.config });
+      }
+    };
+    exports2.User = User;
+  }
+});
+
+// node_modules/mercadopago/dist/clients/order/create/index.js
+var require_create13 = __commonJS({
+  "node_modules/mercadopago/dist/clients/order/create/index.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.default = create;
+    var restClient_1 = require_restClient();
+    function create({ body, config }) {
+      return restClient_1.RestClient.fetch("/v1/orders", Object.assign({ method: "POST", headers: {
+        "Authorization": `Bearer ${config.accessToken}`
+      }, body: JSON.stringify(body) }, config.options));
+    }
+  }
+});
+
+// node_modules/mercadopago/dist/clients/order/get/index.js
+var require_get16 = __commonJS({
+  "node_modules/mercadopago/dist/clients/order/get/index.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.default = get;
+    var path_1 = require_path();
+    var restClient_1 = require_restClient();
+    function get({ id, config }) {
+      return restClient_1.RestClient.fetch(`/v1/orders/${(0, path_1.encodePathParam)(id)}`, Object.assign({ method: "GET", headers: {
+        "Authorization": `Bearer ${config.accessToken}`
+      } }, config.options));
+    }
+  }
+});
+
+// node_modules/mercadopago/dist/clients/order/process/index.js
+var require_process = __commonJS({
+  "node_modules/mercadopago/dist/clients/order/process/index.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.default = process2;
+    var path_1 = require_path();
+    var restClient_1 = require_restClient();
+    function process2({ id, config }) {
+      return restClient_1.RestClient.fetch(`/v1/orders/${(0, path_1.encodePathParam)(id)}/process`, Object.assign({ method: "POST", headers: {
+        "Authorization": `Bearer ${config.accessToken}`
+      } }, config.options));
+    }
+  }
+});
+
+// node_modules/mercadopago/dist/clients/order/capture/index.js
+var require_capture3 = __commonJS({
+  "node_modules/mercadopago/dist/clients/order/capture/index.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.default = capture;
+    var path_1 = require_path();
+    var restClient_1 = require_restClient();
+    function capture({ id, config }) {
+      return restClient_1.RestClient.fetch(`/v1/orders/${(0, path_1.encodePathParam)(id)}/capture`, Object.assign({ method: "POST", headers: {
+        "Authorization": `Bearer ${config.accessToken}`
+      } }, config.options));
+    }
+  }
+});
+
+// node_modules/mercadopago/dist/clients/order/cancel/index.js
+var require_cancel3 = __commonJS({
+  "node_modules/mercadopago/dist/clients/order/cancel/index.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.default = cancel;
+    var path_1 = require_path();
+    var restClient_1 = require_restClient();
+    function cancel({ id, config }) {
+      return restClient_1.RestClient.fetch(`/v1/orders/${(0, path_1.encodePathParam)(id)}/cancel`, Object.assign({ method: "POST", headers: {
+        "Authorization": `Bearer ${config.accessToken}`
+      } }, config.options));
+    }
+  }
+});
+
+// node_modules/mercadopago/dist/clients/order/refund/index.js
+var require_refund = __commonJS({
+  "node_modules/mercadopago/dist/clients/order/refund/index.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.default = refund;
+    var path_1 = require_path();
+    var restClient_1 = require_restClient();
+    function refund({ id, body, config }) {
+      return restClient_1.RestClient.fetch(`/v1/orders/${(0, path_1.encodePathParam)(id)}/refund`, Object.assign({ method: "POST", headers: {
+        "Authorization": `Bearer ${config.accessToken}`
+      }, body: JSON.stringify(body) }, config.options));
+    }
+  }
+});
+
+// node_modules/mercadopago/dist/clients/order/search/index.js
+var require_search10 = __commonJS({
+  "node_modules/mercadopago/dist/clients/order/search/index.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.default = search;
+    var restClient_1 = require_restClient();
+    function search({ options, config }) {
+      const queryParams = {};
+      if (options) {
+        for (const [key, value] of Object.entries(options)) {
+          if (typeof value !== "undefined") {
+            queryParams[key] = value;
+          }
+        }
+      }
+      return restClient_1.RestClient.fetch("/v1/orders", Object.assign({ method: "GET", headers: {
+        "Authorization": `Bearer ${config.accessToken}`
+      }, queryParams }, config.options));
+    }
+  }
+});
+
+// node_modules/mercadopago/dist/clients/order/transaction/create/index.js
+var require_create14 = __commonJS({
+  "node_modules/mercadopago/dist/clients/order/transaction/create/index.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.default = createTransaction;
+    var path_1 = require_path();
+    var restClient_1 = require_restClient();
+    function createTransaction({ id, body, config }) {
+      return restClient_1.RestClient.fetch(`/v1/orders/${(0, path_1.encodePathParam)(id)}/transactions`, Object.assign({ method: "POST", headers: {
+        "Authorization": `Bearer ${config.accessToken}`
+      }, body: JSON.stringify(body) }, config.options));
+    }
+  }
+});
+
+// node_modules/mercadopago/dist/clients/order/transaction/update/index.js
+var require_update9 = __commonJS({
+  "node_modules/mercadopago/dist/clients/order/transaction/update/index.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.default = updateTransaction;
+    var path_1 = require_path();
+    var restClient_1 = require_restClient();
+    function updateTransaction({ id, transactionId, body, config }) {
+      return restClient_1.RestClient.fetch(`/v1/orders/${(0, path_1.encodePathParam)(id)}/transactions/${(0, path_1.encodePathParam)(transactionId)}`, Object.assign({ method: "PUT", headers: {
+        "Authorization": `Bearer ${config.accessToken}`
+      }, body: JSON.stringify(body) }, config.options));
+    }
+  }
+});
+
+// node_modules/mercadopago/dist/clients/order/transaction/delete/index.js
+var require_delete = __commonJS({
+  "node_modules/mercadopago/dist/clients/order/transaction/delete/index.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.default = deleteTransaction;
+    var path_1 = require_path();
+    var restClient_1 = require_restClient();
+    function deleteTransaction({ id, transactionId, config }) {
+      return restClient_1.RestClient.fetch(`/v1/orders/${(0, path_1.encodePathParam)(id)}/transactions/${(0, path_1.encodePathParam)(transactionId)}`, Object.assign({ method: "DELETE", headers: {
+        "Authorization": `Bearer ${config.accessToken}`
+      } }, config.options));
+    }
+  }
+});
+
+// node_modules/mercadopago/dist/clients/order/index.js
+var require_order = __commonJS({
+  "node_modules/mercadopago/dist/clients/order/index.js"(exports2) {
+    "use strict";
+    var __importDefault = exports2 && exports2.__importDefault || function(mod) {
+      return mod && mod.__esModule ? mod : { "default": mod };
+    };
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.Order = void 0;
+    var create_1 = __importDefault(require_create13());
+    var get_1 = __importDefault(require_get16());
+    var process_1 = __importDefault(require_process());
+    var capture_1 = __importDefault(require_capture3());
+    var cancel_1 = __importDefault(require_cancel3());
+    var refund_1 = __importDefault(require_refund());
+    var search_1 = __importDefault(require_search10());
+    var create_2 = __importDefault(require_create14());
+    var update_1 = __importDefault(require_update9());
+    var delete_1 = __importDefault(require_delete());
+    var Order = class {
+      constructor(mercadoPagoConfig) {
+        this.config = mercadoPagoConfig;
+      }
+      /**
+       * Create a new order.
+       *
+       * Sends a `POST /v1/orders` request with the provided order body.
+       *
+       * @see {@link https://github.com/mercadopago/sdk-nodejs/blob/master/src/examples/order/create.ts Usage Example}
+       */
+      create({ body, requestOptions }) {
+        this.config.options = Object.assign(Object.assign({}, this.config.options), requestOptions);
+        return (0, create_1.default)({ body, config: this.config });
+      }
+      /**
+       * Retrieve an existing order by its ID.
+       *
+       * Sends a `GET /v1/orders/{id}` request.
+       *
+       * @see {@link https://github.com/mercadopago/sdk-nodejs/blob/master/src/examples/order/get.ts Usage Example}
+       */
+      get({ id, requestOptions }) {
+        this.config.options = Object.assign(Object.assign({}, this.config.options), requestOptions);
+        return (0, get_1.default)({ id, config: this.config });
+      }
+      /**
+       * Process an order, triggering payment execution.
+       *
+       * Sends a `POST /v1/orders/{id}/process` request. The order must
+       * already contain at least one payment transaction.
+       *
+       * @see {@link https://github.com/mercadopago/sdk-nodejs/blob/master/src/examples/order/process.ts Usage Example}
+       */
+      process({ id, requestOptions }) {
+        this.config.options = Object.assign(Object.assign({}, this.config.options), requestOptions);
+        return (0, process_1.default)({ id, config: this.config });
+      }
+      /**
+       * Capture an authorized order, confirming the payment settlement.
+       *
+       * Sends a `POST /v1/orders/{id}/capture` request. Only applicable
+       * to orders created with `capture_mode: "manual"`.
+       *
+       * @see {@link https://github.com/mercadopago/sdk-nodejs/blob/master/src/examples/order/capture.ts Usage Example}
+       */
+      capture({ id, requestOptions }) {
+        this.config.options = Object.assign(Object.assign({}, this.config.options), requestOptions);
+        return (0, capture_1.default)({ id, config: this.config });
+      }
+      /**
+       * Cancel an order that has not yet been captured.
+       *
+       * Sends a `POST /v1/orders/{id}/cancel` request.
+       *
+       * @see {@link https://github.com/mercadopago/sdk-nodejs/blob/master/src/examples/order/cancel.ts Usage Example}
+       */
+      cancel({ id, requestOptions }) {
+        this.config.options = Object.assign(Object.assign({}, this.config.options), requestOptions);
+        return (0, cancel_1.default)({ id, config: this.config });
+      }
+      /**
+       * Refund an order (total or partial).
+       *
+       * Sends a `POST /v1/orders/{id}/refund` request. Omit the body
+       * for a full refund; provide specific transaction amounts for a
+       * partial refund.
+       *
+       * @see {@link https://github.com/mercadopago/sdk-nodejs/blob/master/src/examples/order/refundTotal.ts Total Refund Example}
+       * @see {@link https://github.com/mercadopago/sdk-nodejs/blob/master/src/examples/order/refundPartial.ts Partial Refund Example}
+       */
+      refund({ id, body, requestOptions }) {
+        this.config.options = Object.assign(Object.assign({}, this.config.options), requestOptions);
+        return (0, refund_1.default)({ id, body, config: this.config });
+      }
+      /**
+       * Search orders by date range and optional filters.
+       *
+       * Sends a `GET /v1/orders` request with query parameters built from
+       * the provided search options. Returns a paginated result set.
+       *
+       * @see {@link https://github.com/mercadopago/sdk-nodejs/blob/master/src/examples/order/search.ts Usage Example}
+       */
+      search(searchData) {
+        const options = searchData === null || searchData === void 0 ? void 0 : searchData.options;
+        const requestOptions = searchData === null || searchData === void 0 ? void 0 : searchData.requestOptions;
+        this.config.options = Object.assign(Object.assign({}, this.config.options), requestOptions);
+        return (0, search_1.default)({ options, config: this.config });
+      }
+      /**
+       * Add a payment transaction to an existing order.
+       *
+       * Sends a `POST /v1/orders/{id}/transactions` request.
+       *
+       * @see {@link https://github.com/mercadopago/sdk-nodejs/blob/master/src/examples/order/transaction/create.ts Usage Example}
+       */
+      createTransaction({ id, body, requestOptions }) {
+        this.config.options = Object.assign(Object.assign({}, this.config.options), requestOptions);
+        return (0, create_2.default)({ id, body, config: this.config });
+      }
+      /**
+       * Update an existing payment transaction within an order.
+       *
+       * Sends a `PUT /v1/orders/{id}/transactions/{transactionId}` request.
+       *
+       * @see {@link https://github.com/mercadopago/sdk-nodejs/blob/master/src/examples/order/transaction/update.ts Usage Example}
+       */
+      updateTransaction({ id, transactionId, body, requestOptions }) {
+        this.config.options = Object.assign(Object.assign({}, this.config.options), requestOptions);
+        return (0, update_1.default)({ id, transactionId, body, config: this.config });
+      }
+      /**
+       * Remove a payment transaction from an order.
+       *
+       * Sends a `DELETE /v1/orders/{id}/transactions/{transactionId}` request.
+       *
+       * @see {@link https://github.com/mercadopago/sdk-nodejs/blob/master/src/examples/order/transaction/delete.ts Usage Example}
+       */
+      deleteTransaction({ id, transactionId, requestOptions }) {
+        this.config.options = Object.assign(Object.assign({}, this.config.options), requestOptions);
+        return (0, delete_1.default)({ id, transactionId, config: this.config });
+      }
+    };
+    exports2.Order = Order;
+  }
+});
+
+// node_modules/mercadopago/dist/utils/webhook/index.js
+var require_webhook = __commonJS({
+  "node_modules/mercadopago/dist/utils/webhook/index.js"(exports2) {
+    "use strict";
+    var __createBinding = exports2 && exports2.__createBinding || (Object.create ? function(o, m, k, k2) {
+      if (k2 === void 0) k2 = k;
+      var desc = Object.getOwnPropertyDescriptor(m, k);
+      if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+        desc = { enumerable: true, get: function() {
+          return m[k];
+        } };
+      }
+      Object.defineProperty(o, k2, desc);
+    } : function(o, m, k, k2) {
+      if (k2 === void 0) k2 = k;
+      o[k2] = m[k];
+    });
+    var __setModuleDefault = exports2 && exports2.__setModuleDefault || (Object.create ? function(o, v) {
+      Object.defineProperty(o, "default", { enumerable: true, value: v });
+    } : function(o, v) {
+      o["default"] = v;
+    });
+    var __importStar = exports2 && exports2.__importStar || /* @__PURE__ */ function() {
+      var ownKeys = function(o) {
+        ownKeys = Object.getOwnPropertyNames || function(o2) {
+          var ar = [];
+          for (var k in o2) if (Object.prototype.hasOwnProperty.call(o2, k)) ar[ar.length] = k;
+          return ar;
+        };
+        return ownKeys(o);
+      };
+      return function(mod) {
+        if (mod && mod.__esModule) return mod;
+        var result = {};
+        if (mod != null) {
+          for (var k = ownKeys(mod), i = 0; i < k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
+        }
+        __setModuleDefault(result, mod);
+        return result;
+      };
+    }();
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.WebhookSignatureValidator = exports2.InvalidWebhookSignatureError = exports2.SignatureFailureReason = void 0;
+    var crypto4 = __importStar(require("crypto"));
+    var SignatureFailureReason;
+    (function(SignatureFailureReason2) {
+      SignatureFailureReason2["MissingSignatureHeader"] = "MissingSignatureHeader";
+      SignatureFailureReason2["MalformedSignatureHeader"] = "MalformedSignatureHeader";
+      SignatureFailureReason2["MissingTimestamp"] = "MissingTimestamp";
+      SignatureFailureReason2["MissingHash"] = "MissingHash";
+      SignatureFailureReason2["SignatureMismatch"] = "SignatureMismatch";
+      SignatureFailureReason2["TimestampOutOfTolerance"] = "TimestampOutOfTolerance";
+    })(SignatureFailureReason || (exports2.SignatureFailureReason = SignatureFailureReason = {}));
+    var InvalidWebhookSignatureError = class _InvalidWebhookSignatureError extends Error {
+      constructor(reason, requestId, timestamp) {
+        super(`Invalid webhook signature: ${reason}`);
+        this.name = "InvalidWebhookSignatureError";
+        this.reason = reason;
+        this.requestId = requestId;
+        this.timestamp = timestamp;
+        Object.setPrototypeOf(this, _InvalidWebhookSignatureError.prototype);
+      }
+    };
+    exports2.InvalidWebhookSignatureError = InvalidWebhookSignatureError;
+    var DEFAULT_VERSIONS = ["v1"];
+    var VERSION_KEY_REGEX = /^v\d+$/;
+    var WebhookSignatureValidator = class {
+      /**
+       * Validates the signature of a MercadoPago webhook notification.
+       *
+       * @param options - Validation inputs (see {@link ValidateOptions}).
+       * @throws {@link InvalidWebhookSignatureError} when the signature is missing,
+       *   malformed, or does not match the expected HMAC.
+       */
+      static validate(options) {
+        var _a, _b;
+        const xSignature = normalise(options.xSignature);
+        const xRequestId = normalise(options.xRequestId);
+        const dataId = normalise(options.dataId);
+        const secret = options.secret;
+        const supportedVersions = (_a = options.supportedVersions) !== null && _a !== void 0 ? _a : DEFAULT_VERSIONS;
+        const toleranceSeconds = options.toleranceSeconds;
+        const now = (_b = options.now) !== null && _b !== void 0 ? _b : () => Date.now();
+        if (!xSignature) {
+          throw new InvalidWebhookSignatureError(SignatureFailureReason.MissingSignatureHeader, xRequestId);
+        }
+        const { ts, hashes } = parseSignatureHeader(xSignature);
+        if (!ts && Object.keys(hashes).length === 0) {
+          throw new InvalidWebhookSignatureError(SignatureFailureReason.MalformedSignatureHeader, xRequestId);
+        }
+        if (!ts) {
+          throw new InvalidWebhookSignatureError(SignatureFailureReason.MissingTimestamp, xRequestId);
+        }
+        if (!/^\d+$/.test(ts)) {
+          throw new InvalidWebhookSignatureError(SignatureFailureReason.MalformedSignatureHeader, xRequestId, ts);
+        }
+        let receivedHash;
+        for (const version2 of supportedVersions) {
+          if (hashes[version2]) {
+            receivedHash = hashes[version2];
+            break;
+          }
+        }
+        if (!receivedHash) {
+          throw new InvalidWebhookSignatureError(SignatureFailureReason.MissingHash, xRequestId, ts);
+        }
+        const manifest = buildManifest(dataId, xRequestId, ts);
+        const computedHash = crypto4.createHmac("sha256", secret).update(manifest).digest("hex");
+        if (!constantTimeEquals(computedHash, receivedHash)) {
+          throw new InvalidWebhookSignatureError(SignatureFailureReason.SignatureMismatch, xRequestId, ts);
+        }
+        if (toleranceSeconds !== void 0) {
+          const tsMs = Number(ts) * 1e3;
+          const driftSeconds = Math.abs(now() - tsMs) / 1e3;
+          if (driftSeconds > toleranceSeconds) {
+            throw new InvalidWebhookSignatureError(SignatureFailureReason.TimestampOutOfTolerance, xRequestId, ts);
+          }
+        }
+      }
+    };
+    exports2.WebhookSignatureValidator = WebhookSignatureValidator;
+    function normalise(value) {
+      if (value === void 0 || value === null)
+        return void 0;
+      const raw = Array.isArray(value) ? value[0] : value;
+      if (raw === void 0 || raw === null)
+        return void 0;
+      const trimmed = String(raw).trim();
+      return trimmed.length > 0 ? trimmed : void 0;
+    }
+    function parseSignatureHeader(header) {
+      const hashes = {};
+      let ts;
+      for (const part of header.split(",")) {
+        const eq = part.indexOf("=");
+        if (eq === -1)
+          continue;
+        const key = part.substring(0, eq).trim().toLowerCase();
+        const value = part.substring(eq + 1).trim();
+        if (!key || !value)
+          continue;
+        if (key === "ts") {
+          ts = value;
+        } else if (VERSION_KEY_REGEX.test(key)) {
+          hashes[key] = value;
+        }
+      }
+      return { ts, hashes };
+    }
+    function buildManifest(dataId, requestId, ts) {
+      const parts = [];
+      if (dataId)
+        parts.push(`id:${dataId}`);
+      if (requestId)
+        parts.push(`request-id:${requestId}`);
+      parts.push(`ts:${ts}`);
+      return parts.join(";") + ";";
+    }
+    function constantTimeEquals(a, b) {
+      if (Buffer.byteLength(a) !== Buffer.byteLength(b))
+        return false;
+      return crypto4.timingSafeEqual(Buffer.from(a), Buffer.from(b));
+    }
+  }
+});
+
+// node_modules/mercadopago/dist/index.js
+var require_dist6 = __commonJS({
+  "node_modules/mercadopago/dist/index.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    exports2.SignatureFailureReason = exports2.InvalidWebhookSignatureError = exports2.WebhookSignatureValidator = exports2.buildError = exports2.MPConnectionError = exports2.MPServerError = exports2.MPRateLimitError = exports2.MPDependencyError = exports2.MPResourceLockedError = exports2.MPValidationError = exports2.MPIdempotencyError = exports2.MPNotFoundError = exports2.MPForbiddenError = exports2.MPPaymentError = exports2.MPAuthenticationError = exports2.MPBadRequestError = exports2.MercadoPagoError = exports2.Order = exports2.User = exports2.MerchantOrder = exports2.OAuth = exports2.Preference = exports2.Point = exports2.PreApprovalPlan = exports2.PreApproval = exports2.Payment = exports2.PaymentMethod = exports2.PaymentRefund = exports2.IdentificationType = exports2.Invoice = exports2.DisbursementRefund = exports2.Chargeback = exports2.AdvancedPayment = exports2.Customer = exports2.CustomerCard = exports2.CardToken = exports2.MercadoPagoConfig = void 0;
+    var mercadoPagoConfig_1 = require_mercadoPagoConfig();
+    Object.defineProperty(exports2, "MercadoPagoConfig", { enumerable: true, get: function() {
+      return mercadoPagoConfig_1.MercadoPagoConfig;
+    } });
+    exports2.default = mercadoPagoConfig_1.MercadoPagoConfig;
+    var cardToken_1 = require_cardToken();
+    Object.defineProperty(exports2, "CardToken", { enumerable: true, get: function() {
+      return cardToken_1.CardToken;
+    } });
+    var customerCard_1 = require_customerCard();
+    Object.defineProperty(exports2, "CustomerCard", { enumerable: true, get: function() {
+      return customerCard_1.CustomerCard;
+    } });
+    var customer_1 = require_customer();
+    Object.defineProperty(exports2, "Customer", { enumerable: true, get: function() {
+      return customer_1.Customer;
+    } });
+    var advancedPayment_1 = require_advancedPayment();
+    Object.defineProperty(exports2, "AdvancedPayment", { enumerable: true, get: function() {
+      return advancedPayment_1.AdvancedPayment;
+    } });
+    var chargeback_1 = require_chargeback();
+    Object.defineProperty(exports2, "Chargeback", { enumerable: true, get: function() {
+      return chargeback_1.Chargeback;
+    } });
+    var disbursementRefund_1 = require_disbursementRefund();
+    Object.defineProperty(exports2, "DisbursementRefund", { enumerable: true, get: function() {
+      return disbursementRefund_1.DisbursementRefund;
+    } });
+    var invoice_1 = require_invoice();
+    Object.defineProperty(exports2, "Invoice", { enumerable: true, get: function() {
+      return invoice_1.Invoice;
+    } });
+    var identificationType_1 = require_identificationType();
+    Object.defineProperty(exports2, "IdentificationType", { enumerable: true, get: function() {
+      return identificationType_1.IdentificationType;
+    } });
+    var paymentRefund_1 = require_paymentRefund();
+    Object.defineProperty(exports2, "PaymentRefund", { enumerable: true, get: function() {
+      return paymentRefund_1.PaymentRefund;
+    } });
+    var paymentMethod_1 = require_paymentMethod();
+    Object.defineProperty(exports2, "PaymentMethod", { enumerable: true, get: function() {
+      return paymentMethod_1.PaymentMethod;
+    } });
+    var payment_1 = require_payment();
+    Object.defineProperty(exports2, "Payment", { enumerable: true, get: function() {
+      return payment_1.Payment;
+    } });
+    var preApproval_1 = require_preApproval();
+    Object.defineProperty(exports2, "PreApproval", { enumerable: true, get: function() {
+      return preApproval_1.PreApproval;
+    } });
+    var preApprovalPlan_1 = require_preApprovalPlan();
+    Object.defineProperty(exports2, "PreApprovalPlan", { enumerable: true, get: function() {
+      return preApprovalPlan_1.PreApprovalPlan;
+    } });
+    var point_1 = require_point();
+    Object.defineProperty(exports2, "Point", { enumerable: true, get: function() {
+      return point_1.Point;
+    } });
+    var preference_1 = require_preference();
+    Object.defineProperty(exports2, "Preference", { enumerable: true, get: function() {
+      return preference_1.Preference;
+    } });
+    var oAuth_1 = require_oAuth();
+    Object.defineProperty(exports2, "OAuth", { enumerable: true, get: function() {
+      return oAuth_1.OAuth;
+    } });
+    var merchantOrder_1 = require_merchantOrder();
+    Object.defineProperty(exports2, "MerchantOrder", { enumerable: true, get: function() {
+      return merchantOrder_1.MerchantOrder;
+    } });
+    var user_1 = require_user();
+    Object.defineProperty(exports2, "User", { enumerable: true, get: function() {
+      return user_1.User;
+    } });
+    var order_1 = require_order();
+    Object.defineProperty(exports2, "Order", { enumerable: true, get: function() {
+      return order_1.Order;
+    } });
+    var errors_1 = require_errors();
+    Object.defineProperty(exports2, "MercadoPagoError", { enumerable: true, get: function() {
+      return errors_1.MercadoPagoError;
+    } });
+    Object.defineProperty(exports2, "MPBadRequestError", { enumerable: true, get: function() {
+      return errors_1.MPBadRequestError;
+    } });
+    Object.defineProperty(exports2, "MPAuthenticationError", { enumerable: true, get: function() {
+      return errors_1.MPAuthenticationError;
+    } });
+    Object.defineProperty(exports2, "MPPaymentError", { enumerable: true, get: function() {
+      return errors_1.MPPaymentError;
+    } });
+    Object.defineProperty(exports2, "MPForbiddenError", { enumerable: true, get: function() {
+      return errors_1.MPForbiddenError;
+    } });
+    Object.defineProperty(exports2, "MPNotFoundError", { enumerable: true, get: function() {
+      return errors_1.MPNotFoundError;
+    } });
+    Object.defineProperty(exports2, "MPIdempotencyError", { enumerable: true, get: function() {
+      return errors_1.MPIdempotencyError;
+    } });
+    Object.defineProperty(exports2, "MPValidationError", { enumerable: true, get: function() {
+      return errors_1.MPValidationError;
+    } });
+    Object.defineProperty(exports2, "MPResourceLockedError", { enumerable: true, get: function() {
+      return errors_1.MPResourceLockedError;
+    } });
+    Object.defineProperty(exports2, "MPDependencyError", { enumerable: true, get: function() {
+      return errors_1.MPDependencyError;
+    } });
+    Object.defineProperty(exports2, "MPRateLimitError", { enumerable: true, get: function() {
+      return errors_1.MPRateLimitError;
+    } });
+    Object.defineProperty(exports2, "MPServerError", { enumerable: true, get: function() {
+      return errors_1.MPServerError;
+    } });
+    Object.defineProperty(exports2, "MPConnectionError", { enumerable: true, get: function() {
+      return errors_1.MPConnectionError;
+    } });
+    Object.defineProperty(exports2, "buildError", { enumerable: true, get: function() {
+      return errors_1.buildError;
+    } });
+    var webhook_1 = require_webhook();
+    Object.defineProperty(exports2, "WebhookSignatureValidator", { enumerable: true, get: function() {
+      return webhook_1.WebhookSignatureValidator;
+    } });
+    Object.defineProperty(exports2, "InvalidWebhookSignatureError", { enumerable: true, get: function() {
+      return webhook_1.InvalidWebhookSignatureError;
+    } });
+    Object.defineProperty(exports2, "SignatureFailureReason", { enumerable: true, get: function() {
+      return webhook_1.SignatureFailureReason;
+    } });
   }
 });
 
@@ -94478,10 +97668,10 @@ var JsonArrPopCommand = class extends Command {
 };
 var JsonArrTrimCommand = class extends Command {
   constructor(cmd, opts) {
-    const path2 = cmd[1] ?? "$";
+    const path3 = cmd[1] ?? "$";
     const start = cmd[2] ?? 0;
     const stop = cmd[3] ?? 0;
-    super(["JSON.ARRTRIM", cmd[0], path2, start, stop], opts);
+    super(["JSON.ARRTRIM", cmd[0], path3, start, stop], opts);
   }
 };
 var JsonClearCommand = class extends Command {
@@ -95533,9 +98723,9 @@ var Pipeline = class {
     if (this.commands.length === 0) {
       throw new Error("Pipeline is empty");
     }
-    const path2 = this.multiExec ? ["multi-exec"] : ["pipeline"];
+    const path3 = this.multiExec ? ["multi-exec"] : ["pipeline"];
     const res = await this.client.request({
-      path: path2,
+      path: path3,
       body: Object.values(this.commands).map((c) => c.command)
     });
     return options?.keepErrors ? res.map(({ error, result }, i) => {
@@ -105175,8 +108365,8 @@ var Receiving = class {
     const searchParams = new URLSearchParams();
     if (options.html_format !== void 0) searchParams.set("html_format", options.html_format);
     const queryString = searchParams.toString();
-    const path2 = queryString ? `/emails/receiving/${id}?${queryString}` : `/emails/receiving/${id}`;
-    return await this.resend.get(path2, requestOptions);
+    const path3 = queryString ? `/emails/receiving/${id}?${queryString}` : `/emails/receiving/${id}`;
+    return await this.resend.get(path3, requestOptions);
   }
   async list(options = {}, requestOptions = {}) {
     const url = buildPaginationUrl("/emails/receiving", options);
@@ -105927,21 +109117,21 @@ var Resend = class {
       "Content-Type": "application/json"
     });
   }
-  logError(error, path2, status) {
+  logError(error, path3, status) {
     if (typeof process !== "undefined" && process.env && process.env.NODE_ENV !== "production") console.error("[Resend API Error]:", {
       ...status !== void 0 && { status },
       error,
-      path: path2
+      path: path3
     });
   }
-  async fetchRequest(path2, options = {}) {
+  async fetchRequest(path3, options = {}) {
     const { signal } = options;
     try {
-      const response = await fetch(`${this.baseUrl}${path2}`, options);
+      const response = await fetch(`${this.baseUrl}${path3}`, options);
       if (!response.ok) try {
         const rawError = await response.text();
         const parsedError = JSON.parse(rawError);
-        this.logError(parsedError, path2, response.status);
+        this.logError(parsedError, path3, response.status);
         return {
           data: null,
           error: parsedError,
@@ -105955,7 +109145,7 @@ var Resend = class {
             statusCode: response.status,
             message: "Internal server error. We are unable to process your request right now, please try again later."
           };
-          this.logError(error2, path2, response.status);
+          this.logError(error2, path3, response.status);
           return {
             data: null,
             error: error2,
@@ -105972,14 +109162,14 @@ var Resend = class {
             ...error,
             message: err.message
           };
-          this.logError(errorWithMessage, path2, response.status);
+          this.logError(errorWithMessage, path3, response.status);
           return {
             data: null,
             error: errorWithMessage,
             headers: Object.fromEntries(response.headers.entries())
           };
         }
-        this.logError(error, path2, response.status);
+        this.logError(error, path3, response.status);
         return {
           data: null,
           error,
@@ -105997,7 +109187,7 @@ var Resend = class {
         statusCode: null,
         message: "Unable to fetch data. The request could not be resolved."
       };
-      this.logError(error, path2);
+      this.logError(error, path3);
       return {
         data: null,
         error,
@@ -106005,7 +109195,7 @@ var Resend = class {
       };
     }
   }
-  async post(path2, entity, options = {}) {
+  async post(path3, entity, options = {}) {
     const headers = new Headers(this.headers);
     const isFormData = typeof FormData !== "undefined" && entity instanceof FormData;
     if (isFormData) headers.delete("Content-Type");
@@ -106017,9 +109207,9 @@ var Resend = class {
       ...options,
       headers
     };
-    return this.fetchRequest(path2, requestOptions);
+    return this.fetchRequest(path3, requestOptions);
   }
-  async get(path2, options = {}) {
+  async get(path3, options = {}) {
     const headers = new Headers(this.headers);
     if (options.headers) for (const [key, value] of new Headers(options.headers).entries()) headers.set(key, value);
     const requestOptions = {
@@ -106027,9 +109217,9 @@ var Resend = class {
       ...options,
       headers
     };
-    return this.fetchRequest(path2, requestOptions);
+    return this.fetchRequest(path3, requestOptions);
   }
-  async put(path2, entity, options = {}) {
+  async put(path3, entity, options = {}) {
     const headers = new Headers(this.headers);
     if (options.headers) for (const [key, value] of new Headers(options.headers).entries()) headers.set(key, value);
     const requestOptions = {
@@ -106038,9 +109228,9 @@ var Resend = class {
       ...options,
       headers
     };
-    return this.fetchRequest(path2, requestOptions);
+    return this.fetchRequest(path3, requestOptions);
   }
-  async patch(path2, entity, options = {}) {
+  async patch(path3, entity, options = {}) {
     const headers = new Headers(this.headers);
     if (options.headers) for (const [key, value] of new Headers(options.headers).entries()) headers.set(key, value);
     const requestOptions = {
@@ -106049,9 +109239,9 @@ var Resend = class {
       ...options,
       headers
     };
-    return this.fetchRequest(path2, requestOptions);
+    return this.fetchRequest(path3, requestOptions);
   }
-  async delete(path2, query, options = {}) {
+  async delete(path3, query, options = {}) {
     const headers = new Headers(this.headers);
     if (options.headers) for (const [key, value] of new Headers(options.headers).entries()) headers.set(key, value);
     const requestOptions = {
@@ -106060,7 +109250,7 @@ var Resend = class {
       ...options,
       headers
     };
-    return this.fetchRequest(path2, requestOptions);
+    return this.fetchRequest(path3, requestOptions);
   }
 };
 
@@ -107043,6 +110233,18780 @@ ProjectsModule = __decorateClass([
   })
 ], ProjectsModule);
 
+// server/billing/billing.module.ts
+init_common();
+
+// server/billing/billing.controller.ts
+init_common();
+
+// server/billing/billing.service.ts
+init_common();
+
+// node_modules/stripe/esm/Error.js
+var Error_exports = {};
+__export(Error_exports, {
+  RateLimitError: () => RateLimitError,
+  StripeAPIError: () => StripeAPIError,
+  StripeAuthenticationError: () => StripeAuthenticationError,
+  StripeCardError: () => StripeCardError,
+  StripeConnectionError: () => StripeConnectionError,
+  StripeError: () => StripeError,
+  StripeIdempotencyError: () => StripeIdempotencyError,
+  StripeInvalidClientError: () => StripeInvalidClientError,
+  StripeInvalidGrantError: () => StripeInvalidGrantError,
+  StripeInvalidRequestError: () => StripeInvalidRequestError,
+  StripeInvalidScopeError: () => StripeInvalidScopeError,
+  StripeOAuthError: () => StripeOAuthError,
+  StripeOAuthInvalidRequestError: () => StripeOAuthInvalidRequestError,
+  StripePermissionError: () => StripePermissionError,
+  StripeRateLimitError: () => StripeRateLimitError,
+  StripeSignatureVerificationError: () => StripeSignatureVerificationError,
+  StripeUnsupportedGrantTypeError: () => StripeUnsupportedGrantTypeError,
+  StripeUnsupportedResponseTypeError: () => StripeUnsupportedResponseTypeError,
+  TemporarySessionExpiredError: () => TemporarySessionExpiredError,
+  generateOAuthError: () => generateOAuthError,
+  generateV1Error: () => generateV1Error,
+  generateV2Error: () => generateV2Error
+});
+var generateV1Error = (rawStripeError) => {
+  const statusCode = rawStripeError.statusCode;
+  if (statusCode === 429 || statusCode === 400 && rawStripeError.code === "rate_limit") {
+    return new StripeRateLimitError(rawStripeError);
+  }
+  if (statusCode === 400 || statusCode === 404) {
+    if (rawStripeError.type === "idempotency_error") {
+      return new StripeIdempotencyError(rawStripeError);
+    }
+    return new StripeInvalidRequestError(rawStripeError);
+  }
+  if (statusCode === 401) {
+    return new StripeAuthenticationError(rawStripeError);
+  }
+  if (statusCode === 402) {
+    return new StripeCardError(rawStripeError);
+  }
+  if (statusCode === 403) {
+    return new StripePermissionError(rawStripeError);
+  }
+  return new StripeAPIError(rawStripeError);
+};
+var generateOAuthError = (rawStripeError) => {
+  const oauthType = rawStripeError.type;
+  switch (oauthType) {
+    case "invalid_grant":
+      return new StripeInvalidGrantError(rawStripeError);
+    case "invalid_client":
+      return new StripeInvalidClientError(rawStripeError);
+    case "invalid_request":
+      return new StripeOAuthInvalidRequestError(rawStripeError);
+    case "invalid_scope":
+      return new StripeInvalidScopeError(rawStripeError);
+    case "unsupported_grant_type":
+      return new StripeUnsupportedGrantTypeError(rawStripeError);
+    case "unsupported_response_type":
+      return new StripeUnsupportedResponseTypeError(rawStripeError);
+    default:
+      return new StripeOAuthError(rawStripeError);
+  }
+};
+var generateV2Error = (rawStripeError) => {
+  switch (rawStripeError.type) {
+    case "idempotency_error":
+      return new StripeIdempotencyError(rawStripeError);
+    case "rate_limit":
+      return new RateLimitError(rawStripeError);
+    case "temporary_session_expired":
+      return new TemporarySessionExpiredError(rawStripeError);
+  }
+  switch (rawStripeError.code) {
+    case "invalid_fields":
+      return new StripeInvalidRequestError(rawStripeError);
+  }
+  return generateV1Error(rawStripeError);
+};
+var StripeError = class extends Error {
+  // errorProperties: The end of the section generated from our OpenAPI spec
+  constructor(raw = {}, type = null) {
+    super(raw.message);
+    this.type = type || this.constructor.name;
+    this.raw = raw;
+    this.rawType = raw.type;
+    this.detail = raw.detail;
+    this.headers = raw.headers;
+    this.requestId = raw.requestId;
+    this.statusCode = raw.statusCode;
+    this.message = raw.message ?? "";
+    this.userMessage = raw.user_message;
+    this.advice_code = raw.advice_code;
+    this.charge = raw.charge;
+    this.code = raw.code;
+    this.decline_code = raw.decline_code;
+    this.doc_url = raw.doc_url;
+    this.network_advice_code = raw.network_advice_code;
+    this.network_decline_code = raw.network_decline_code;
+    this.param = raw.param;
+    this.payment_intent = raw.payment_intent;
+    this.payment_method = raw.payment_method;
+    this.payment_method_type = raw.payment_method_type;
+    this.request_log_url = raw.request_log_url;
+    this.setup_intent = raw.setup_intent;
+    this.source = raw.source;
+    this.user_message = raw.user_message;
+  }
+};
+StripeError.generate = generateV1Error;
+var StripeCardError = class extends StripeError {
+  constructor(raw = {}) {
+    super(raw, "StripeCardError");
+    this.decline_code = raw.decline_code ?? "";
+  }
+};
+var StripeInvalidRequestError = class extends StripeError {
+  constructor(raw = {}) {
+    super(raw, "StripeInvalidRequestError");
+  }
+};
+var StripeAPIError = class extends StripeError {
+  constructor(raw = {}) {
+    super(raw, "StripeAPIError");
+  }
+};
+var StripeAuthenticationError = class extends StripeError {
+  constructor(raw = {}) {
+    super(raw, "StripeAuthenticationError");
+  }
+};
+var StripePermissionError = class extends StripeError {
+  constructor(raw = {}) {
+    super(raw, "StripePermissionError");
+  }
+};
+var StripeRateLimitError = class extends StripeError {
+  constructor(raw = {}) {
+    super(raw, "StripeRateLimitError");
+  }
+};
+var StripeConnectionError = class extends StripeError {
+  constructor(raw = {}) {
+    super(raw, "StripeConnectionError");
+  }
+};
+var StripeSignatureVerificationError = class extends StripeError {
+  constructor(header, payload, raw = {}) {
+    super(raw, "StripeSignatureVerificationError");
+    this.header = header;
+    this.payload = payload;
+  }
+};
+var StripeIdempotencyError = class extends StripeError {
+  constructor(raw = {}) {
+    super(raw, "StripeIdempotencyError");
+  }
+};
+var StripeOAuthError = class extends StripeError {
+  constructor(raw = {}, type = "StripeOAuthError") {
+    super(raw, type);
+  }
+};
+var StripeInvalidGrantError = class extends StripeOAuthError {
+  constructor(raw = {}) {
+    super(raw, "StripeInvalidGrantError");
+  }
+};
+var StripeInvalidClientError = class extends StripeOAuthError {
+  constructor(raw = {}) {
+    super(raw, "StripeInvalidClientError");
+  }
+};
+var StripeOAuthInvalidRequestError = class extends StripeOAuthError {
+  constructor(raw = {}) {
+    super(raw, "StripeOAuthInvalidRequestError");
+  }
+};
+var StripeInvalidScopeError = class extends StripeOAuthError {
+  constructor(raw = {}) {
+    super(raw, "StripeInvalidScopeError");
+  }
+};
+var StripeUnsupportedGrantTypeError = class extends StripeOAuthError {
+  constructor(raw = {}) {
+    super(raw, "StripeUnsupportedGrantTypeError");
+  }
+};
+var StripeUnsupportedResponseTypeError = class extends StripeOAuthError {
+  constructor(raw = {}) {
+    super(raw, "StripeUnsupportedResponseTypeError");
+  }
+};
+var RateLimitError = class extends StripeError {
+  constructor(rawStripeError = {}) {
+    super(rawStripeError, "RateLimitError");
+  }
+};
+var TemporarySessionExpiredError = class extends StripeError {
+  constructor(rawStripeError = {}) {
+    super(rawStripeError, "TemporarySessionExpiredError");
+  }
+};
+
+// node_modules/stripe/esm/net/HttpClient.js
+var HttpClient2 = class _HttpClient {
+  /** The client name used for diagnostics. */
+  getClientName() {
+    throw new Error("getClientName not implemented.");
+  }
+  makeRequest(host, port, path3, method, headers, requestData, protocol, timeout) {
+    throw new Error("makeRequest not implemented.");
+  }
+  /** Helper to make a consistent timeout error across implementations. */
+  static makeTimeoutError() {
+    const timeoutErr = new TypeError(_HttpClient.TIMEOUT_ERROR_CODE);
+    timeoutErr.code = _HttpClient.TIMEOUT_ERROR_CODE;
+    return timeoutErr;
+  }
+  /**
+   * Helper to wrap a failure that occurred while reading a response body, so
+   * that implementations can report one consistently.
+   */
+  static makeResponseBodyError(exception) {
+    const error = new HttpClientResponseBodyError("Failed to read the response body");
+    error.exception = exception;
+    if (exception && typeof exception.code === "string") {
+      error.code = exception.code;
+    }
+    return error;
+  }
+};
+HttpClient2.CONNECTION_CLOSED_ERROR_CODES = ["ECONNRESET", "EPIPE"];
+HttpClient2.TIMEOUT_ERROR_CODE = "ETIMEDOUT";
+var HttpClientResponse = class {
+  constructor(statusCode, headers) {
+    this._statusCode = statusCode;
+    this._headers = headers;
+  }
+  getStatusCode() {
+    return this._statusCode;
+  }
+  getHeaders() {
+    return this._headers;
+  }
+  getRawResponse() {
+    throw new Error("getRawResponse not implemented.");
+  }
+  toStream(streamCompleteCallback) {
+    throw new Error("toStream not implemented.");
+  }
+  toJSON() {
+    throw new Error("toJSON not implemented.");
+  }
+  _parseResponseBody(body) {
+    try {
+      return JSON.parse(body);
+    } catch (e) {
+      if (e instanceof Error) {
+        e.rawBody = body;
+      }
+      throw e;
+    }
+  }
+};
+var HttpClientRuntimeError = class extends Error {
+};
+var HttpClientResponseBodyError = class extends Error {
+};
+
+// node_modules/stripe/esm/Types.js
+var DEFAULT_BASE_ADDRESSES = {
+  api: "api.stripe.com",
+  files: "files.stripe.com",
+  connect: "connect.stripe.com",
+  meter_events: "meter-events.stripe.com"
+};
+
+// node_modules/stripe/esm/utils.js
+function queryStringifyRequestData(data) {
+  return stringifyRequestData(data);
+}
+function encodeQueryValue(value) {
+  return encodeURIComponent(value).replace(/!/g, "%21").replace(/\*/g, "%2A").replace(/\(/g, "%28").replace(/\)/g, "%29").replace(/'/g, "%27").replace(/%5B/g, "[").replace(/%5D/g, "]");
+}
+function valueToString(value) {
+  if (value instanceof Date) {
+    return Math.floor(value.getTime() / 1e3).toString();
+  }
+  if (value === null) {
+    return "";
+  }
+  return String(value);
+}
+function stringifyRequestData(data) {
+  const pairs = [];
+  function encode(key, value) {
+    if (value === void 0) {
+      return;
+    }
+    if (value === null || typeof value !== "object" || value instanceof Date) {
+      pairs.push(encodeQueryValue(key) + "=" + encodeQueryValue(valueToString(value)));
+      return;
+    }
+    if (Array.isArray(value)) {
+      for (let i = 0; i < value.length; i++) {
+        if (value[i] !== void 0) {
+          encode(key + "[" + i + "]", value[i]);
+        }
+      }
+      return;
+    }
+    for (const k of Object.keys(value)) {
+      encode(key + "[" + k + "]", value[k]);
+    }
+  }
+  if (typeof data === "object" && data !== null) {
+    for (const key of Object.keys(data)) {
+      encode(key, data[key]);
+    }
+  }
+  return pairs.join("&");
+}
+var makeURLInterpolator = /* @__PURE__ */ (() => {
+  const rc = {
+    "\n": "\\n",
+    '"': '\\"',
+    "\u2028": "\\u2028",
+    "\u2029": "\\u2029"
+  };
+  return (str) => {
+    const cleanString = str.replace(/["\n\r\u2028\u2029]/g, ($0) => rc[$0]);
+    return (outputs) => {
+      return cleanString.replace(/\{([\s\S]+?)\}/g, ($0, $1) => {
+        const output = outputs[$1];
+        if (isValidEncodeUriComponentType(output))
+          return encodeURIComponent(output);
+        return "";
+      });
+    };
+  };
+})();
+function isValidEncodeUriComponentType(value) {
+  return ["number", "string", "boolean"].includes(typeof value);
+}
+function processOptions(options) {
+  const result = {
+    authenticator: null,
+    headers: {},
+    settings: {},
+    streaming: false,
+    apiBase: null
+  };
+  if (!options) {
+    return result;
+  }
+  if (options.apiKey) {
+    result.authenticator = createApiKeyAuthenticator(options.apiKey);
+  }
+  if (options.idempotencyKey) {
+    result.headers["Idempotency-Key"] = options.idempotencyKey;
+  }
+  if (options.stripeAccount) {
+    result.headers["Stripe-Account"] = options.stripeAccount;
+  }
+  if (options.stripeContext) {
+    if (result.headers["Stripe-Account"]) {
+      throw new Error("Can't specify both stripeAccount and stripeContext.");
+    }
+    result.headers["Stripe-Context"] = options.stripeContext;
+  }
+  if (options.apiVersion) {
+    result.headers["Stripe-Version"] = options.apiVersion;
+  }
+  if (Number.isInteger(options.maxNetworkRetries)) {
+    result.settings.maxNetworkRetries = options.maxNetworkRetries;
+  }
+  if (Number.isInteger(options.timeout)) {
+    result.settings.timeout = options.timeout;
+  }
+  if (options.authenticator) {
+    if (options.apiKey) {
+      throw new Error("Can't specify both apiKey and authenticator.");
+    }
+    if (typeof options.authenticator !== "function") {
+      throw new Error("The authenticator must be a function receiving a request as the first parameter.");
+    }
+    result.authenticator = options.authenticator;
+  }
+  if (options.headers) {
+    Object.assign(result.headers, options.headers);
+  }
+  if (options.streaming) {
+    result.streaming = true;
+  }
+  return result;
+}
+function removeNullish(obj) {
+  if (typeof obj !== "object") {
+    throw new Error("Argument must be an object");
+  }
+  return Object.keys(obj).reduce((result, key) => {
+    if (obj[key] != null) {
+      result[key] = obj[key];
+    }
+    return result;
+  }, {});
+}
+function normalizeHeaders(obj) {
+  if (!(obj && typeof obj === "object")) {
+    return obj;
+  }
+  return Object.keys(obj).reduce((result, header) => {
+    result[normalizeHeader(header)] = obj[header];
+    return result;
+  }, {});
+}
+function normalizeHeader(header) {
+  return header.split("-").map((text) => text.charAt(0).toUpperCase() + text.substr(1).toLowerCase()).join("-");
+}
+function pascalToCamelCase(name) {
+  if (name === "OAuth") {
+    return "oauth";
+  } else {
+    return name[0].toLowerCase() + name.substring(1);
+  }
+}
+function isObject2(obj) {
+  const type = typeof obj;
+  return (type === "function" || type === "object") && !!obj;
+}
+function flattenAndStringify(data) {
+  const result = {};
+  const step = (obj, prevKey) => {
+    Object.entries(obj).forEach(([key, value]) => {
+      const newKey = prevKey ? `${prevKey}[${key}]` : key;
+      if (isObject2(value)) {
+        if (!(value instanceof Uint8Array) && !Object.prototype.hasOwnProperty.call(value, "data")) {
+          return step(value, newKey);
+        } else {
+          result[newKey] = value;
+        }
+      } else {
+        result[newKey] = String(value);
+      }
+    });
+  };
+  step(data, null);
+  return result;
+}
+function validateInteger(name, n, defaultVal) {
+  if (!Number.isInteger(n)) {
+    if (defaultVal !== void 0) {
+      return defaultVal;
+    } else {
+      throw new Error(`${name} must be an integer`);
+    }
+  }
+  return n;
+}
+var AI_AGENTS = [
+  // The beginning of the section generated from our OpenAPI spec
+  ["ANTIGRAVITY_CLI_ALIAS", "antigravity"],
+  ["CLAUDECODE", "claude_code"],
+  ["CLINE_ACTIVE", "cline"],
+  ["CODEX_SANDBOX", "codex_cli"],
+  ["CODEX_THREAD_ID", "codex_cli"],
+  ["CODEX_SANDBOX_NETWORK_DISABLED", "codex_cli"],
+  ["CODEX_CI", "codex_cli"],
+  ["CURSOR_AGENT", "cursor"],
+  ["GEMINI_CLI", "gemini_cli"],
+  ["HERMES_AGENT", "hermes"],
+  ["OPENCLAW_SHELL", "openclaw"],
+  ["OPENCODE", "open_code"]
+  // The end of the section generated from our OpenAPI spec
+];
+function detectAIAgent(env) {
+  for (const [envVar, agentName] of AI_AGENTS) {
+    if (env[envVar]) {
+      return agentName;
+    }
+  }
+  return "";
+}
+function createApiKeyAuthenticator(apiKey) {
+  const authenticator = (request) => {
+    request.headers.Authorization = "Bearer " + apiKey;
+    return Promise.resolve();
+  };
+  authenticator._apiKey = apiKey;
+  return authenticator;
+}
+function concat(arrays) {
+  const totalLength = arrays.reduce((len, array) => len + array.length, 0);
+  const merged = new Uint8Array(totalLength);
+  let offset = 0;
+  arrays.forEach((array) => {
+    merged.set(array, offset);
+    offset += array.length;
+  });
+  return merged;
+}
+function dateTimeReplacer(key, value) {
+  if (this[key] instanceof Date) {
+    return Math.floor(this[key].getTime() / 1e3).toString();
+  }
+  return value;
+}
+function jsonStringifyRequestData(data) {
+  return JSON.stringify(data, dateTimeReplacer);
+}
+function validatePath(path3) {
+  if (typeof path3 !== "string" || !path3.startsWith("/") || path3.startsWith("//")) {
+    throw new Error(`Request path must be a string beginning with a single "/", got: ${JSON.stringify(path3)}`);
+  }
+}
+function getAPIMode(path3) {
+  if (!path3) {
+    return "v1";
+  }
+  return path3.startsWith("/v2") ? "v2" : "v1";
+}
+function parseHttpHeaderAsString(header) {
+  if (Array.isArray(header)) {
+    return header.join(", ");
+  }
+  return String(header);
+}
+function parseHeadersForFetch(headers) {
+  return Object.entries(headers).map(([key, value]) => {
+    return [key, parseHttpHeaderAsString(value)];
+  });
+}
+function parsePayload(payload) {
+  const raw = payload instanceof Uint8Array ? new TextDecoder("utf8").decode(payload) : payload;
+  return JSON.parse(raw);
+}
+function maybeExtractFromCloudProviderEnvelope(payload) {
+  const parsed = parsePayload(payload);
+  if ("detail" in parsed) {
+    return parsed.detail;
+  }
+  if ("specversion" in parsed && "data" in parsed) {
+    return parsed.data;
+  }
+  if (parsed.object === "event" || parsed.object === "v2.core.event") {
+    return parsed;
+  }
+  throw new Error("Unrecognized event format. The payload must be an AWS EventBridge/Azure Event Grid event envelope or a Stripe webhook (thin event notification or snapshot).");
+}
+var CALL_SITE_MARKER = "\nOriginating from:";
+function attachCallSiteToError(err, callSiteStack) {
+  if (!err || !err.stack || !callSiteStack) {
+    return;
+  }
+  const callerFrames = callSiteStack.substring(callSiteStack.indexOf("\n") + 1);
+  const existingMarkerIdx = err.stack.indexOf(CALL_SITE_MARKER);
+  const baseStack = existingMarkerIdx >= 0 ? err.stack.substring(0, existingMarkerIdx) : err.stack;
+  err.stack = `${baseStack}${CALL_SITE_MARKER}
+${callerFrames}`;
+}
+
+// node_modules/stripe/esm/RequestSender.js
+var STRIPE_NOTICE_SUPPRESSION_MESSAGE = "To suppress Stripe notices in test and sandbox environments, set the STRIPE_SUPPRESS_NOTICES environment variable to true.";
+var RequestSender = class _RequestSender {
+  constructor(stripe, maxBufferedRequestMetric) {
+    this._stripe = stripe;
+    this._maxBufferedRequestMetric = maxBufferedRequestMetric;
+  }
+  _normalizeStripeContext(optsContext, clientContext) {
+    if (optsContext) {
+      return optsContext.toString() || null;
+    }
+    return clientContext?.toString() || null;
+  }
+  _addHeadersDirectlyToObject(obj, headers) {
+    obj.requestId = headers["request-id"];
+    obj.stripeAccount = obj.stripeAccount || headers["stripe-account"];
+    obj.apiVersion = obj.apiVersion || headers["stripe-version"];
+    obj.idempotencyKey = obj.idempotencyKey || headers["idempotency-key"];
+  }
+  _makeResponseEvent(requestEvent, statusCode, headers) {
+    const requestEndTime = Date.now();
+    const requestDurationMs = requestEndTime - requestEvent.request_start_time;
+    return removeNullish({
+      api_version: headers["stripe-version"],
+      account: headers["stripe-account"],
+      idempotency_key: headers["idempotency-key"],
+      method: requestEvent.method,
+      path: requestEvent.path,
+      status: statusCode,
+      request_id: this._getRequestId(headers),
+      elapsed: requestDurationMs,
+      request_start_time: requestEvent.request_start_time,
+      request_end_time: requestEndTime
+    });
+  }
+  _getRequestId(headers) {
+    return headers["request-id"];
+  }
+  _emitStripeNotice(headers) {
+    const notice = headers["stripe-notice"];
+    if (!notice) {
+      return;
+    }
+    const aiAgent = this._stripe.getConstant("AI_AGENT");
+    const suppressionValue = this._stripe._platformFunctions.getEnv()?.STRIPE_SUPPRESS_NOTICES?.toLowerCase();
+    const shouldSuppress = !aiAgent && suppressionValue === "true";
+    if (shouldSuppress) {
+      return;
+    }
+    const noticeMessage = typeof notice === "string" ? notice : notice[0];
+    this._stripe._platformFunctions.emitWarning(aiAgent ? noticeMessage : `${noticeMessage}
+${STRIPE_NOTICE_SUPPRESSION_MESSAGE}`);
+  }
+  /**
+   * Used by methods with spec.streaming === true. For these methods, we do not
+   * buffer successful responses into memory or do parse them into stripe
+   * objects, we delegate that all of that to the user and pass back the raw
+   * http.Response object to the callback.
+   *
+   * (Unsuccessful responses shouldn't make it here, they should
+   * still be buffered/parsed and handled by _jsonResponseHandler -- see
+   * makeRequest)
+   */
+  _streamingResponseHandler(requestEvent, usage, callback) {
+    return (res) => {
+      const headers = res.getHeaders();
+      this._emitStripeNotice(headers);
+      const streamCompleteCallback = () => {
+        const responseEvent = this._makeResponseEvent(requestEvent, res.getStatusCode(), headers);
+        this._stripe._emitter.emit("response", responseEvent);
+        this._recordRequestMetrics(this._getRequestId(headers), responseEvent.elapsed, usage);
+      };
+      const stream = res.toStream(streamCompleteCallback);
+      this._addHeadersDirectlyToObject(stream, headers);
+      return callback(null, stream);
+    };
+  }
+  /**
+   * Default handler for Stripe responses. Buffers the response into memory,
+   * parses the JSON and returns it (i.e. passes it to the callback) if there
+   * is no "error" field. Otherwise constructs/passes an appropriate Error.
+   */
+  _jsonResponseHandler(requestEvent, apiMode, usage, timeout, requestRetries, callback) {
+    return (res) => {
+      const headers = res.getHeaders();
+      this._emitStripeNotice(headers);
+      const requestId = this._getRequestId(headers);
+      const statusCode = res.getStatusCode();
+      const responseEvent = this._makeResponseEvent(requestEvent, statusCode, headers);
+      res.toJSON().then((jsonResponse) => {
+        if (this._stripe.getEmitEventBodiesEnabled()) {
+          responseEvent.body = jsonResponse;
+        }
+        if (jsonResponse.error) {
+          const isOAuth = typeof jsonResponse.error === "string";
+          if (isOAuth) {
+            jsonResponse.error = {
+              type: jsonResponse.error,
+              message: jsonResponse.error_description
+            };
+          }
+          jsonResponse.error.headers = headers;
+          jsonResponse.error.statusCode = statusCode;
+          jsonResponse.error.requestId = requestId;
+          let err;
+          if (isOAuth) {
+            err = generateOAuthError(jsonResponse.error);
+          } else if (apiMode === "v2") {
+            err = generateV2Error(jsonResponse.error);
+          } else {
+            err = generateV1Error(jsonResponse.error);
+          }
+          throw err;
+        }
+        return jsonResponse;
+      }, (e) => {
+        if (this._stripe.getEmitEventBodiesEnabled() && e.rawBody) {
+          responseEvent.body = e.rawBody;
+        }
+        if (e instanceof HttpClientResponseBodyError) {
+          throw _RequestSender._generateConnectionError(e, timeout, requestRetries, requestId);
+        }
+        throw new StripeAPIError({
+          message: "Invalid JSON received from the Stripe API",
+          exception: e,
+          requestId: headers["request-id"]
+        });
+      }).then((jsonResponse) => {
+        this._stripe._emitter.emit("response", responseEvent);
+        this._recordRequestMetrics(requestId, responseEvent.elapsed, usage);
+        const rawResponse = res.getRawResponse();
+        this._addHeadersDirectlyToObject(rawResponse, headers);
+        Object.defineProperty(jsonResponse, "lastResponse", {
+          enumerable: false,
+          writable: false,
+          value: rawResponse
+        });
+        callback(null, jsonResponse);
+      }, (e) => {
+        this._stripe._emitter.emit("response", responseEvent);
+        callback(e, null);
+      });
+    };
+  }
+  static _generateConnectionErrorMessage(requestRetries) {
+    return `An error occurred with our connection to Stripe.${requestRetries > 0 ? ` Request was retried ${requestRetries} times.` : ""}`;
+  }
+  static _generateConnectionError(error, timeout, requestRetries, requestId) {
+    const isTimeoutError = !!error.code && error.code === HttpClient2.TIMEOUT_ERROR_CODE;
+    return new StripeConnectionError({
+      message: isTimeoutError ? `Request aborted due to timeout being reached (${timeout}ms)` : _RequestSender._generateConnectionErrorMessage(requestRetries),
+      detail: error,
+      requestId
+    });
+  }
+  // For more on when and how to retry API requests, see https://stripe.com/docs/error-handling#safely-retrying-requests-with-idempotency
+  static _shouldRetry(res, numRetries, maxRetries, error) {
+    if (error && numRetries === 0 && HttpClient2.CONNECTION_CLOSED_ERROR_CODES.includes(error.code)) {
+      return true;
+    }
+    if (numRetries >= maxRetries) {
+      return false;
+    }
+    if (!res) {
+      return true;
+    }
+    if (res.getHeaders()["stripe-should-retry"] === "false") {
+      return false;
+    }
+    if (res.getHeaders()["stripe-should-retry"] === "true") {
+      return true;
+    }
+    if (res.getStatusCode() === 409) {
+      return true;
+    }
+    if (res.getStatusCode() >= 500) {
+      return true;
+    }
+    return false;
+  }
+  _getSleepTimeInMS(numRetries) {
+    const initialNetworkRetryDelay = this._stripe.getInitialNetworkRetryDelay();
+    const maxNetworkRetryDelay = this._stripe.getMaxNetworkRetryDelay();
+    let sleepSeconds = Math.min(initialNetworkRetryDelay * Math.pow(2, numRetries - 1), maxNetworkRetryDelay);
+    sleepSeconds *= 0.5 * (1 + Math.random());
+    sleepSeconds = Math.max(initialNetworkRetryDelay, sleepSeconds);
+    return sleepSeconds * 1e3;
+  }
+  // Max retries can be set on a per request basis. Favor those over the global setting
+  _getMaxNetworkRetries(settings = {}) {
+    return settings.maxNetworkRetries !== void 0 && Number.isInteger(settings.maxNetworkRetries) ? settings.maxNetworkRetries : this._stripe.getMaxNetworkRetries();
+  }
+  _defaultIdempotencyKey(method, apiMode) {
+    const genKey = () => {
+      let uuid;
+      try {
+        uuid = this._stripe._platformFunctions.uuid4();
+      } catch {
+        uuid = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, (c) => {
+          const r = Math.random() * 16 | 0;
+          const v = c === "x" ? r : r & 3 | 8;
+          return v.toString(16);
+        });
+      }
+      return `stripe-node-retry-${uuid}`;
+    };
+    if (apiMode === "v2") {
+      if (method === "POST" || method === "DELETE") {
+        return genKey();
+      }
+    } else if (apiMode === "v1") {
+      if (method === "POST") {
+        return genKey();
+      }
+    }
+    return null;
+  }
+  _makeHeaders({ contentType, contentLength, apiVersion, clientUserAgent, method, userSuppliedHeaders, userSuppliedSettings, stripeAccount, stripeContext, apiMode }) {
+    const defaultHeaders = {
+      Accept: "application/json",
+      "Content-Type": contentType,
+      "User-Agent": this._getUserAgentString(apiMode),
+      "X-Stripe-Client-User-Agent": clientUserAgent,
+      "X-Stripe-Client-Telemetry": this._getTelemetryHeader(),
+      "Stripe-Version": apiVersion,
+      "Stripe-Account": stripeAccount,
+      "Stripe-Context": stripeContext,
+      "Idempotency-Key": this._defaultIdempotencyKey(method, apiMode)
+    };
+    const methodHasPayload = method == "POST" || method == "PUT" || method == "PATCH";
+    if (methodHasPayload || contentLength) {
+      if (!methodHasPayload) {
+        this._stripe._platformFunctions.emitWarning(`${method} method had non-zero contentLength but no payload is expected for this verb`);
+      }
+      defaultHeaders["Content-Length"] = contentLength;
+    }
+    return Object.assign(
+      removeNullish(defaultHeaders),
+      // If the user supplied, say 'idempotency-key', override instead of appending by ensuring caps are the same.
+      normalizeHeaders(userSuppliedHeaders)
+    );
+  }
+  _getUserAgentString(apiMode) {
+    const packageVersion = this._stripe.getConstant("PACKAGE_VERSION");
+    const appInfo = this._stripe._appInfo ? this._stripe.getAppInfoAsString() : "";
+    const aiAgent = this._stripe.getConstant("AI_AGENT");
+    let uaString = `Stripe/${apiMode} NodeBindings/${packageVersion}`;
+    if (appInfo) {
+      uaString += ` ${appInfo}`;
+    }
+    if (aiAgent) {
+      uaString += ` AIAgent/${aiAgent}`;
+    }
+    return uaString;
+  }
+  _getTelemetryHeader() {
+    if (this._stripe.getTelemetryEnabled() && this._stripe._prevRequestMetrics.length > 0) {
+      const metrics = this._stripe._prevRequestMetrics.shift();
+      return JSON.stringify({
+        last_request_metrics: metrics
+      });
+    }
+  }
+  _recordRequestMetrics(requestId, requestDurationMs, usage) {
+    if (this._stripe.getTelemetryEnabled() && requestId) {
+      if (this._stripe._prevRequestMetrics.length > this._maxBufferedRequestMetric) {
+        this._stripe._platformFunctions.emitWarning("Request metrics buffer is full, dropping telemetry message.");
+      } else {
+        const m = {
+          request_id: requestId,
+          request_duration_ms: requestDurationMs
+        };
+        if (usage && usage.length > 0) {
+          m.usage = usage;
+        }
+        this._stripe._prevRequestMetrics.push(m);
+      }
+    }
+  }
+  _rawRequest(method, path3, params, options, usage) {
+    return new Promise((resolve, reject) => {
+      try {
+        const requestMethod = method.toUpperCase();
+        if (requestMethod !== "POST" && params && Object.keys(params).length !== 0) {
+          throw new Error("rawRequest only supports params on POST requests. Please pass null and add your parameters to path.");
+        }
+        const data = requestMethod === "POST" ? Object.assign({}, params) : null;
+        const processed = processOptions(options);
+        if (options?.additionalHeaders) {
+          Object.assign(processed.headers, options.additionalHeaders);
+        }
+        const apiBase = processed.apiBase || (options?.apiBase ?? null);
+        const host = apiBase ? this._stripe.resolveBaseAddress(apiBase) : null;
+        this._request(requestMethod, host, path3, data, processed.authenticator, {
+          headers: processed.headers,
+          settings: processed.settings,
+          streaming: processed.streaming
+        }, usage || ["raw_request"], (err, response) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(response);
+          }
+        });
+      } catch (err) {
+        reject(err);
+      }
+    });
+  }
+  _getContentLength(data) {
+    return typeof data === "string" ? new TextEncoder().encode(data).length : data.length;
+  }
+  /**
+   * This is the main HTTP method that all resources eventually call
+   */
+  _request(method, host, path3, data, authenticator, options, usage = [], callback, requestDataProcessor = null) {
+    let requestData;
+    authenticator = authenticator ?? this._stripe._authenticator;
+    validatePath(path3);
+    const apiMode = getAPIMode(path3);
+    const retryRequest = (requestFn, apiVersion, headers, requestRetries) => {
+      return setTimeout(requestFn, this._getSleepTimeInMS(requestRetries), apiVersion, headers, requestRetries + 1);
+    };
+    const makeRequest = (apiVersion, headers, numRetries) => {
+      const timeout = options.settings && options.settings.timeout && Number.isInteger(options.settings.timeout) && options.settings.timeout >= 0 ? options.settings.timeout : this._stripe.getApiField("timeout");
+      const request = {
+        host: host || this._stripe.getApiField("host"),
+        port: this._stripe.getApiField("port"),
+        path: path3,
+        method,
+        headers: Object.assign({}, headers),
+        body: requestData,
+        protocol: this._stripe.getApiField("protocol")
+      };
+      if (!authenticator) {
+        throw Error("Authenticator was't initialized. Please pass an API Key or an Authenticator when initializing StripeClient.");
+      }
+      authenticator(request).then(() => {
+        const req = this._stripe.getApiField("httpClient").makeRequest(request.host, request.port, request.path, request.method, request.headers, request.body, request.protocol, timeout);
+        const requestStartTime = Date.now();
+        const requestEvent = removeNullish({
+          api_version: apiVersion,
+          account: parseHttpHeaderAsString(headers["Stripe-Account"]),
+          idempotency_key: parseHttpHeaderAsString(headers["Idempotency-Key"]),
+          method,
+          path: path3,
+          body: this._stripe.getEmitEventBodiesEnabled() ? data ?? void 0 : void 0,
+          request_start_time: requestStartTime
+        });
+        const requestRetries = numRetries || 0;
+        const maxRetries = this._getMaxNetworkRetries(options.settings || {});
+        this._stripe._emitter.emit("request", requestEvent);
+        req.then((res) => {
+          if (_RequestSender._shouldRetry(res, requestRetries, maxRetries)) {
+            return retryRequest(makeRequest, apiVersion, headers, requestRetries);
+          } else if (options.streaming && res.getStatusCode() < 400) {
+            return this._streamingResponseHandler(requestEvent, usage, callback)(res);
+          } else {
+            return this._jsonResponseHandler(requestEvent, apiMode, usage, timeout, requestRetries, callback)(res);
+          }
+        }).catch((error) => {
+          if (error instanceof HttpClientRuntimeError) {
+            return callback(error);
+          }
+          if (_RequestSender._shouldRetry(null, requestRetries, maxRetries, error)) {
+            return retryRequest(makeRequest, apiVersion, headers, requestRetries);
+          } else {
+            return callback(_RequestSender._generateConnectionError(error, timeout, requestRetries));
+          }
+        });
+      }).catch((e) => {
+        throw new StripeError({
+          message: "Unable to authenticate the request",
+          exception: e
+        });
+      });
+    };
+    const prepareAndMakeRequest = (error, data2) => {
+      if (error) {
+        return callback(error);
+      }
+      requestData = data2;
+      this._stripe.getClientUserAgent((clientUserAgent) => {
+        const apiVersion = this._stripe.getApiField("version");
+        const headers = this._makeHeaders({
+          contentType: apiMode == "v2" ? "application/json" : "application/x-www-form-urlencoded",
+          contentLength: this._getContentLength(data2),
+          apiVersion,
+          clientUserAgent,
+          method,
+          // other callers expect null, but .headers being optional means it's undefined if not supplied. So we normalize to null.
+          userSuppliedHeaders: options.headers ?? null,
+          userSuppliedSettings: options.settings ?? {},
+          stripeAccount: options.stripeAccount ?? this._stripe.getApiField("stripeAccount"),
+          stripeContext: this._normalizeStripeContext(options.stripeContext, this._stripe.getApiField("stripeContext")),
+          apiMode
+        });
+        makeRequest(apiVersion, headers, 0);
+      });
+    };
+    if (requestDataProcessor) {
+      requestDataProcessor(method, data, options.headers, prepareAndMakeRequest);
+    } else {
+      let stringifiedData;
+      if (apiMode == "v2") {
+        stringifiedData = data ? jsonStringifyRequestData(data) : "";
+      } else {
+        stringifiedData = queryStringifyRequestData(data || {});
+      }
+      prepareAndMakeRequest(null, stringifiedData);
+    }
+  }
+};
+
+// node_modules/stripe/esm/Decimal.js
+var ROUNDING_PRESETS = {
+  "ubb-usage-count": { mode: "significant-figures", value: 15 },
+  "v1-api": { mode: "decimal-places", value: 12 }
+};
+var PLAIN_NOTATION_DIGIT_LIMIT = 30;
+var MAX_EXPONENT = 1e6;
+var DecimalImpl = class _DecimalImpl {
+  /**
+   * Construct and normalise a decimal value.
+   *
+   * @param coefficient - The unscaled integer value.
+   * @param exponent - The power-of-ten scale factor.
+   *
+   * @internal
+   */
+  constructor(coefficient, exponent) {
+    const [normalizedCoef, normalizedExp] = _DecimalImpl.normalize(coefficient, exponent);
+    this._coefficient = normalizedCoef;
+    this._exponent = normalizedExp;
+    Object.freeze(this);
+  }
+  /**
+   * Strip trailing zeros from `coefficient`, incrementing `exponent`
+   * for each zero removed. Zero always normalises to `(0n, 0)`.
+   *
+   * @param coefficient - Raw coefficient before normalisation.
+   * @param exponent - Raw exponent before normalisation.
+   * @returns A `[coefficient, exponent]` tuple with trailing zeros removed.
+   *
+   * @internal
+   */
+  static normalize(coefficient, exponent) {
+    if (coefficient === 0n) {
+      return [0n, 0];
+    }
+    let coef = coefficient;
+    let exp = exponent;
+    while (coef !== 0n && coef % 10n === 0n) {
+      coef /= 10n;
+      exp += 1;
+    }
+    return [coef, exp];
+  }
+  /**
+   * Apply rounding to the result of an integer division.
+   *
+   * @remarks
+   * BigInt division truncates toward zero. This helper inspects the
+   * `remainder` to decide whether to adjust the truncated `quotient`
+   * by ±1 according to the chosen {@link RoundDirection}.
+   *
+   * The rounding direction is derived from the signs of `remainder`
+   * and `divisor`: when they agree the exact fractional part is
+   * positive (the truncation point is below the true value, so +1
+   * rounds to nearest); when they disagree the fractional part is
+   * negative (−1 rounds to nearest).
+   *
+   * @param quotient - Truncated integer quotient (`dividend / divisor`).
+   * @param remainder - Division remainder (`dividend % divisor`).
+   * @param divisor - The divisor used in the division.
+   * @param direction - The rounding strategy to apply.
+   * @returns The rounded quotient.
+   *
+   * @internal
+   */
+  static roundDivision(quotient, remainder, divisor, direction) {
+    if (remainder === 0n) {
+      return quotient;
+    }
+    if (direction === "round-down") {
+      return quotient;
+    }
+    const roundDir = remainder > 0n === divisor > 0n ? 1n : -1n;
+    if (direction === "round-up") {
+      return quotient + roundDir;
+    }
+    if (direction === "ceil") {
+      return roundDir === 1n ? quotient + 1n : quotient;
+    }
+    if (direction === "floor") {
+      return roundDir === -1n ? quotient - 1n : quotient;
+    }
+    const absRemainder = remainder < 0n ? -remainder : remainder;
+    const absDivisor = divisor < 0n ? -divisor : divisor;
+    const doubled = absRemainder * 2n;
+    let cmp;
+    if (doubled === absDivisor) {
+      cmp = 0;
+    } else if (doubled < absDivisor) {
+      cmp = -1;
+    } else {
+      cmp = 1;
+    }
+    if (cmp < 0) {
+      return quotient;
+    }
+    if (cmp > 0) {
+      return quotient + roundDir;
+    }
+    if (direction === "half-up") {
+      return quotient + roundDir;
+    }
+    if (direction === "half-down") {
+      return quotient;
+    }
+    if (quotient % 2n === 0n) {
+      return quotient;
+    } else {
+      return quotient + roundDir;
+    }
+  }
+  // -------------------------------------------------------------------
+  // Arithmetic
+  // -------------------------------------------------------------------
+  /**
+   * Return the sum of this value and `other`.
+   *
+   * @param other - The addend.
+   * @returns A new {@link Decimal} equal to `this + other`.
+   *
+   * @public
+   */
+  add(other) {
+    const otherImpl = other;
+    if (this._exponent === otherImpl._exponent) {
+      return new _DecimalImpl(this._coefficient + otherImpl._coefficient, this._exponent);
+    }
+    if (this._exponent < otherImpl._exponent) {
+      const scale = 10n ** BigInt(otherImpl._exponent - this._exponent);
+      return new _DecimalImpl(this._coefficient + otherImpl._coefficient * scale, this._exponent);
+    } else {
+      const scale = 10n ** BigInt(this._exponent - otherImpl._exponent);
+      return new _DecimalImpl(this._coefficient * scale + otherImpl._coefficient, otherImpl._exponent);
+    }
+  }
+  /**
+   * Return the difference of this value and `other`.
+   *
+   * @param other - The subtrahend.
+   * @returns A new {@link Decimal} equal to `this - other`.
+   *
+   * @public
+   */
+  sub(other) {
+    const otherImpl = other;
+    if (this._exponent === otherImpl._exponent) {
+      return new _DecimalImpl(this._coefficient - otherImpl._coefficient, this._exponent);
+    }
+    if (this._exponent < otherImpl._exponent) {
+      const scale = 10n ** BigInt(otherImpl._exponent - this._exponent);
+      return new _DecimalImpl(this._coefficient - otherImpl._coefficient * scale, this._exponent);
+    } else {
+      const scale = 10n ** BigInt(this._exponent - otherImpl._exponent);
+      return new _DecimalImpl(this._coefficient * scale - otherImpl._coefficient, otherImpl._exponent);
+    }
+  }
+  /**
+   * Return the product of this value and `other`.
+   *
+   * @param other - The multiplicand.
+   * @returns A new {@link Decimal} equal to `this × other`.
+   *
+   * @public
+   */
+  mul(other) {
+    const otherImpl = other;
+    return new _DecimalImpl(this._coefficient * otherImpl._coefficient, this._exponent + otherImpl._exponent);
+  }
+  /**
+   * Return the quotient of this value divided by `other`.
+   *
+   * @remarks
+   * Division scales the dividend to produce `precision` decimal digits
+   * in the result, then applies integer division and rounds the
+   * remainder according to `direction`.
+   *
+   * Division requires explicit rounding control — no invisible defaults
+   * in financial code. For full precision use {@link DEFAULT_DIV_PRECISION}
+   * (34, matching the IEEE 754 decimal128 coefficient size).
+   *
+   * @example
+   * ```ts
+   * Decimal.from('1').div(Decimal.from('3'), 5, 'half-up');   // "0.33333"
+   * Decimal.from('5').div(Decimal.from('2'), 0, 'half-up');   // "3"
+   * Decimal.from('5').div(Decimal.from('2'), 0, 'half-even'); // "2"
+   * ```
+   *
+   * @param other - The divisor. Must not be zero.
+   * @param precision - Maximum number of decimal digits in the result.
+   * @param direction - How to round when the exact quotient cannot
+   *   be represented at the requested precision.
+   * @returns A new {@link Decimal} equal to `this ÷ other`, rounded to
+   *   `precision` decimal places.
+   * @throws {@link Error} if `other` is zero.
+   * @throws {@link Error} if `precision` is negative or non-integer.
+   *
+   * @public
+   */
+  div(other, precision, direction) {
+    if (precision < 0 || !Number.isInteger(precision)) {
+      throw new Error("precision must be a non-negative integer");
+    }
+    const otherImpl = other;
+    if (otherImpl._coefficient === 0n) {
+      throw new Error("Division by zero");
+    }
+    const scale = this._exponent - otherImpl._exponent + precision;
+    let quotient;
+    let remainder;
+    let roundingDivisor;
+    if (scale >= 0) {
+      const scaledDividend = this._coefficient * 10n ** BigInt(scale);
+      quotient = scaledDividend / otherImpl._coefficient;
+      remainder = scaledDividend % otherImpl._coefficient;
+      roundingDivisor = otherImpl._coefficient;
+    } else {
+      const scaledDivisor = otherImpl._coefficient * 10n ** BigInt(-scale);
+      quotient = this._coefficient / scaledDivisor;
+      remainder = this._coefficient % scaledDivisor;
+      roundingDivisor = scaledDivisor;
+    }
+    const roundedQuotient = _DecimalImpl.roundDivision(quotient, remainder, roundingDivisor, direction);
+    return new _DecimalImpl(roundedQuotient, -precision);
+  }
+  // -------------------------------------------------------------------
+  // Comparison
+  // -------------------------------------------------------------------
+  /**
+   * Three-way comparison of this value with `other`.
+   *
+   * @example
+   * ```ts
+   * const a = Decimal.from('1.5');
+   * const b = Decimal.from('2');
+   * a.cmp(b); // -1
+   * b.cmp(a); //  1
+   * a.cmp(a); //  0
+   * ```
+   *
+   * @param other - The value to compare against.
+   * @returns `-1` if `this \< other`, `0` if equal, `1` if `this \> other`.
+   *
+   * @public
+   */
+  cmp(other) {
+    const otherImpl = other;
+    if (this._exponent === otherImpl._exponent) {
+      if (this._coefficient < otherImpl._coefficient)
+        return -1;
+      if (this._coefficient > otherImpl._coefficient)
+        return 1;
+      return 0;
+    }
+    if (this._exponent < otherImpl._exponent) {
+      const scale = 10n ** BigInt(otherImpl._exponent - this._exponent);
+      const scaledOther = otherImpl._coefficient * scale;
+      if (this._coefficient < scaledOther)
+        return -1;
+      if (this._coefficient > scaledOther)
+        return 1;
+      return 0;
+    } else {
+      const scale = 10n ** BigInt(this._exponent - otherImpl._exponent);
+      const scaledThis = this._coefficient * scale;
+      if (scaledThis < otherImpl._coefficient)
+        return -1;
+      if (scaledThis > otherImpl._coefficient)
+        return 1;
+      return 0;
+    }
+  }
+  /**
+   * Return `true` if this value is numerically equal to `other`.
+   *
+   * @param other - The value to compare against.
+   * @returns `true` if `this === other` in value, `false` otherwise.
+   *
+   * @public
+   */
+  eq(other) {
+    return this.cmp(other) === 0;
+  }
+  /**
+   * Return `true` if this value is strictly less than `other`.
+   *
+   * @param other - The value to compare against.
+   * @returns `true` if `this \< other`, `false` otherwise.
+   *
+   * @public
+   */
+  lt(other) {
+    return this.cmp(other) === -1;
+  }
+  /**
+   * Return `true` if this value is less than or equal to `other`.
+   *
+   * @param other - The value to compare against.
+   * @returns `true` if `this ≤ other`, `false` otherwise.
+   *
+   * @public
+   */
+  lte(other) {
+    return this.cmp(other) <= 0;
+  }
+  /**
+   * Return `true` if this value is strictly greater than `other`.
+   *
+   * @param other - The value to compare against.
+   * @returns `true` if `this \> other`, `false` otherwise.
+   *
+   * @public
+   */
+  gt(other) {
+    return this.cmp(other) === 1;
+  }
+  /**
+   * Return `true` if this value is greater than or equal to `other`.
+   *
+   * @param other - The value to compare against.
+   * @returns `true` if `this ≥ other`, `false` otherwise.
+   *
+   * @public
+   */
+  gte(other) {
+    return this.cmp(other) >= 0;
+  }
+  // -------------------------------------------------------------------
+  // Predicates
+  // -------------------------------------------------------------------
+  /**
+   * Return `true` if this value is exactly zero.
+   *
+   * @returns `true` if the value is zero, `false` otherwise.
+   *
+   * @public
+   */
+  isZero() {
+    return this._coefficient === 0n;
+  }
+  /**
+   * Return `true` if this value is strictly less than zero.
+   *
+   * @returns `true` if negative, `false` if zero or positive.
+   *
+   * @public
+   */
+  isNegative() {
+    return this._coefficient < 0n;
+  }
+  /**
+   * Return `true` if this value is strictly greater than zero.
+   *
+   * @returns `true` if positive, `false` if zero or negative.
+   *
+   * @public
+   */
+  isPositive() {
+    return this._coefficient > 0n;
+  }
+  // -------------------------------------------------------------------
+  // Unary operations
+  // -------------------------------------------------------------------
+  /**
+   * Return the additive inverse of this value.
+   *
+   * @returns A new {@link Decimal} equal to `-this`.
+   *
+   * @public
+   */
+  neg() {
+    return new _DecimalImpl(-this._coefficient, this._exponent);
+  }
+  /**
+   * Return the absolute value.
+   *
+   * @returns A new {@link Decimal} equal to `|this|`. If this value is
+   *   already non-negative, returns `this` (no allocation).
+   *
+   * @public
+   */
+  abs() {
+    if (this._coefficient < 0n) {
+      return new _DecimalImpl(-this._coefficient, this._exponent);
+    }
+    return this;
+  }
+  // -------------------------------------------------------------------
+  // Rounding
+  // -------------------------------------------------------------------
+  /**
+   * Round this value to a specified precision.
+   *
+   * @remarks
+   * **Rounding directions** (IEEE 754-2019 §4.3):
+   *
+   * | Direction      | Behavior                                       |
+   * | -------------- | ---------------------------------------------- |
+   * | `'ceil'`       |  1.1→2, -1.1→-1, 1.0→1 (toward +∞)             |
+   * | `'floor'`      |  1.9→1, -1.1→-2, 1.0→1 (toward -∞)             |
+   * | `'round-down'` |  1.9→1, -1.9→-1 (toward zero / truncate)       |
+   * | `'round-up'`   |  1.1→2, -1.1→-2 (away from zero)               |
+   * | `'half-up'`    |  0.5→1, 1.5→2, -0.5→-1 (ties away from zero)   |
+   * | `'half-down'`  |  0.5→0, 1.5→1, -0.5→0 (ties toward zero)       |
+   * | `'half-even'`  |  0.5→0, 1.5→2, 2.5→2, 3.5→4 (ties to even)     |
+   *
+   * **Precision** is specified as a {@link DecimalRoundingOptions} object
+   * or a preset name from {@link DecimalRoundingPresets}:
+   *
+   * @example
+   * ```ts
+   * // Using a preset
+   * amount.round('half-even', 'v1-api');
+   *
+   * // Using explicit options
+   * amount.round('half-even', { mode: 'decimal-places', value: 2 });
+   * amount.round('half-up', { mode: 'significant-figures', value: 4 });
+   * ```
+   *
+   * @param direction - How to round.
+   * @param options - A {@link DecimalRoundingOptions} object or key of {@link DecimalRoundingPresets}.
+   * @returns A new {@link Decimal} rounded to the specified precision.
+   * @throws {@link Error} if `options.value` is negative or non-integer.
+   * @throws {@link Error} if the preset name is not recognized.
+   *
+   * @public
+   */
+  round(direction, options) {
+    const resolved = typeof options === "string" ? (
+      // Declaration merging allows consumers to add keys at compile time, but
+      // ROUNDING_PRESETS only knows about built-in keys at runtime.  The double
+      // cast through `unknown` is intentional: we want an undefined-safe lookup
+      // so the runtime guard below can produce a clear error for unrecognised
+      // (e.g. declaration-merged) preset names that were not also added to
+      // ROUNDING_PRESETS.
+      ROUNDING_PRESETS[options]
+    ) : options;
+    if (resolved === void 0) {
+      throw new Error(`Unknown rounding preset: "${options}"`);
+    }
+    if (resolved.value < 0 || !Number.isInteger(resolved.value)) {
+      throw new Error("DecimalRoundingOptions.value must be a non-negative integer");
+    }
+    if (resolved.mode === "decimal-places") {
+      const fixed = this.toFixed(resolved.value, direction);
+      return Decimal.from(fixed);
+    }
+    if (this._coefficient === 0n) {
+      return this;
+    }
+    const coeffStr = this._coefficient < 0n ? (-this._coefficient).toString() : this._coefficient.toString();
+    const currentSigFigs = coeffStr.length;
+    if (resolved.value === 0) {
+      return Decimal.zero;
+    }
+    if (currentSigFigs <= resolved.value) {
+      return this;
+    }
+    const digitsToTrim = currentSigFigs - resolved.value;
+    const divisor = 10n ** BigInt(digitsToTrim);
+    const quotient = this._coefficient / divisor;
+    const remainder = this._coefficient % divisor;
+    const rounded = _DecimalImpl.roundDivision(quotient, remainder, divisor, direction);
+    return new _DecimalImpl(rounded, this._exponent + digitsToTrim);
+  }
+  // -------------------------------------------------------------------
+  // Conversion / serialisation
+  // -------------------------------------------------------------------
+  /**
+   * Return a human-readable string representation.
+   *
+   * @remarks
+   * Plain notation for values whose digit count is at most 30, and
+   * scientific notation (`1.23E+40`) for larger values. Trailing zeros
+   * are never present because the internal representation is normalised.
+   *
+   * @public
+   */
+  toString() {
+    if (this._coefficient === 0n) {
+      return "0";
+    }
+    const coeffStr = this._coefficient.toString();
+    const isNeg = coeffStr.startsWith("-");
+    const absCoeffStr = isNeg ? coeffStr.slice(1) : coeffStr;
+    if (this._exponent < 0) {
+      const decimalPlaces = -this._exponent;
+      const leadingZeroCount = decimalPlaces >= absCoeffStr.length ? decimalPlaces - absCoeffStr.length : 0;
+      if (leadingZeroCount > PLAIN_NOTATION_DIGIT_LIMIT) {
+        if (absCoeffStr.length === 1) {
+          return `${coeffStr}E${String(this._exponent)}`;
+        }
+        const intPart = absCoeffStr[0] ?? "";
+        const fracPart = absCoeffStr.slice(1);
+        const adjustedExp = this._exponent + absCoeffStr.length - 1;
+        return `${isNeg ? "-" : ""}${intPart}.${fracPart}E${String(adjustedExp)}`;
+      }
+      if (decimalPlaces >= absCoeffStr.length) {
+        const leadingZeros = "0".repeat(decimalPlaces - absCoeffStr.length);
+        return `${isNeg ? "-" : ""}0.${leadingZeros}${absCoeffStr}`;
+      } else {
+        const integerPart = absCoeffStr.slice(0, absCoeffStr.length - decimalPlaces);
+        const fractionalPart = absCoeffStr.slice(absCoeffStr.length - decimalPlaces);
+        return `${isNeg ? "-" : ""}${integerPart}.${fractionalPart}`;
+      }
+    }
+    const plainLength = absCoeffStr.length + this._exponent;
+    if (plainLength <= PLAIN_NOTATION_DIGIT_LIMIT) {
+      if (this._exponent === 0) {
+        return coeffStr;
+      }
+      const trailingZeros = "0".repeat(this._exponent);
+      return `${isNeg ? "-" : ""}${absCoeffStr}${trailingZeros}`;
+    } else {
+      if (absCoeffStr.length === 1) {
+        return `${coeffStr}E+${String(this._exponent)}`;
+      }
+      const integerPart = absCoeffStr[0] ?? "";
+      const fractionalPart = absCoeffStr.slice(1);
+      const adjustedExponent = this._exponent + absCoeffStr.length - 1;
+      return `${isNeg ? "-" : ""}${integerPart}.${fractionalPart}E+${String(adjustedExponent)}`;
+    }
+  }
+  /**
+   * Return the JSON-serialisable representation.
+   *
+   * @remarks
+   * Returns a plain string matching the Stripe API convention where
+   * decimal values are serialised as strings in JSON. Called
+   * automatically by `JSON.stringify`.
+   *
+   * @public
+   */
+  toJSON() {
+    return this.toString();
+  }
+  /**
+   * Convert to a JavaScript `number`.
+   *
+   * @remarks
+   * This is an explicit, intentionally lossy conversion. Use it only
+   * when you need a numeric value for display or interop with APIs
+   * that require `number`. Prefer {@link Decimal.toString | toString}
+   * or {@link Decimal.toFixed | toFixed} for lossless output.
+   *
+   * @public
+   */
+  toNumber() {
+    return Number(this.toString());
+  }
+  /**
+   * Format this value as a fixed-point string with exactly
+   * `decimalPlaces` digits after the decimal point.
+   *
+   * @remarks
+   * Values are rounded according to `direction` when the internal
+   * precision exceeds the requested number of decimal places.
+   * The rounding direction is always required — no invisible defaults
+   * in financial code.
+   *
+   * @example
+   * ```ts
+   * Decimal.from('1.235').toFixed(2, 'half-up');   // "1.24"
+   * Decimal.from('1.225').toFixed(2, 'half-even'); // "1.22"
+   * Decimal.from('42').toFixed(3, 'half-up');      // "42.000"
+   * ```
+   *
+   * @param decimalPlaces - Number of digits after the decimal point.
+   *   Must be a non-negative integer.
+   * @param direction - How to round when truncating excess digits.
+   * @returns A string with exactly `decimalPlaces` fractional digits.
+   * @throws {@link Error} if `decimalPlaces` is negative or non-integer.
+   *
+   * @public
+   */
+  toFixed(decimalPlaces, direction) {
+    if (decimalPlaces < 0 || !Number.isInteger(decimalPlaces)) {
+      throw new Error("decimalPlaces must be a non-negative integer");
+    }
+    const formatFixed = (coef) => {
+      const coeffStr = coef.toString();
+      const isNeg = coeffStr.startsWith("-");
+      const absCoeffStr = isNeg ? coeffStr.slice(1) : coeffStr;
+      if (decimalPlaces === 0) {
+        return coeffStr;
+      }
+      if (decimalPlaces >= absCoeffStr.length) {
+        const leadingZeros = "0".repeat(decimalPlaces - absCoeffStr.length);
+        return `${isNeg ? "-" : ""}0.${leadingZeros}${absCoeffStr}`;
+      } else {
+        const integerPart = absCoeffStr.slice(0, absCoeffStr.length - decimalPlaces);
+        const fractionalPart = absCoeffStr.slice(absCoeffStr.length - decimalPlaces);
+        return `${isNeg ? "-" : ""}${integerPart}.${fractionalPart}`;
+      }
+    };
+    const targetExponent = -decimalPlaces;
+    if (this._exponent === targetExponent) {
+      return formatFixed(this._coefficient);
+    }
+    if (this._exponent < targetExponent) {
+      const scaleDiff = targetExponent - this._exponent;
+      const divisor = 10n ** BigInt(scaleDiff);
+      const quotient = this._coefficient / divisor;
+      const remainder = this._coefficient % divisor;
+      const rounded = _DecimalImpl.roundDivision(quotient, remainder, divisor, direction);
+      return formatFixed(rounded);
+    } else {
+      const scaleDiff = this._exponent - targetExponent;
+      const scaled = this._coefficient * 10n ** BigInt(scaleDiff);
+      return formatFixed(scaled);
+    }
+  }
+  /**
+   * Return a string primitive when the runtime coerces the value.
+   *
+   * @remarks
+   * Deliberately returns a `string` (not a `number`) to discourage
+   * silent precision loss through implicit arithmetic coercion.
+   * When used in a numeric context (for example, `+myDecimal`), the
+   * JavaScript runtime will first call this method and then coerce
+   * the resulting string to a `number`, which may lose precision.
+   * Callers should prefer the explicit
+   * {@link Decimal.toNumber | toNumber} method when an IEEE 754
+   * `number` is required.
+   *
+   * @public
+   */
+  valueOf() {
+    return this.toString();
+  }
+};
+var Decimal = {
+  /**
+   * Create a {@link Decimal} from a string, number, or bigint.
+   *
+   * @remarks
+   * - **string**: Parsed as a decimal literal. Accepts an optional sign,
+   *   integer digits, an optional fractional part, and an optional `e`/`E`
+   *   exponent. Leading/trailing whitespace is trimmed.
+   * - **number**: Must be finite. Converted via `Number.prototype.toString()`
+   *   then parsed, so `Decimal.from(0.1)` produces `"0.1"` (not the
+   *   53-bit binary approximation).
+   * - **bigint**: Treated as an integer with exponent 0.
+   *
+   * @example
+   * ```ts
+   * Decimal.from('1.23');   // string
+   * Decimal.from(42);       // number
+   * Decimal.from(100n);     // bigint
+   * Decimal.from('1.5e3');  // scientific notation → 1500
+   * ```
+   *
+   * @param value - The value to convert.
+   * @returns A new frozen {@link Decimal} instance.
+   * @throws {@link Error} if `value` is a non-finite number, an empty
+   *   string, or a string that does not match the decimal literal grammar.
+   *
+   * @public
+   */
+  from(value) {
+    if (typeof value === "bigint") {
+      return new DecimalImpl(value, 0);
+    }
+    if (typeof value === "number") {
+      if (!Number.isFinite(value)) {
+        throw new Error("Number must be finite");
+      }
+      return Decimal.from(value.toString());
+    }
+    const trimmed = value.trim();
+    if (trimmed === "") {
+      throw new Error("Cannot parse empty string as Decimal");
+    }
+    const match = /^([+-]?)(\d+)(?:\.(\d+))?(?:[eE]([+-]?\d+))?$/.exec(trimmed);
+    if (!match) {
+      throw new Error(`Invalid decimal string: ${value}`);
+    }
+    const sign = match[1] === "-" ? -1n : 1n;
+    const integerPart = match[2] ?? "";
+    const fractionalPart = match[3] ?? "";
+    const exponentPart = match[4] ? Number(match[4]) : 0;
+    if (!Number.isSafeInteger(exponentPart) || exponentPart > MAX_EXPONENT || exponentPart < -MAX_EXPONENT) {
+      throw new Error(`Exponent out of range: ${String(match[4])} exceeds safe integer bounds`);
+    }
+    const coefficientStr = integerPart + fractionalPart;
+    const coefficient = sign * BigInt(coefficientStr);
+    const exponent = exponentPart - fractionalPart.length;
+    if (!Number.isSafeInteger(exponent) || exponent > MAX_EXPONENT || exponent < -MAX_EXPONENT) {
+      throw new Error(`Computed exponent out of range: ${String(exponent)} exceeds safe integer bounds`);
+    }
+    return new DecimalImpl(coefficient, exponent);
+  },
+  /**
+   * The {@link Decimal} value representing zero.
+   *
+   * @remarks
+   * Pre-allocated singleton — prefer `Decimal.zero` over
+   * `Decimal.from(0)` to avoid an unnecessary allocation.
+   *
+   * @public
+   */
+  zero: new DecimalImpl(0n, 0)
+};
+
+// node_modules/stripe/esm/V2Coercion.js
+var coerceV2RequestDiscriminatedUnion = (data, schema) => {
+  if (typeof data !== "object" || Array.isArray(data)) {
+    return data;
+  }
+  const obj = data;
+  const discriminatorValue = obj[schema.discriminator];
+  if (typeof discriminatorValue !== "string") {
+    throw new Error(`Missing or invalid discriminator \`${schema.discriminator}\` for a polymorphic parameter. Stripe uses this field to determine the shape of the value, so we cannot encode the request without it. Provide \`${schema.discriminator}\` with one of: ${Object.keys(schema.variants).join(", ")}.`);
+  }
+  const variant = schema.variants[discriminatorValue];
+  return variant ? coerceV2RequestData(data, variant) : data;
+};
+var coerceV2RequestObject = (data, schema) => {
+  if (typeof data !== "object" || Array.isArray(data)) {
+    return data;
+  }
+  const obj = data;
+  const result = {};
+  for (const key of Object.keys(obj)) {
+    const fieldSchema = schema.fields[key];
+    result[key] = fieldSchema ? coerceV2RequestData(obj[key], fieldSchema) : obj[key];
+  }
+  return result;
+};
+var coerceV2RequestData = (data, schema) => {
+  if (data == null) {
+    return data;
+  }
+  switch (schema.kind) {
+    case "int64_string":
+      return typeof data === "bigint" || typeof data === "number" ? String(data) : data;
+    case "decimal_string":
+      return typeof data.toFixed === "function" && typeof data.isZero === "function" ? data.toString() : data;
+    case "object": {
+      return coerceV2RequestObject(data, schema);
+    }
+    case "array": {
+      if (!Array.isArray(data)) {
+        return data;
+      }
+      return data.map((element) => coerceV2RequestData(element, schema.element));
+    }
+    case "nullable":
+      return coerceV2RequestData(data, schema.inner);
+    case "discriminatedUnion": {
+      return coerceV2RequestDiscriminatedUnion(data, schema);
+    }
+  }
+};
+var coerceV2ResponseDiscriminatedUnion = (data, schema) => {
+  if (typeof data !== "object" || Array.isArray(data)) {
+    return data;
+  }
+  const obj = data;
+  const discriminatorValue = obj[schema.discriminator];
+  if (typeof discriminatorValue === "string" && discriminatorValue in schema.variants) {
+    return coerceV2ResponseData(data, schema.variants[discriminatorValue]);
+  }
+  return data;
+};
+var coerceV2ResponseObject = (data, schema) => {
+  if (typeof data !== "object" || Array.isArray(data)) {
+    return data;
+  }
+  const obj = data;
+  for (const key of Object.keys(schema.fields)) {
+    if (key in obj) {
+      obj[key] = coerceV2ResponseData(obj[key], schema.fields[key]);
+    }
+  }
+  return obj;
+};
+var coerceV2ResponseData = (data, schema) => {
+  if (data == null) {
+    return data;
+  }
+  switch (schema.kind) {
+    case "int64_string":
+      if (typeof data === "string") {
+        try {
+          return BigInt(data);
+        } catch {
+          throw new Error(`Failed to coerce int64_string value: expected an integer string, got '${data}'`);
+        }
+      }
+      return data;
+    case "decimal_string":
+      if (typeof data === "string") {
+        try {
+          return Decimal.from(data);
+        } catch {
+          throw new Error(`Failed to coerce decimal_string value: expected a decimal string, got '${data}'`);
+        }
+      }
+      return data;
+    case "object": {
+      return coerceV2ResponseObject(data, schema);
+    }
+    case "array": {
+      if (!Array.isArray(data)) {
+        return data;
+      }
+      for (let i = 0; i < data.length; i++) {
+        data[i] = coerceV2ResponseData(data[i], schema.element);
+      }
+      return data;
+    }
+    case "nullable":
+      return coerceV2ResponseData(data, schema.inner);
+    case "discriminatedUnion": {
+      return coerceV2ResponseDiscriminatedUnion(data, schema);
+    }
+  }
+};
+
+// node_modules/stripe/esm/autoPagination.js
+var V1Iterator = class {
+  constructor(firstPagePromise, params, options, method, path3, spec, stripeResource) {
+    this.index = 0;
+    this.pagePromise = firstPagePromise;
+    this.promiseCache = { currentPromise: null };
+    this.params = params;
+    this.options = options;
+    this.method = method;
+    this.path = path3;
+    this.spec = spec;
+    this.stripeResource = stripeResource;
+  }
+  async iterate(pageResult) {
+    if (!(pageResult && pageResult.data && typeof pageResult.data.length === "number")) {
+      throw Error("Unexpected: Stripe API response does not have a well-formed `data` array.");
+    }
+    const reverseIteration = !!this.params.ending_before;
+    if (this.index < pageResult.data.length) {
+      const idx = reverseIteration ? pageResult.data.length - 1 - this.index : this.index;
+      const value = pageResult.data[idx];
+      this.index += 1;
+      return { value, done: false };
+    } else if (pageResult.has_more) {
+      this.index = 0;
+      this.pagePromise = this.getNextPage(pageResult);
+      const nextPageResult = await this.pagePromise;
+      return this.iterate(nextPageResult);
+    }
+    return { done: true, value: void 0 };
+  }
+  /** @abstract */
+  getNextPage(_pageResult) {
+    throw new Error("Unimplemented");
+  }
+  async _next() {
+    return this.iterate(await this.pagePromise);
+  }
+  next() {
+    if (this.promiseCache.currentPromise) {
+      return this.promiseCache.currentPromise;
+    }
+    const nextPromise = (async () => {
+      const ret = await this._next();
+      this.promiseCache.currentPromise = null;
+      return ret;
+    })();
+    this.promiseCache.currentPromise = nextPromise;
+    return nextPromise;
+  }
+};
+var V1ListIterator = class extends V1Iterator {
+  getNextPage(pageResult) {
+    const reverseIteration = !!this.params.ending_before;
+    const lastId = getLastId(pageResult, reverseIteration);
+    const nextParams = {
+      ...this.params,
+      [reverseIteration ? "ending_before" : "starting_after"]: lastId
+    };
+    return this.stripeResource._makeRequest(this.method, this.path, nextParams, this.options, this.spec);
+  }
+};
+var V1SearchIterator = class extends V1Iterator {
+  getNextPage(pageResult) {
+    if (!pageResult.next_page) {
+      throw Error("Unexpected: Stripe API response does not have a well-formed `next_page` field, but `has_more` was true.");
+    }
+    const nextParams = {
+      ...this.params,
+      page: pageResult.next_page
+    };
+    return this.stripeResource._makeRequest(this.method, this.path, nextParams, this.options, this.spec);
+  }
+};
+var V2ListIterator = class {
+  constructor(firstPagePromise, options, spec, stripeResource) {
+    this.firstPagePromise = firstPagePromise;
+    this.currentPageIterator = null;
+    this.nextPageUrl = null;
+    this.promiseCache = { currentPromise: null };
+    this.options = options;
+    this.spec = spec;
+    this.stripeResource = stripeResource;
+  }
+  async initFirstPage() {
+    if (this.firstPagePromise) {
+      const page = await this.firstPagePromise;
+      this.firstPagePromise = null;
+      this.currentPageIterator = page.data[Symbol.iterator]();
+      this.nextPageUrl = page.next_page_url || null;
+    }
+  }
+  async turnPage() {
+    if (!this.nextPageUrl)
+      return null;
+    const page = await this.stripeResource._makeRequest("GET", this.nextPageUrl, void 0, this.options, this.spec);
+    this.nextPageUrl = page.next_page_url || null;
+    this.currentPageIterator = page.data[Symbol.iterator]();
+    return this.currentPageIterator;
+  }
+  async _next() {
+    await this.initFirstPage();
+    if (this.currentPageIterator) {
+      const result = this.currentPageIterator.next();
+      if (!result.done)
+        return { done: false, value: result.value };
+    }
+    return this.nextFromNewPage();
+  }
+  async nextFromNewPage() {
+    const nextPageIterator = await this.turnPage();
+    if (!nextPageIterator) {
+      return { done: true, value: void 0 };
+    }
+    const result = nextPageIterator.next();
+    if (!result.done)
+      return { done: false, value: result.value };
+    return this.nextFromNewPage();
+  }
+  next() {
+    if (this.promiseCache.currentPromise) {
+      return this.promiseCache.currentPromise;
+    }
+    const nextPromise = (async () => {
+      try {
+        return await this._next();
+      } finally {
+        this.promiseCache.currentPromise = null;
+      }
+    })();
+    this.promiseCache.currentPromise = nextPromise;
+    return nextPromise;
+  }
+};
+var makeAutoPaginationMethods = (stripeResource, params, options, method, path3, spec, firstPagePromise) => {
+  const apiMode = getAPIMode(path3);
+  const methodType = spec?.methodType;
+  if (apiMode !== "v2" && methodType === "search") {
+    return makeAutoPaginationMethodsFromIterator(new V1SearchIterator(firstPagePromise, params, options, method, path3, spec, stripeResource));
+  }
+  if (apiMode !== "v2" && methodType === "list") {
+    return makeAutoPaginationMethodsFromIterator(new V1ListIterator(firstPagePromise, params, options, method, path3, spec, stripeResource));
+  }
+  if (apiMode === "v2" && methodType === "list") {
+    return makeAutoPaginationMethodsFromIterator(new V2ListIterator(firstPagePromise, options, spec, stripeResource));
+  }
+  return null;
+};
+var makeAutoPaginationMethodsFromIterator = (iterator) => {
+  const autoPagingEach = makeAutoPagingEach((...args) => iterator.next(...args));
+  const autoPagingToArray = makeAutoPagingToArray(autoPagingEach);
+  const autoPaginationMethods = {
+    autoPagingEach,
+    autoPagingToArray,
+    // Async iterator functions:
+    next: () => iterator.next(),
+    return: () => {
+      return {};
+    },
+    [getAsyncIteratorSymbol()]: () => {
+      return autoPaginationMethods;
+    }
+  };
+  return autoPaginationMethods;
+};
+function getAsyncIteratorSymbol() {
+  if (typeof Symbol !== "undefined" && Symbol.asyncIterator) {
+    return Symbol.asyncIterator;
+  }
+  return "@@asyncIterator";
+}
+function getDoneCallback(args) {
+  if (args.length < 2) {
+    return null;
+  }
+  const onDone = args[1];
+  if (typeof onDone !== "function") {
+    throw Error(`The second argument to autoPagingEach, if present, must be a callback function; received ${typeof onDone}`);
+  }
+  return onDone;
+}
+function getItemCallback(args) {
+  if (args.length === 0) {
+    return void 0;
+  }
+  const onItem = args[0];
+  if (typeof onItem !== "function") {
+    throw Error(`The first argument to autoPagingEach, if present, must be a callback function; received ${typeof onItem}`);
+  }
+  if (onItem.length === 2) {
+    return onItem;
+  }
+  if (onItem.length > 2) {
+    throw Error(`The \`onItem\` callback function passed to autoPagingEach must accept at most two arguments; got ${onItem}`);
+  }
+  return function _onItem(item, next) {
+    const shouldContinue = onItem(item);
+    next(shouldContinue);
+  };
+}
+function getLastId(listResult, reverseIteration) {
+  const lastIdx = reverseIteration ? 0 : listResult.data.length - 1;
+  const lastItem = listResult.data[lastIdx];
+  const lastId = lastItem && lastItem.id;
+  if (!lastId) {
+    throw Error("Unexpected: No `id` found on the last item while auto-paging a list.");
+  }
+  return lastId;
+}
+function makeAutoPagingEach(asyncIteratorNext) {
+  return function autoPagingEach() {
+    const callSiteStack = new Error().stack;
+    const args = [].slice.call(arguments);
+    const onItem = getItemCallback(args);
+    const onDone = getDoneCallback(args);
+    if (args.length > 2) {
+      throw Error(`autoPagingEach takes up to two arguments; received ${args}`);
+    }
+    const autoPagePromise = wrapAsyncIteratorWithCallback(
+      asyncIteratorNext,
+      // @ts-ignore we might need a null check
+      onItem
+    ).catch((err) => {
+      attachCallSiteToError(err, callSiteStack);
+      throw err;
+    });
+    if (onDone) {
+      autoPagePromise.then(() => onDone(), (err) => onDone(err));
+    }
+    return autoPagePromise;
+  };
+}
+function makeAutoPagingToArray(autoPagingEach) {
+  return function autoPagingToArray(opts, onDone) {
+    const callSiteStack = new Error().stack;
+    const limit = opts && opts.limit;
+    if (!limit) {
+      throw Error("You must pass a `limit` option to autoPagingToArray, e.g., `autoPagingToArray({limit: 1000});`.");
+    }
+    if (limit > 1e4) {
+      throw Error("You cannot specify a limit of more than 10,000 items to fetch in `autoPagingToArray`; use `autoPagingEach` to iterate through longer lists.");
+    }
+    const promise = new Promise((resolve, reject) => {
+      const items = [];
+      autoPagingEach((item) => {
+        items.push(item);
+        if (items.length >= limit) {
+          return false;
+        }
+      }).then(() => {
+        resolve(items);
+      }).catch((err) => {
+        attachCallSiteToError(err, callSiteStack);
+        reject(err);
+      });
+    });
+    if (onDone) {
+      promise.then((items) => onDone(null, items), (err) => onDone(err));
+    }
+    return promise;
+  };
+}
+function wrapAsyncIteratorWithCallback(asyncIteratorNext, onItem) {
+  return new Promise((resolve, reject) => {
+    function handleIteration(iterResult) {
+      if (iterResult.done) {
+        resolve();
+        return;
+      }
+      const item = iterResult.value;
+      return new Promise((next) => {
+        onItem(item, next);
+      }).then((shouldContinue) => {
+        if (shouldContinue === false) {
+          return handleIteration({ done: true, value: void 0 });
+        } else {
+          return asyncIteratorNext().then(handleIteration);
+        }
+      });
+    }
+    asyncIteratorNext().then(handleIteration).catch(reject);
+  });
+}
+
+// node_modules/stripe/esm/StripeResource.js
+var StripeResource = class {
+  constructor(stripe, deprecatedUrlData) {
+    this.resourcePath = "";
+    this.requestDataProcessor = null;
+    this._stripe = stripe;
+    if (deprecatedUrlData) {
+      throw new Error("Support for curried url params was dropped in stripe-node v7.0.0. Instead, pass two ids.");
+    }
+    this.basePath = makeURLInterpolator(
+      // @ts-expect-error changing type of basePath
+      this.basePath || stripe.getApiField("basePath")
+    );
+    const rawPath = this.path || "";
+    this.resourcePath = rawPath;
+    this.path = makeURLInterpolator(rawPath);
+    this.initialize(stripe, deprecatedUrlData);
+  }
+  initialize(_stripe, _deprecatedUrlData) {
+  }
+  _makeRequest(method, path3, params, options, spec) {
+    const requestMethod = method.toUpperCase();
+    const encode = spec?.encode || ((data2) => data2);
+    let data = encode(params ? { ...params } : {});
+    const processed = processOptions(options);
+    const apiBase = processed.apiBase || spec?.apiBase || null;
+    const host = apiBase ? this._stripe.resolveBaseAddress(apiBase) : null;
+    const streaming = processed.streaming || !!spec?.streaming;
+    const headers = Object.assign(processed.headers, spec?.headers);
+    const usage = spec?.usage || [];
+    try {
+      if (spec?.validator) {
+        spec.validator(data, { headers });
+      }
+      if (spec?.requestSchema) {
+        data = coerceV2RequestData(data, spec.requestSchema);
+      }
+    } catch (err) {
+      return Promise.reject(err);
+    }
+    const dataInQuery = requestMethod === "GET" || requestMethod === "DELETE";
+    const bodyData = dataInQuery ? null : data;
+    const queryData = dataInQuery ? data : {};
+    const callSiteStack = new Error().stack;
+    const innerPromise = new Promise((resolve, reject) => {
+      function requestCallback(err, response) {
+        if (err) {
+          attachCallSiteToError(err, callSiteStack);
+          reject(err);
+        } else {
+          try {
+            if (spec?.responseSchema) {
+              coerceV2ResponseData(response, spec.responseSchema);
+            }
+            resolve(spec?.transformResponseData ? spec.transformResponseData(response) : response);
+          } catch (e) {
+            reject(e);
+          }
+        }
+      }
+      const emptyQuery = Object.keys(queryData).length === 0;
+      const fullPath = [
+        path3,
+        emptyQuery ? "" : "?",
+        queryStringifyRequestData(queryData)
+      ].join("");
+      this._stripe._requestSender._request(requestMethod, host, fullPath, bodyData, processed.authenticator, {
+        headers,
+        settings: processed.settings,
+        streaming
+      }, usage, requestCallback, this.requestDataProcessor?.bind(this));
+    });
+    if (spec?.methodType) {
+      Object.assign(innerPromise, makeAutoPaginationMethods(this, params ? { ...params } : {}, options, requestMethod, path3, spec, innerPromise));
+    }
+    return innerPromise;
+  }
+};
+StripeResource.MAX_BUFFERED_REQUEST_METRICS = 100;
+
+// node_modules/stripe/esm/StripeContext.js
+var StripeContext = class _StripeContext {
+  /**
+   * Creates a new StripeContext with the given segments.
+   */
+  constructor(segments = []) {
+    this._segments = [...segments];
+  }
+  /**
+   * Gets a copy of the segments of this Context.
+   */
+  get segments() {
+    return [...this._segments];
+  }
+  /**
+   * Creates a new StripeContext with an additional segment appended.
+   */
+  push(segment) {
+    if (!segment) {
+      throw new Error("Segment cannot be null or undefined");
+    }
+    return new _StripeContext([...this._segments, segment]);
+  }
+  /**
+   * Creates a new StripeContext with the last segment removed.
+   * If there are no segments, throws an error.
+   */
+  pop() {
+    if (this._segments.length === 0) {
+      throw new Error("Cannot pop from an empty context");
+    }
+    return new _StripeContext(this._segments.slice(0, -1));
+  }
+  /**
+   * Converts this context to its string representation.
+   */
+  toString() {
+    return this._segments.join("/");
+  }
+  /**
+   * Parses a context string into a StripeContext instance.
+   */
+  static parse(contextStr) {
+    if (!contextStr) {
+      return new _StripeContext([]);
+    }
+    return new _StripeContext(contextStr.split("/"));
+  }
+};
+
+// node_modules/stripe/esm/platform/NodePlatformFunctions.js
+var crypto3 = __toESM(require("crypto"), 1);
+var fs2 = __toESM(require("fs"), 1);
+var os = __toESM(require("os"), 1);
+var path2 = __toESM(require("path"), 1);
+var import_events = require("events");
+
+// node_modules/stripe/esm/crypto/NodeCryptoProvider.js
+var crypto2 = __toESM(require("crypto"), 1);
+
+// node_modules/stripe/esm/crypto/CryptoProvider.js
+var CryptoProvider = class {
+  /**
+   * Computes a SHA-256 HMAC given a secret and a payload (encoded in UTF-8).
+   * The output HMAC should be encoded in hexadecimal.
+   *
+   * Sample values for implementations:
+   * - computeHMACSignature('', 'test_secret') => 'f7f9bd47fb987337b5796fdc1fdb9ba221d0d5396814bfcaf9521f43fd8927fd'
+   * - computeHMACSignature('\ud83d\ude00', 'test_secret') => '837da296d05c4fe31f61d5d7ead035099d9585a5bcde87de952012a78f0b0c43
+   */
+  computeHMACSignature(payload, secret) {
+    throw new Error("computeHMACSignature not implemented.");
+  }
+  /**
+   * Asynchronous version of `computeHMACSignature`. Some implementations may
+   * only allow support async signature computation.
+   *
+   * Computes a SHA-256 HMAC given a secret and a payload (encoded in UTF-8).
+   * The output HMAC should be encoded in hexadecimal.
+   *
+   * Sample values for implementations:
+   * - computeHMACSignature('', 'test_secret') => 'f7f9bd47fb987337b5796fdc1fdb9ba221d0d5396814bfcaf9521f43fd8927fd'
+   * - computeHMACSignature('\ud83d\ude00', 'test_secret') => '837da296d05c4fe31f61d5d7ead035099d9585a5bcde87de952012a78f0b0c43
+   */
+  computeHMACSignatureAsync(payload, secret) {
+    throw new Error("computeHMACSignatureAsync not implemented.");
+  }
+  /**
+   * Computes a SHA-256 hash of the data.
+   */
+  computeSHA256Async(data) {
+    throw new Error("computeSHA256 not implemented.");
+  }
+};
+var CryptoProviderOnlySupportsAsyncError = class extends Error {
+};
+
+// node_modules/stripe/esm/crypto/NodeCryptoProvider.js
+var NodeCryptoProvider = class extends CryptoProvider {
+  /** @override */
+  computeHMACSignature(payload, secret) {
+    return crypto2.createHmac("sha256", secret).update(payload, "utf8").digest("hex");
+  }
+  /** @override */
+  async computeHMACSignatureAsync(payload, secret) {
+    const signature = await this.computeHMACSignature(payload, secret);
+    return signature;
+  }
+  /** @override */
+  async computeSHA256Async(data) {
+    return new Uint8Array(await crypto2.createHash("sha256").update(data).digest());
+  }
+};
+
+// node_modules/stripe/esm/net/NodeHttpClient.js
+var http_ = __toESM(require("http"), 1);
+var https_ = __toESM(require("https"), 1);
+var http2 = http_.default || http_;
+var https2 = https_.default || https_;
+var defaultHttpAgent = new http2.Agent({ keepAlive: true });
+var defaultHttpsAgent = new https2.Agent({ keepAlive: true });
+var NodeHttpClient = class extends HttpClient2 {
+  constructor(agent) {
+    super();
+    this._agent = agent;
+  }
+  /** @override. */
+  getClientName() {
+    return "node";
+  }
+  makeRequest(host, port, path3, method, headers, requestData, protocol, timeout) {
+    const isInsecureConnection = protocol === "http";
+    let agent = this._agent;
+    if (!agent) {
+      agent = isInsecureConnection ? defaultHttpAgent : defaultHttpsAgent;
+    }
+    const requestPromise = new Promise((resolve, reject) => {
+      const req = (isInsecureConnection ? http2 : https2).request({
+        host,
+        port,
+        path: path3,
+        method,
+        agent,
+        headers,
+        ciphers: "DEFAULT:!aNULL:!eNULL:!LOW:!EXPORT:!SSLv2:!MD5"
+      });
+      let requestTimedOut = false;
+      req.setTimeout(timeout, () => {
+        requestTimedOut = true;
+        req.destroy(HttpClient2.makeTimeoutError());
+      });
+      req.on("response", (response) => {
+        resolve(new NodeHttpClientResponse(response, () => requestTimedOut));
+      });
+      req.on("error", (error) => {
+        reject(error);
+      });
+      req.write(requestData);
+      req.end();
+    });
+    return requestPromise;
+  }
+};
+var NodeHttpClientResponse = class extends HttpClientResponse {
+  constructor(res, isRequestTimedOut = () => false) {
+    super(res.statusCode, res.headers || {});
+    this._res = res;
+    this._isRequestTimedOut = isRequestTimedOut;
+  }
+  getRawResponse() {
+    return this._res;
+  }
+  /** Returns the raw Node response stream; stream errors are emitted unchanged. */
+  toStream(streamCompleteCallback) {
+    this._res.once("end", () => streamCompleteCallback());
+    return this._res;
+  }
+  /** Buffers and parses the body; body-read failures are normalized for SDK handling. */
+  toJSON() {
+    return new Promise((resolve, reject) => {
+      let response = "";
+      const makeBodyError = (error) => HttpClient2.makeResponseBodyError(this._isRequestTimedOut() ? HttpClient2.makeTimeoutError() : error);
+      this._res.setEncoding("utf8");
+      this._res.on("data", (chunk) => {
+        response += chunk;
+      });
+      this._res.once("error", (error) => {
+        reject(makeBodyError(error));
+      });
+      this._res.once("close", () => {
+        if (!this._res.complete) {
+          reject(makeBodyError(null));
+        }
+      });
+      this._res.once("end", () => {
+        try {
+          resolve(this._parseResponseBody(response));
+        } catch (e) {
+          reject(e);
+        }
+      });
+    });
+  }
+};
+
+// node_modules/stripe/esm/net/FetchHttpClient.js
+var NOOP_REQUEST_TIMEOUT = {
+  guard: (promise) => promise,
+  release: () => {
+  }
+};
+var FetchHttpClient = class _FetchHttpClient extends HttpClient2 {
+  constructor(fetchFn) {
+    super();
+    if (!fetchFn) {
+      if (!globalThis.fetch) {
+        throw new Error("fetch() function not provided and is not defined in the global scope. You must provide a fetch implementation.");
+      }
+      fetchFn = globalThis.fetch;
+    }
+    if (globalThis.AbortController) {
+      this._fetchFn = _FetchHttpClient.makeFetchWithAbortTimeout(fetchFn);
+    } else {
+      this._fetchFn = _FetchHttpClient.makeFetchWithRaceTimeout(fetchFn);
+    }
+  }
+  static makeFetchWithRaceTimeout(fetchFn) {
+    return async (url, init, timeout) => {
+      let pendingTimeoutId;
+      const timeoutPromise = new Promise((_, reject) => {
+        pendingTimeoutId = setTimeout(() => {
+          pendingTimeoutId = null;
+          reject(HttpClient2.makeTimeoutError());
+        }, timeout);
+      });
+      timeoutPromise.catch(() => {
+      });
+      const release2 = () => {
+        if (pendingTimeoutId) {
+          clearTimeout(pendingTimeoutId);
+          pendingTimeoutId = null;
+        }
+      };
+      const requestTimeout = {
+        // Racing cannot cancel the underlying read, but it does stop the
+        // request from hanging past the timeout.
+        guard: (promise) => Promise.race([promise, timeoutPromise]),
+        release: release2
+      };
+      try {
+        const res = await Promise.race([fetchFn(url, init), timeoutPromise]);
+        return { res, requestTimeout };
+      } catch (err) {
+        release2();
+        throw err;
+      }
+    };
+  }
+  static makeFetchWithAbortTimeout(fetchFn) {
+    return async (url, init, timeout) => {
+      const abort = new AbortController();
+      let timeoutId = setTimeout(() => {
+        timeoutId = null;
+        abort.abort(HttpClient2.makeTimeoutError());
+      }, timeout);
+      const release2 = () => {
+        if (timeoutId) {
+          clearTimeout(timeoutId);
+          timeoutId = null;
+        }
+      };
+      const normalizeAbortError = (err) => {
+        if (err?.name === "AbortError") {
+          throw HttpClient2.makeTimeoutError();
+        }
+        throw err;
+      };
+      const requestTimeout = {
+        // The signal stays armed after the headers arrive, so aborting it also
+        // interrupts the body read.
+        guard: (promise) => promise.catch(normalizeAbortError),
+        release: release2
+      };
+      try {
+        const res = await fetchFn(url, {
+          ...init,
+          signal: abort.signal
+        });
+        return { res, requestTimeout };
+      } catch (err) {
+        release2();
+        return normalizeAbortError(err);
+      }
+    };
+  }
+  /** @override. */
+  getClientName() {
+    return "fetch";
+  }
+  async makeRequest(host, port, path3, method, headers, requestData, protocol, timeout) {
+    const isInsecureConnection = protocol === "http";
+    if (!path3.startsWith("/")) {
+      throw new Error(`Only relative paths are supported, got: "${path3}"`);
+    }
+    const url = new URL(`${isInsecureConnection ? "http" : "https"}://${host}${path3}`);
+    url.port = port;
+    const methodHasPayload = method == "POST" || method == "PUT" || method == "PATCH";
+    const body = requestData || (methodHasPayload ? "" : void 0);
+    const { res, requestTimeout } = await this._fetchFn(url.toString(), {
+      method,
+      headers: parseHeadersForFetch(headers),
+      body
+    }, timeout);
+    return new FetchHttpClientResponse(res, requestTimeout);
+  }
+};
+var FetchHttpClientResponse = class _FetchHttpClientResponse extends HttpClientResponse {
+  constructor(res, requestTimeout) {
+    super(res.status, _FetchHttpClientResponse._transformHeadersToObject(res.headers));
+    this._res = res;
+    this._requestTimeout = requestTimeout ?? NOOP_REQUEST_TIMEOUT;
+  }
+  getRawResponse() {
+    return this._res;
+  }
+  toStream(streamCompleteCallback) {
+    this._requestTimeout.release();
+    streamCompleteCallback();
+    return this._res.body;
+  }
+  async toJSON() {
+    let text;
+    try {
+      text = await this._requestTimeout.guard(this._res.text());
+    } catch (e) {
+      throw HttpClient2.makeResponseBodyError(e);
+    } finally {
+      this._requestTimeout.release();
+    }
+    return this._parseResponseBody(text);
+  }
+  static _transformHeadersToObject(headers) {
+    const headersObj = {};
+    for (const entry of headers) {
+      if (!Array.isArray(entry) || entry.length != 2) {
+        throw new Error("Response objects produced by the fetch function given to FetchHttpClient do not have an iterable headers map. Response#headers should be an iterable object.");
+      }
+      headersObj[entry[0]] = entry[1];
+    }
+    return headersObj;
+  }
+};
+
+// node_modules/stripe/esm/crypto/SubtleCryptoProvider.js
+var SubtleCryptoProvider = class extends CryptoProvider {
+  constructor(subtleCrypto) {
+    super();
+    this.subtleCrypto = subtleCrypto || crypto.subtle;
+  }
+  /** @override */
+  computeHMACSignature(payload, secret) {
+    throw new CryptoProviderOnlySupportsAsyncError("SubtleCryptoProvider cannot be used in a synchronous context.");
+  }
+  /** @override */
+  async computeHMACSignatureAsync(payload, secret) {
+    const encoder = new TextEncoder();
+    const key = await this.subtleCrypto.importKey("raw", encoder.encode(secret), {
+      name: "HMAC",
+      hash: { name: "SHA-256" }
+    }, false, ["sign"]);
+    const signatureBuffer = await this.subtleCrypto.sign("hmac", key, encoder.encode(payload));
+    const signatureBytes = new Uint8Array(signatureBuffer);
+    const signatureHexCodes = new Array(signatureBytes.length);
+    for (let i = 0; i < signatureBytes.length; i++) {
+      signatureHexCodes[i] = byteHexMapping[signatureBytes[i]];
+    }
+    return signatureHexCodes.join("");
+  }
+  /** @override */
+  async computeSHA256Async(data) {
+    return new Uint8Array(await this.subtleCrypto.digest("SHA-256", data));
+  }
+};
+var byteHexMapping = new Array(256);
+for (let i = 0; i < byteHexMapping.length; i++) {
+  byteHexMapping[i] = i.toString(16).padStart(2, "0");
+}
+
+// node_modules/stripe/esm/platform/PlatformFunctions.js
+var PlatformFunctions = class {
+  constructor() {
+    this._fetchFn = null;
+    this._agent = null;
+  }
+  /**
+   * Returns platform info string for telemetry, or null if unavailable.
+   */
+  getPlatformInfo() {
+    return null;
+  }
+  getTelemetryId() {
+    return null;
+  }
+  /**
+   * Writes a message to stderr, or does nothing if unavailable.
+   */
+  writeStderr(_msg) {
+  }
+  /**
+   * Emits a warning. Node.js uses process.emitWarning; other runtimes
+   * fall back to console.warn.
+   */
+  emitWarning(warning) {
+    console.warn(`Stripe: ${warning}`);
+  }
+  /**
+   * Returns environment variables, or null if unavailable.
+   */
+  getEnv() {
+    return null;
+  }
+  /**
+   * Returns the runtime version string, or null if unavailable.
+   */
+  getRuntimeVersion() {
+    return null;
+  }
+  /**
+   * Returns the default number of network retries for this platform.
+   */
+  getDefaultMaxNetworkRetries() {
+    return 2;
+  }
+  /**
+   * Returns the default request authenticator for this platform.
+   */
+  createDefaultAuthenticator() {
+    return null;
+  }
+  /**
+   * Generates a v4 UUID. Must be cryptographically secure: this seeds both `Idempotency-Key` values and the multipart/form-data boundary.
+   *
+   * Deliberately throws rather than degrading to `Math.random()`.
+   */
+  uuid4() {
+    if (typeof crypto === "undefined" || !crypto.randomUUID) {
+      throw new Error("Stripe: no cryptographically secure random number generator is available in this runtime; `crypto.randomUUID` is required.");
+    }
+    return crypto.randomUUID();
+  }
+  /**
+   * Compares strings in constant time.
+   */
+  secureCompare(a, b) {
+    if (a.length !== b.length) {
+      return false;
+    }
+    const len = a.length;
+    let result = 0;
+    for (let i = 0; i < len; ++i) {
+      result |= a.charCodeAt(i) ^ b.charCodeAt(i);
+    }
+    return result === 0;
+  }
+  /**
+   * Creates an event emitter.
+   */
+  createEmitter() {
+    throw new Error("createEmitter not implemented.");
+  }
+  /**
+   * Checks if the request data is a stream. If so, read the entire stream
+   * to a buffer and return the buffer.
+   */
+  tryBufferData(data) {
+    throw new Error("tryBufferData not implemented.");
+  }
+  /**
+   * Creates an HTTP client which uses the Node `http` and `https` packages
+   * to issue requests.
+   */
+  createNodeHttpClient(agent) {
+    throw new Error("createNodeHttpClient not implemented.");
+  }
+  /**
+   * Creates an HTTP client for issuing Stripe API requests which uses the Web
+   * Fetch API.
+   *
+   * A fetch function can optionally be passed in as a parameter. If none is
+   * passed, will default to the default `fetch` function in the global scope.
+   */
+  createFetchHttpClient(fetchFn) {
+    return new FetchHttpClient(fetchFn);
+  }
+  /**
+   * Creates an HTTP client using runtime-specific APIs.
+   */
+  createDefaultHttpClient() {
+    throw new Error("createDefaultHttpClient not implemented.");
+  }
+  /**
+   * Creates a CryptoProvider which uses the Node `crypto` package for its computations.
+   */
+  createNodeCryptoProvider() {
+    throw new Error("createNodeCryptoProvider not implemented.");
+  }
+  /**
+   * Creates a CryptoProvider which uses the SubtleCrypto interface of the Web Crypto API.
+   */
+  createSubtleCryptoProvider(subtleCrypto) {
+    return new SubtleCryptoProvider(subtleCrypto);
+  }
+  createDefaultCryptoProvider() {
+    throw new Error("createDefaultCryptoProvider not implemented.");
+  }
+};
+
+// node_modules/stripe/esm/platform/NodePlatformFunctions.js
+var StreamProcessingError = class extends StripeError {
+};
+var NodePlatformFunctions = class extends PlatformFunctions {
+  constructor() {
+    super(...arguments);
+    this._telemetryId = void 0;
+  }
+  /** @override */
+  getPlatformInfo() {
+    return `${process.platform} ${os.release()} ${os.arch()}`;
+  }
+  /** @override */
+  writeStderr(msg) {
+    process.stderr.write(msg);
+  }
+  /** @override */
+  emitWarning(warning) {
+    if (typeof process.emitWarning === "function") {
+      process.emitWarning(warning, "Stripe");
+    } else {
+      super.emitWarning(warning);
+    }
+  }
+  /** @override */
+  getEnv() {
+    return process.env;
+  }
+  /** @override */
+  getRuntimeVersion() {
+    return process.version;
+  }
+  /** @override */
+  getTelemetryId() {
+    if (this._telemetryId !== void 0) {
+      return this._telemetryId;
+    }
+    const filePath = this._getTelemetryIdPath();
+    if (!filePath) {
+      this._telemetryId = null;
+      return null;
+    }
+    try {
+      const content = fs2.readFileSync(filePath, "utf8").trim();
+      if (content) {
+        this._telemetryId = content;
+        return content;
+      }
+    } catch {
+    }
+    const newId = crypto3.randomBytes(16).toString("hex");
+    try {
+      fs2.mkdirSync(path2.dirname(filePath), { recursive: true });
+      fs2.writeFileSync(filePath, newId, "utf8");
+    } catch {
+      this._telemetryId = null;
+      return null;
+    }
+    this._telemetryId = newId;
+    return newId;
+  }
+  _getTelemetryIdPath() {
+    if (process.platform === "win32") {
+      const appData = process.env.APPDATA;
+      if (!appData)
+        return null;
+      return path2.join(appData, "Stripe", "telemetry_id");
+    }
+    const xdg = process.env.XDG_CONFIG_HOME;
+    if (xdg) {
+      return path2.join(xdg, "stripe", "telemetry_id");
+    }
+    const home = os.homedir();
+    if (!home)
+      return null;
+    return path2.join(home, ".config", "stripe", "telemetry_id");
+  }
+  /**
+   * @override
+   * Secure compare, from https://github.com/freewil/scmp
+   */
+  secureCompare(a, b) {
+    if (!a || !b) {
+      throw new Error("secureCompare must receive two arguments");
+    }
+    if (a.length !== b.length) {
+      return false;
+    }
+    if (crypto3.timingSafeEqual) {
+      const textEncoder2 = new TextEncoder();
+      const aEncoded = textEncoder2.encode(a);
+      const bEncoded = textEncoder2.encode(b);
+      return crypto3.timingSafeEqual(aEncoded, bEncoded);
+    }
+    return super.secureCompare(a, b);
+  }
+  createEmitter() {
+    return new import_events.EventEmitter();
+  }
+  /** @override */
+  tryBufferData(data) {
+    if (!(data.file.data instanceof import_events.EventEmitter)) {
+      return Promise.resolve(data);
+    }
+    const bufferArray = [];
+    return new Promise((resolve, reject) => {
+      data.file.data.on("data", (line) => {
+        bufferArray.push(line);
+      }).once("end", () => {
+        const bufferData = Object.assign({}, data);
+        bufferData.file.data = concat(bufferArray);
+        resolve(bufferData);
+      }).on("error", (err) => {
+        reject(new StreamProcessingError({
+          message: "An error occurred while attempting to process the file for upload.",
+          detail: err
+        }));
+      });
+    });
+  }
+  /** @override */
+  createNodeHttpClient(agent) {
+    return new NodeHttpClient(agent);
+  }
+  /** @override */
+  createDefaultHttpClient() {
+    return new NodeHttpClient();
+  }
+  /** @override */
+  createNodeCryptoProvider() {
+    return new NodeCryptoProvider();
+  }
+  /** @override */
+  createDefaultCryptoProvider() {
+    return this.createNodeCryptoProvider();
+  }
+};
+
+// node_modules/stripe/esm/Webhooks.js
+function createWebhooks(platformFunctions) {
+  function buildEvent(jsonPayload) {
+    if (jsonPayload && jsonPayload.object === "v2.core.event") {
+      throw new Error("You passed a thin event notification to a function that expects a webhook. Use the corresponding EventNotification method instead.");
+    }
+    return jsonPayload;
+  }
+  const Webhook2 = {
+    DEFAULT_TOLERANCE: 300,
+    signature: null,
+    constructEvent(payload, header, secret, tolerance, cryptoProvider, receivedAt) {
+      try {
+        if (!this.signature) {
+          throw new Error("ERR: missing signature helper, unable to verify");
+        }
+        cryptoProvider = cryptoProvider || getCryptoProvider();
+        this.signature.verifyHeader(payload, header, secret, tolerance ?? Webhook2.DEFAULT_TOLERANCE, cryptoProvider, receivedAt);
+      } catch (e) {
+        if (e instanceof CryptoProviderOnlySupportsAsyncError) {
+          e.message += "\nUse `await constructEventAsync(...)` instead of `constructEvent(...)`";
+        }
+        throw e;
+      }
+      return buildEvent(parsePayload(payload));
+    },
+    async constructEventAsync(payload, header, secret, tolerance, cryptoProvider, receivedAt) {
+      if (!this.signature) {
+        throw new Error("ERR: missing signature helper, unable to verify");
+      }
+      cryptoProvider = cryptoProvider || getCryptoProvider();
+      await this.signature.verifyHeaderAsync(payload, header, secret, tolerance ?? Webhook2.DEFAULT_TOLERANCE, cryptoProvider, receivedAt);
+      return buildEvent(parsePayload(payload));
+    },
+    constructEventWithoutVerification(payload) {
+      return buildEvent(maybeExtractFromCloudProviderEnvelope(payload));
+    },
+    generateTestHeaderString: function(opts) {
+      try {
+        const preparedOpts = prepareOptions(opts);
+        const signature2 = preparedOpts.signature || preparedOpts.cryptoProvider.computeHMACSignature(preparedOpts.payloadString, preparedOpts.secret);
+        return preparedOpts.generateHeaderString(signature2);
+      } catch (e) {
+        if (e instanceof CryptoProviderOnlySupportsAsyncError) {
+          e.message += "\nUse `await generateTestHeaderStringAsync(...)` instead of `generateTestHeaderString(...)`";
+        }
+        throw e;
+      }
+    },
+    generateTestHeaderStringAsync: async function(opts) {
+      const preparedOpts = prepareOptions(opts);
+      const signature2 = preparedOpts.signature || await preparedOpts.cryptoProvider.computeHMACSignatureAsync(preparedOpts.payloadString, preparedOpts.secret);
+      return preparedOpts.generateHeaderString(signature2);
+    }
+  };
+  const signature = {
+    EXPECTED_SCHEME: "v1",
+    verifyHeader(encodedPayload, encodedHeader, secret, tolerance, cryptoProvider, receivedAt) {
+      const { decodedHeader: header, decodedPayload: payload, details, suspectPayloadType } = parseEventDetails(encodedPayload, encodedHeader, this.EXPECTED_SCHEME);
+      if (!secret) {
+        throw new StripeSignatureVerificationError(header, payload, {
+          message: "No webhook secret value was provided. It should start with `whsec_`"
+        });
+      }
+      const secretContainsWhitespace = /\s/.test(secret);
+      cryptoProvider = cryptoProvider || getCryptoProvider();
+      const expectedSignature = cryptoProvider.computeHMACSignature(makeHMACContent(payload, details), secret);
+      validateComputedSignature(payload, header, details, expectedSignature, tolerance ?? Webhook2.DEFAULT_TOLERANCE, suspectPayloadType, secretContainsWhitespace, receivedAt);
+      return true;
+    },
+    async verifyHeaderAsync(encodedPayload, encodedHeader, secret, tolerance, cryptoProvider, receivedAt) {
+      const { decodedHeader: header, decodedPayload: payload, details, suspectPayloadType } = parseEventDetails(encodedPayload, encodedHeader, this.EXPECTED_SCHEME);
+      if (!secret) {
+        throw new StripeSignatureVerificationError(header, payload, {
+          message: "No webhook secret value was provided. It should start with `whsec_`"
+        });
+      }
+      const secretContainsWhitespace = /\s/.test(secret);
+      cryptoProvider = cryptoProvider || getCryptoProvider();
+      const expectedSignature = await cryptoProvider.computeHMACSignatureAsync(makeHMACContent(payload, details), secret);
+      return validateComputedSignature(payload, header, details, expectedSignature, tolerance ?? Webhook2.DEFAULT_TOLERANCE, suspectPayloadType, secretContainsWhitespace, receivedAt);
+    }
+  };
+  function makeHMACContent(payload, details) {
+    return `${details.timestamp}.${payload}`;
+  }
+  function parseEventDetails(encodedPayload, encodedHeader, expectedScheme) {
+    if (Array.isArray(encodedHeader)) {
+      throw new Error("Unexpected: An array was passed as a header, which should not be possible for the stripe-signature header.");
+    }
+    if (!encodedPayload) {
+      throw new StripeSignatureVerificationError(encodedHeader, encodedPayload, {
+        message: "No webhook payload was provided."
+      });
+    }
+    const suspectPayloadType = typeof encodedPayload != "string" && !(encodedPayload instanceof Uint8Array);
+    const textDecoder = new TextDecoder("utf8");
+    const decodedPayload = encodedPayload instanceof Uint8Array ? textDecoder.decode(encodedPayload) : encodedPayload;
+    if (encodedHeader == null || encodedHeader == "") {
+      throw new StripeSignatureVerificationError(encodedHeader, encodedPayload, {
+        message: "No stripe-signature header value was provided."
+      });
+    }
+    const decodedHeader = encodedHeader instanceof Uint8Array ? textDecoder.decode(encodedHeader) : encodedHeader;
+    const details = parseHeader(decodedHeader, expectedScheme);
+    if (!details || details.timestamp === -1) {
+      throw new StripeSignatureVerificationError(decodedHeader, decodedPayload, {
+        message: "Unable to extract timestamp and signatures from header"
+      });
+    }
+    if (!details.signatures.length) {
+      throw new StripeSignatureVerificationError(decodedHeader, decodedPayload, {
+        message: "No signatures found with expected scheme"
+      });
+    }
+    return {
+      decodedPayload,
+      decodedHeader,
+      details,
+      suspectPayloadType
+    };
+  }
+  function validateComputedSignature(payload, header, details, expectedSignature, tolerance, suspectPayloadType, secretContainsWhitespace, receivedAt) {
+    const signatureFound = !!details.signatures.filter(platformFunctions.secureCompare.bind(platformFunctions, expectedSignature)).length;
+    const docsLocation = "\nLearn more about webhook signing and explore webhook integration examples for various frameworks at https://docs.stripe.com/webhooks/signature";
+    const whitespaceMessage = secretContainsWhitespace ? "\n\nNote: The provided signing secret contains whitespace. This often indicates an extra newline or space is in the value" : "";
+    if (!signatureFound) {
+      if (suspectPayloadType) {
+        throw new StripeSignatureVerificationError(header, payload, {
+          message: "Webhook payload must be provided as a string or a Buffer (https://nodejs.org/api/buffer.html) instance representing the _raw_ request body.Payload was provided as a parsed JavaScript object instead. \nSignature verification is impossible without access to the original signed material. \n" + docsLocation + "\n" + whitespaceMessage
+        });
+      }
+      throw new StripeSignatureVerificationError(header, payload, {
+        message: "No signatures found matching the expected signature for payload. Are you passing the raw request body you received from Stripe? \n If a webhook request is being forwarded by a third-party tool, ensure that the exact request body, including JSON formatting and new line style, is preserved.\n" + docsLocation + "\n" + whitespaceMessage
+      });
+    }
+    const timestampAge = Math.floor((typeof receivedAt === "number" ? receivedAt : Date.now()) / 1e3) - details.timestamp;
+    if (tolerance > 0 && timestampAge > tolerance) {
+      throw new StripeSignatureVerificationError(header, payload, {
+        message: "Timestamp outside the tolerance zone"
+      });
+    }
+    return true;
+  }
+  function parseHeader(header, scheme) {
+    if (typeof header !== "string") {
+      return null;
+    }
+    scheme = scheme || signature.EXPECTED_SCHEME;
+    return header.split(",").reduce((accum, item) => {
+      const kv = item.split("=");
+      if (kv[0] === "t") {
+        accum.timestamp = parseInt(kv[1], 10);
+      }
+      if (kv[0] === scheme) {
+        accum.signatures.push(kv[1]);
+      }
+      return accum;
+    }, {
+      timestamp: -1,
+      signatures: []
+    });
+  }
+  let webhooksCryptoProviderInstance = null;
+  function getCryptoProvider() {
+    if (!webhooksCryptoProviderInstance) {
+      webhooksCryptoProviderInstance = platformFunctions.createDefaultCryptoProvider();
+    }
+    return webhooksCryptoProviderInstance;
+  }
+  function prepareOptions(opts) {
+    if (!opts) {
+      throw new StripeError({
+        message: "Options are required"
+      });
+    }
+    const timestamp = opts.timestamp && Math.floor(opts.timestamp) || Math.floor(Date.now() / 1e3);
+    const scheme = opts.scheme || signature.EXPECTED_SCHEME;
+    const cryptoProvider = opts.cryptoProvider || getCryptoProvider();
+    const payloadString = `${timestamp}.${opts.payload}`;
+    const generateHeaderString = (signature2) => {
+      return `t=${timestamp},${scheme}=${signature2}`;
+    };
+    return {
+      ...opts,
+      timestamp,
+      scheme,
+      cryptoProvider,
+      payloadString,
+      generateHeaderString
+    };
+  }
+  Webhook2.signature = signature;
+  return Webhook2;
+}
+
+// node_modules/stripe/esm/apiVersion.js
+var ApiVersion = "2026-09-30.endive";
+var ApiMajorVersion = "endive";
+
+// node_modules/stripe/esm/resources.js
+var resources_exports = {};
+__export(resources_exports, {
+  Account: () => AccountResource3,
+  AccountLinks: () => AccountLinkResource2,
+  AccountSessions: () => AccountSessionResource,
+  Accounts: () => AccountResource3,
+  ApplePayDomains: () => ApplePayDomainResource,
+  ApplicationFees: () => ApplicationFeeResource,
+  Apps: () => Apps,
+  Balance: () => BalanceResource,
+  BalanceSettings: () => BalanceSettingResource,
+  BalanceTransactions: () => BalanceTransactionResource,
+  Balances: () => BalanceResource,
+  Billing: () => Billing,
+  BillingPortal: () => BillingPortal,
+  Charges: () => ChargeResource,
+  Checkout: () => Checkout,
+  Climate: () => Climate,
+  ConfirmationTokens: () => ConfirmationTokenResource2,
+  CountrySpecs: () => CountrySpecResource,
+  Coupons: () => CouponResource,
+  CreditNotes: () => CreditNoteResource,
+  CustomerSessions: () => CustomerSessionResource,
+  Customers: () => CustomerResource2,
+  Disputes: () => DisputeResource2,
+  Entitlements: () => Entitlements,
+  EphemeralKeys: () => EphemeralKeyResource,
+  Events: () => EventResource2,
+  ExchangeRates: () => ExchangeRateResource,
+  FileLinks: () => FileLinkResource,
+  Files: () => FileResource,
+  FinancialConnections: () => FinancialConnections,
+  Forwarding: () => Forwarding,
+  Identity: () => Identity,
+  InvoiceItems: () => InvoiceItemResource,
+  InvoicePayments: () => InvoicePaymentResource,
+  InvoiceRenderingTemplates: () => InvoiceRenderingTemplateResource,
+  Invoices: () => InvoiceResource,
+  Issuing: () => Issuing,
+  Mandates: () => MandateResource,
+  OAuthResource: () => OAuthResource,
+  PaymentAttemptRecords: () => PaymentAttemptRecordResource,
+  PaymentIntents: () => PaymentIntentResource,
+  PaymentLinks: () => PaymentLinkResource,
+  PaymentMethodConfigurations: () => PaymentMethodConfigurationResource,
+  PaymentMethodDomains: () => PaymentMethodDomainResource,
+  PaymentMethods: () => PaymentMethodResource,
+  PaymentRecords: () => PaymentRecordResource,
+  Payouts: () => PayoutResource,
+  Plans: () => PlanResource,
+  Prices: () => PriceResource,
+  ProductCatalog: () => ProductCatalog,
+  Products: () => ProductResource2,
+  PromotionCodes: () => PromotionCodeResource,
+  Quotes: () => QuoteResource,
+  Radar: () => Radar,
+  Refunds: () => RefundResource2,
+  Reporting: () => Reporting,
+  Reviews: () => ReviewResource,
+  SetupAttempts: () => SetupAttemptResource,
+  SetupIntents: () => SetupIntentResource,
+  ShippingRates: () => ShippingRateResource,
+  Sigma: () => Sigma,
+  Sources: () => SourceResource,
+  SubscriptionItems: () => SubscriptionItemResource,
+  SubscriptionSchedules: () => SubscriptionScheduleResource,
+  Subscriptions: () => SubscriptionResource,
+  Tax: () => Tax,
+  TaxCodes: () => TaxCodeResource,
+  TaxIds: () => TaxIdResource,
+  TaxRates: () => TaxRateResource,
+  Terminal: () => Terminal,
+  TestHelpers: () => TestHelpers,
+  ThreeDSecure: () => ThreeDSecure,
+  Tokens: () => TokenResource2,
+  Topups: () => TopupResource,
+  Transfers: () => TransferResource,
+  Treasury: () => Treasury,
+  V2: () => V2,
+  WebhookEndpoints: () => WebhookEndpointResource
+});
+
+// node_modules/stripe/esm/ResourceNamespace.js
+function ResourceNamespace(stripe, resources) {
+  for (const name in resources) {
+    if (!Object.prototype.hasOwnProperty.call(resources, name)) {
+      continue;
+    }
+    const camelCaseName = name[0].toLowerCase() + name.substring(1);
+    const resource = new resources[name](stripe);
+    this[camelCaseName] = resource;
+  }
+}
+function resourceNamespace(namespace, resources) {
+  return function(stripe) {
+    return new ResourceNamespace(stripe, resources);
+  };
+}
+
+// node_modules/stripe/esm/resources/V2/Core/AccountLinks.js
+var AccountLinkResource = class extends StripeResource {
+  /**
+   * Creates an AccountLink object that includes a single-use URL that an account can use to access a Stripe-hosted flow for collecting or updating required information.
+   * @throws Stripe.RateLimitError
+   */
+  create(params, options) {
+    return this._makeRequest("POST", "/v2/core/account_links", params, options);
+  }
+};
+
+// node_modules/stripe/esm/resources/V2/Core/AccountTokens.js
+var AccountTokenResource = class extends StripeResource {
+  /**
+   * Create an account token with a publishable key and pass it to the Accounts v2 API to
+   * create or update an account without its data touching your server.
+   * Learn more about [account tokens](https://docs.stripe.com/connect/account-tokens).
+   * In live mode, you can only create account tokens with your application's publishable key.
+   * In test mode, you can create account tokens with your secret key or publishable key.
+   * @throws Stripe.RateLimitError
+   */
+  create(params, options) {
+    return this._makeRequest("POST", "/v2/core/account_tokens", params, options, {
+      requestSchema: {
+        kind: "object",
+        fields: {
+          identity: {
+            kind: "object",
+            fields: {
+              individual: {
+                kind: "object",
+                fields: {
+                  relationship: {
+                    kind: "object",
+                    fields: { percent_ownership: { kind: "decimal_string" } }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+  /**
+   * Retrieves an Account Token.
+   * @throws Stripe.RateLimitError
+   */
+  retrieve(id, params, options) {
+    return this._makeRequest("GET", `/v2/core/account_tokens/${encodeURIComponent(id)}`, params, options);
+  }
+};
+
+// node_modules/stripe/esm/resources/FinancialConnections/Accounts.js
+var AccountResource = class extends StripeResource {
+  /**
+   * Returns a list of Financial Connections Account objects.
+   */
+  list(params, options) {
+    return this._makeRequest("GET", "/v1/financial_connections/accounts", params, options, {
+      methodType: "list"
+    });
+  }
+  /**
+   * Retrieves the details of a Financial Connections Account.
+   */
+  retrieve(id, params, options) {
+    return this._makeRequest("GET", `/v1/financial_connections/accounts/${encodeURIComponent(id)}`, params, options);
+  }
+  /**
+   * Disables your access to a Financial Connections Account. You will no longer be able to access data associated with the account (e.g. balances, transactions).
+   */
+  disconnect(id, params, options) {
+    return this._makeRequest("POST", `/v1/financial_connections/accounts/${encodeURIComponent(id)}/disconnect`, params, options);
+  }
+  /**
+   * Refreshes the data associated with a Financial Connections Account.
+   */
+  refresh(id, params, options) {
+    return this._makeRequest("POST", `/v1/financial_connections/accounts/${encodeURIComponent(id)}/refresh`, params, options);
+  }
+  /**
+   * Subscribes to periodic refreshes of data associated with a Financial Connections Account. When the account status is active, data is typically refreshed once a day.
+   */
+  subscribe(id, params, options) {
+    return this._makeRequest("POST", `/v1/financial_connections/accounts/${encodeURIComponent(id)}/subscribe`, params, options);
+  }
+  /**
+   * Unsubscribes from periodic refreshes of data associated with a Financial Connections Account.
+   */
+  unsubscribe(id, params, options) {
+    return this._makeRequest("POST", `/v1/financial_connections/accounts/${encodeURIComponent(id)}/unsubscribe`, params, options);
+  }
+  /**
+   * Lists all owners for a given Account
+   */
+  listOwners(id, params, options) {
+    return this._makeRequest("GET", `/v1/financial_connections/accounts/${encodeURIComponent(id)}/owners`, params, options, {
+      methodType: "list"
+    });
+  }
+};
+
+// node_modules/stripe/esm/resources/V2/Core/Accounts/Persons.js
+var PersonResource = class extends StripeResource {
+  /**
+   * Returns a paginated list of Persons associated with an Account.
+   * @throws Stripe.RateLimitError
+   */
+  list(accountId, params, options) {
+    return this._makeRequest("GET", `/v2/core/accounts/${encodeURIComponent(accountId)}/persons`, params, options, {
+      methodType: "list",
+      responseSchema: {
+        kind: "object",
+        fields: {
+          data: {
+            kind: "array",
+            element: {
+              kind: "object",
+              fields: {
+                relationship: {
+                  kind: "object",
+                  fields: { percent_ownership: { kind: "decimal_string" } }
+                }
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+  /**
+   * Create a Person. Adds an individual to an Account's identity. You can set relationship attributes and identity information at creation.
+   * @throws Stripe.RateLimitError
+   */
+  create(accountId, params, options) {
+    return this._makeRequest("POST", `/v2/core/accounts/${encodeURIComponent(accountId)}/persons`, params, options, {
+      requestSchema: {
+        kind: "object",
+        fields: {
+          relationship: {
+            kind: "object",
+            fields: { percent_ownership: { kind: "decimal_string" } }
+          }
+        }
+      },
+      responseSchema: {
+        kind: "object",
+        fields: {
+          relationship: {
+            kind: "object",
+            fields: { percent_ownership: { kind: "decimal_string" } }
+          }
+        }
+      }
+    });
+  }
+  /**
+   * Delete a Person associated with an Account.
+   * @throws Stripe.RateLimitError
+   */
+  del(accountId, id, params, options) {
+    return this._makeRequest("DELETE", `/v2/core/accounts/${encodeURIComponent(accountId)}/persons/${encodeURIComponent(id)}`, params, options);
+  }
+  /**
+   * Retrieves a Person associated with an Account.
+   * @throws Stripe.RateLimitError
+   */
+  retrieve(accountId, id, params, options) {
+    return this._makeRequest("GET", `/v2/core/accounts/${encodeURIComponent(accountId)}/persons/${encodeURIComponent(id)}`, params, options, {
+      responseSchema: {
+        kind: "object",
+        fields: {
+          relationship: {
+            kind: "object",
+            fields: { percent_ownership: { kind: "decimal_string" } }
+          }
+        }
+      }
+    });
+  }
+  /**
+   * Updates a Person associated with an Account.
+   * @throws Stripe.RateLimitError
+   */
+  update(accountId, id, params, options) {
+    return this._makeRequest("POST", `/v2/core/accounts/${encodeURIComponent(accountId)}/persons/${encodeURIComponent(id)}`, params, options, {
+      requestSchema: {
+        kind: "object",
+        fields: {
+          relationship: {
+            kind: "object",
+            fields: { percent_ownership: { kind: "decimal_string" } }
+          }
+        }
+      },
+      responseSchema: {
+        kind: "object",
+        fields: {
+          relationship: {
+            kind: "object",
+            fields: { percent_ownership: { kind: "decimal_string" } }
+          }
+        }
+      }
+    });
+  }
+};
+
+// node_modules/stripe/esm/resources/V2/Core/Accounts/PersonTokens.js
+var PersonTokenResource = class extends StripeResource {
+  /**
+   * Creates a single-use token that represents the details for a person. Use this when you create or update persons associated with an Account v2. Learn more about [account tokens](https://docs.stripe.com/connect/account-tokens).
+   * You can only create person tokens with your application's publishable key and in live mode. You can use your application's secret key to create person tokens only in test mode.
+   * @throws Stripe.RateLimitError
+   */
+  create(accountId, params, options) {
+    return this._makeRequest("POST", `/v2/core/accounts/${encodeURIComponent(accountId)}/person_tokens`, params, options, {
+      requestSchema: {
+        kind: "object",
+        fields: {
+          relationship: {
+            kind: "object",
+            fields: { percent_ownership: { kind: "decimal_string" } }
+          }
+        }
+      }
+    });
+  }
+  /**
+   * Retrieves a Person Token associated with an Account.
+   * @throws Stripe.RateLimitError
+   */
+  retrieve(accountId, id, params, options) {
+    return this._makeRequest("GET", `/v2/core/accounts/${encodeURIComponent(accountId)}/person_tokens/${encodeURIComponent(id)}`, params, options);
+  }
+};
+
+// node_modules/stripe/esm/resources/V2/Core/Accounts.js
+var AccountResource2 = class extends StripeResource {
+  constructor(stripe) {
+    super(stripe);
+    this.stripe = stripe;
+    this.persons = new PersonResource(stripe);
+    this.personTokens = new PersonTokenResource(stripe);
+  }
+  /**
+   * Returns a list of Accounts.
+   * @throws Stripe.RateLimitError
+   */
+  list(params, options) {
+    return this._makeRequest("GET", "/v2/core/accounts", params, options, {
+      methodType: "list",
+      responseSchema: {
+        kind: "object",
+        fields: {
+          data: {
+            kind: "array",
+            element: {
+              kind: "object",
+              fields: {
+                identity: {
+                  kind: "object",
+                  fields: {
+                    individual: {
+                      kind: "object",
+                      fields: {
+                        relationship: {
+                          kind: "object",
+                          fields: { percent_ownership: { kind: "decimal_string" } }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+  /**
+   * Create an Account that represents a company, individual, or other entity that your business interacts with. Accounts contain identifying information about the entity, and configurations that store the features an account has access to. An account can be configured as any or all of the following configurations: Customer, Merchant and/or Recipient.
+   * @throws Stripe.RateLimitError
+   */
+  create(params, options) {
+    return this._makeRequest("POST", "/v2/core/accounts", params, options, {
+      requestSchema: {
+        kind: "object",
+        fields: {
+          identity: {
+            kind: "object",
+            fields: {
+              individual: {
+                kind: "object",
+                fields: {
+                  relationship: {
+                    kind: "object",
+                    fields: { percent_ownership: { kind: "decimal_string" } }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      responseSchema: {
+        kind: "object",
+        fields: {
+          identity: {
+            kind: "object",
+            fields: {
+              individual: {
+                kind: "object",
+                fields: {
+                  relationship: {
+                    kind: "object",
+                    fields: { percent_ownership: { kind: "decimal_string" } }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+  /**
+   * Retrieves the details of an Account.
+   * @throws Stripe.RateLimitError
+   */
+  retrieve(id, params, options) {
+    return this._makeRequest("GET", `/v2/core/accounts/${encodeURIComponent(id)}`, params, options, {
+      responseSchema: {
+        kind: "object",
+        fields: {
+          identity: {
+            kind: "object",
+            fields: {
+              individual: {
+                kind: "object",
+                fields: {
+                  relationship: {
+                    kind: "object",
+                    fields: { percent_ownership: { kind: "decimal_string" } }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+  /**
+   * Updates the details of an Account.
+   * @throws Stripe.RateLimitError
+   */
+  update(id, params, options) {
+    return this._makeRequest("POST", `/v2/core/accounts/${encodeURIComponent(id)}`, params, options, {
+      requestSchema: {
+        kind: "object",
+        fields: {
+          identity: {
+            kind: "object",
+            fields: {
+              individual: {
+                kind: "object",
+                fields: {
+                  relationship: {
+                    kind: "object",
+                    fields: { percent_ownership: { kind: "decimal_string" } }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      responseSchema: {
+        kind: "object",
+        fields: {
+          identity: {
+            kind: "object",
+            fields: {
+              individual: {
+                kind: "object",
+                fields: {
+                  relationship: {
+                    kind: "object",
+                    fields: { percent_ownership: { kind: "decimal_string" } }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+  /**
+   * Removes access to the Account and its associated resources. Closed Accounts can no longer be operated on, but limited information can still be retrieved through the API in order to be able to track their history.
+   * @throws Stripe.RateLimitError
+   */
+  close(id, params, options) {
+    return this._makeRequest("POST", `/v2/core/accounts/${encodeURIComponent(id)}/close`, params, options, {
+      responseSchema: {
+        kind: "object",
+        fields: {
+          identity: {
+            kind: "object",
+            fields: {
+              individual: {
+                kind: "object",
+                fields: {
+                  relationship: {
+                    kind: "object",
+                    fields: { percent_ownership: { kind: "decimal_string" } }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+};
+
+// node_modules/stripe/esm/resources/Entitlements/ActiveEntitlements.js
+var ActiveEntitlementResource = class extends StripeResource {
+  /**
+   * Retrieve a list of active entitlements for a customer
+   */
+  list(params, options) {
+    return this._makeRequest("GET", "/v1/entitlements/active_entitlements", params, options, {
+      methodType: "list"
+    });
+  }
+  /**
+   * Retrieve an active entitlement
+   */
+  retrieve(id, params, options) {
+    return this._makeRequest("GET", `/v1/entitlements/active_entitlements/${encodeURIComponent(id)}`, params, options);
+  }
+};
+
+// node_modules/stripe/esm/resources/Billing/Alerts.js
+var AlertResource = class extends StripeResource {
+  /**
+   * Lists billing active and inactive alerts
+   */
+  list(params, options) {
+    return this._makeRequest("GET", "/v1/billing/alerts", params, options, {
+      methodType: "list"
+    });
+  }
+  /**
+   * Creates a billing alert
+   */
+  create(params, options) {
+    return this._makeRequest("POST", "/v1/billing/alerts", params, options);
+  }
+  /**
+   * Retrieves a billing alert given an ID
+   */
+  retrieve(id, params, options) {
+    return this._makeRequest("GET", `/v1/billing/alerts/${encodeURIComponent(id)}`, params, options);
+  }
+  /**
+   * Reactivates this alert, allowing it to trigger again.
+   */
+  activate(id, params, options) {
+    return this._makeRequest("POST", `/v1/billing/alerts/${encodeURIComponent(id)}/activate`, params, options);
+  }
+  /**
+   * Archives this alert, removing it from the list view and APIs. This is non-reversible.
+   */
+  archive(id, params, options) {
+    return this._makeRequest("POST", `/v1/billing/alerts/${encodeURIComponent(id)}/archive`, params, options);
+  }
+  /**
+   * Deactivates this alert, preventing it from triggering.
+   */
+  deactivate(id, params, options) {
+    return this._makeRequest("POST", `/v1/billing/alerts/${encodeURIComponent(id)}/deactivate`, params, options);
+  }
+};
+
+// node_modules/stripe/esm/resources/Tax/Associations.js
+var AssociationResource = class extends StripeResource {
+  /**
+   * Finds a tax association object by PaymentIntent id.
+   */
+  find(params, options) {
+    return this._makeRequest("GET", "/v1/tax/associations/find", params, options);
+  }
+};
+
+// node_modules/stripe/esm/resources/ThreeDSecure/Authentications.js
+var AuthenticationResource = class extends StripeResource {
+  /**
+   * Returns a list of 3D Secure Authentications.
+   */
+  list(params, options) {
+    return this._makeRequest("GET", "/v1/three_d_secure/authentications", params, options, {
+      methodType: "list"
+    });
+  }
+  /**
+   * This endpoint creates a 3DS Authentication. Refer to the [Create a 3DS Authentication object section of the Standalone 3DS guide](https://docs.stripe.com/payments/3d-secure/standalone-3d-secure#create-a-3ds-authentication-object) for more information.
+   *
+   * You can pass the submit parameter to automatically submit the 3DS Authentication object when you create it. Refer to the [Submit at creation section of the Standalone 3DS guide](https://docs.stripe.com/payments/3d-secure/standalone-3d-secure#submit-at-creation) for more information.
+   */
+  create(params, options) {
+    return this._makeRequest("POST", "/v1/three_d_secure/authentications", params, options);
+  }
+  /**
+   * This endpoint retrieves a 3DS Authentication.
+   */
+  retrieve(id, params, options) {
+    return this._makeRequest("GET", `/v1/three_d_secure/authentications/${encodeURIComponent(id)}`, params, options);
+  }
+  /**
+   * This endpoint cancels a 3DS Authentication. You can cancel a 3DS Authentication object when it's in a non-final status:
+   * requires_submission or requires_challenge.
+   */
+  cancel(id, params, options) {
+    return this._makeRequest("POST", `/v1/three_d_secure/authentications/${encodeURIComponent(id)}/cancel`, params, options);
+  }
+  /**
+   * This endpoint submits a 3DS Authentication. You can submit a 3DS Authentication object when it has status requires_submission. Refer to the [Submit the 3DS Authentication object section of the Standalone 3DS guide](https://docs.stripe.com/payments/3d-secure/standalone-3d-secure#submit-the-3ds-authentication-object) for more information.
+   */
+  submit(id, params, options) {
+    return this._makeRequest("POST", `/v1/three_d_secure/authentications/${encodeURIComponent(id)}/submit`, params, options);
+  }
+};
+
+// node_modules/stripe/esm/resources/Issuing/Authorizations.js
+var AuthorizationResource = class extends StripeResource {
+  /**
+   * Returns a list of Issuing Authorization objects. The objects are sorted in descending order by creation date, with the most recently created object appearing first.
+   */
+  list(params, options) {
+    return this._makeRequest("GET", "/v1/issuing/authorizations", params, options, {
+      methodType: "list",
+      responseSchema: {
+        kind: "object",
+        fields: {
+          data: {
+            kind: "array",
+            element: {
+              kind: "object",
+              fields: {
+                fleet: {
+                  kind: "nullable",
+                  inner: {
+                    kind: "object",
+                    fields: {
+                      reported_breakdown: {
+                        kind: "nullable",
+                        inner: {
+                          kind: "object",
+                          fields: {
+                            fuel: {
+                              kind: "nullable",
+                              inner: {
+                                kind: "object",
+                                fields: {
+                                  gross_amount_decimal: {
+                                    kind: "nullable",
+                                    inner: { kind: "decimal_string" }
+                                  }
+                                }
+                              }
+                            },
+                            non_fuel: {
+                              kind: "nullable",
+                              inner: {
+                                kind: "object",
+                                fields: {
+                                  gross_amount_decimal: {
+                                    kind: "nullable",
+                                    inner: { kind: "decimal_string" }
+                                  }
+                                }
+                              }
+                            },
+                            tax: {
+                              kind: "nullable",
+                              inner: {
+                                kind: "object",
+                                fields: {
+                                  local_amount_decimal: {
+                                    kind: "nullable",
+                                    inner: { kind: "decimal_string" }
+                                  },
+                                  national_amount_decimal: {
+                                    kind: "nullable",
+                                    inner: { kind: "decimal_string" }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                fuel: {
+                  kind: "nullable",
+                  inner: {
+                    kind: "object",
+                    fields: {
+                      quantity_decimal: {
+                        kind: "nullable",
+                        inner: { kind: "decimal_string" }
+                      },
+                      unit_cost_decimal: {
+                        kind: "nullable",
+                        inner: { kind: "decimal_string" }
+                      }
+                    }
+                  }
+                },
+                transactions: {
+                  kind: "array",
+                  element: {
+                    kind: "object",
+                    fields: {
+                      purchase_details: {
+                        kind: "nullable",
+                        inner: {
+                          kind: "object",
+                          fields: {
+                            fleet: {
+                              kind: "nullable",
+                              inner: {
+                                kind: "object",
+                                fields: {
+                                  reported_breakdown: {
+                                    kind: "nullable",
+                                    inner: {
+                                      kind: "object",
+                                      fields: {
+                                        fuel: {
+                                          kind: "nullable",
+                                          inner: {
+                                            kind: "object",
+                                            fields: {
+                                              gross_amount_decimal: {
+                                                kind: "nullable",
+                                                inner: {
+                                                  kind: "decimal_string"
+                                                }
+                                              }
+                                            }
+                                          }
+                                        },
+                                        non_fuel: {
+                                          kind: "nullable",
+                                          inner: {
+                                            kind: "object",
+                                            fields: {
+                                              gross_amount_decimal: {
+                                                kind: "nullable",
+                                                inner: {
+                                                  kind: "decimal_string"
+                                                }
+                                              }
+                                            }
+                                          }
+                                        },
+                                        tax: {
+                                          kind: "nullable",
+                                          inner: {
+                                            kind: "object",
+                                            fields: {
+                                              local_amount_decimal: {
+                                                kind: "nullable",
+                                                inner: {
+                                                  kind: "decimal_string"
+                                                }
+                                              },
+                                              national_amount_decimal: {
+                                                kind: "nullable",
+                                                inner: {
+                                                  kind: "decimal_string"
+                                                }
+                                              }
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            },
+                            fuel: {
+                              kind: "nullable",
+                              inner: {
+                                kind: "object",
+                                fields: {
+                                  quantity_decimal: {
+                                    kind: "nullable",
+                                    inner: { kind: "decimal_string" }
+                                  },
+                                  unit_cost_decimal: { kind: "decimal_string" }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+  /**
+   * Retrieves an Issuing Authorization object.
+   */
+  retrieve(id, params, options) {
+    return this._makeRequest("GET", `/v1/issuing/authorizations/${encodeURIComponent(id)}`, params, options, {
+      responseSchema: {
+        kind: "object",
+        fields: {
+          fleet: {
+            kind: "nullable",
+            inner: {
+              kind: "object",
+              fields: {
+                reported_breakdown: {
+                  kind: "nullable",
+                  inner: {
+                    kind: "object",
+                    fields: {
+                      fuel: {
+                        kind: "nullable",
+                        inner: {
+                          kind: "object",
+                          fields: {
+                            gross_amount_decimal: {
+                              kind: "nullable",
+                              inner: { kind: "decimal_string" }
+                            }
+                          }
+                        }
+                      },
+                      non_fuel: {
+                        kind: "nullable",
+                        inner: {
+                          kind: "object",
+                          fields: {
+                            gross_amount_decimal: {
+                              kind: "nullable",
+                              inner: { kind: "decimal_string" }
+                            }
+                          }
+                        }
+                      },
+                      tax: {
+                        kind: "nullable",
+                        inner: {
+                          kind: "object",
+                          fields: {
+                            local_amount_decimal: {
+                              kind: "nullable",
+                              inner: { kind: "decimal_string" }
+                            },
+                            national_amount_decimal: {
+                              kind: "nullable",
+                              inner: { kind: "decimal_string" }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          fuel: {
+            kind: "nullable",
+            inner: {
+              kind: "object",
+              fields: {
+                quantity_decimal: {
+                  kind: "nullable",
+                  inner: { kind: "decimal_string" }
+                },
+                unit_cost_decimal: {
+                  kind: "nullable",
+                  inner: { kind: "decimal_string" }
+                }
+              }
+            }
+          },
+          transactions: {
+            kind: "array",
+            element: {
+              kind: "object",
+              fields: {
+                purchase_details: {
+                  kind: "nullable",
+                  inner: {
+                    kind: "object",
+                    fields: {
+                      fleet: {
+                        kind: "nullable",
+                        inner: {
+                          kind: "object",
+                          fields: {
+                            reported_breakdown: {
+                              kind: "nullable",
+                              inner: {
+                                kind: "object",
+                                fields: {
+                                  fuel: {
+                                    kind: "nullable",
+                                    inner: {
+                                      kind: "object",
+                                      fields: {
+                                        gross_amount_decimal: {
+                                          kind: "nullable",
+                                          inner: { kind: "decimal_string" }
+                                        }
+                                      }
+                                    }
+                                  },
+                                  non_fuel: {
+                                    kind: "nullable",
+                                    inner: {
+                                      kind: "object",
+                                      fields: {
+                                        gross_amount_decimal: {
+                                          kind: "nullable",
+                                          inner: { kind: "decimal_string" }
+                                        }
+                                      }
+                                    }
+                                  },
+                                  tax: {
+                                    kind: "nullable",
+                                    inner: {
+                                      kind: "object",
+                                      fields: {
+                                        local_amount_decimal: {
+                                          kind: "nullable",
+                                          inner: { kind: "decimal_string" }
+                                        },
+                                        national_amount_decimal: {
+                                          kind: "nullable",
+                                          inner: { kind: "decimal_string" }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      },
+                      fuel: {
+                        kind: "nullable",
+                        inner: {
+                          kind: "object",
+                          fields: {
+                            quantity_decimal: {
+                              kind: "nullable",
+                              inner: { kind: "decimal_string" }
+                            },
+                            unit_cost_decimal: { kind: "decimal_string" }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+  /**
+   * Updates the specified Issuing Authorization object by setting the values of the parameters passed. Any parameters not provided will be left unchanged.
+   */
+  update(id, params, options) {
+    return this._makeRequest("POST", `/v1/issuing/authorizations/${encodeURIComponent(id)}`, params, options, {
+      responseSchema: {
+        kind: "object",
+        fields: {
+          fleet: {
+            kind: "nullable",
+            inner: {
+              kind: "object",
+              fields: {
+                reported_breakdown: {
+                  kind: "nullable",
+                  inner: {
+                    kind: "object",
+                    fields: {
+                      fuel: {
+                        kind: "nullable",
+                        inner: {
+                          kind: "object",
+                          fields: {
+                            gross_amount_decimal: {
+                              kind: "nullable",
+                              inner: { kind: "decimal_string" }
+                            }
+                          }
+                        }
+                      },
+                      non_fuel: {
+                        kind: "nullable",
+                        inner: {
+                          kind: "object",
+                          fields: {
+                            gross_amount_decimal: {
+                              kind: "nullable",
+                              inner: { kind: "decimal_string" }
+                            }
+                          }
+                        }
+                      },
+                      tax: {
+                        kind: "nullable",
+                        inner: {
+                          kind: "object",
+                          fields: {
+                            local_amount_decimal: {
+                              kind: "nullable",
+                              inner: { kind: "decimal_string" }
+                            },
+                            national_amount_decimal: {
+                              kind: "nullable",
+                              inner: { kind: "decimal_string" }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          fuel: {
+            kind: "nullable",
+            inner: {
+              kind: "object",
+              fields: {
+                quantity_decimal: {
+                  kind: "nullable",
+                  inner: { kind: "decimal_string" }
+                },
+                unit_cost_decimal: {
+                  kind: "nullable",
+                  inner: { kind: "decimal_string" }
+                }
+              }
+            }
+          },
+          transactions: {
+            kind: "array",
+            element: {
+              kind: "object",
+              fields: {
+                purchase_details: {
+                  kind: "nullable",
+                  inner: {
+                    kind: "object",
+                    fields: {
+                      fleet: {
+                        kind: "nullable",
+                        inner: {
+                          kind: "object",
+                          fields: {
+                            reported_breakdown: {
+                              kind: "nullable",
+                              inner: {
+                                kind: "object",
+                                fields: {
+                                  fuel: {
+                                    kind: "nullable",
+                                    inner: {
+                                      kind: "object",
+                                      fields: {
+                                        gross_amount_decimal: {
+                                          kind: "nullable",
+                                          inner: { kind: "decimal_string" }
+                                        }
+                                      }
+                                    }
+                                  },
+                                  non_fuel: {
+                                    kind: "nullable",
+                                    inner: {
+                                      kind: "object",
+                                      fields: {
+                                        gross_amount_decimal: {
+                                          kind: "nullable",
+                                          inner: { kind: "decimal_string" }
+                                        }
+                                      }
+                                    }
+                                  },
+                                  tax: {
+                                    kind: "nullable",
+                                    inner: {
+                                      kind: "object",
+                                      fields: {
+                                        local_amount_decimal: {
+                                          kind: "nullable",
+                                          inner: { kind: "decimal_string" }
+                                        },
+                                        national_amount_decimal: {
+                                          kind: "nullable",
+                                          inner: { kind: "decimal_string" }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      },
+                      fuel: {
+                        kind: "nullable",
+                        inner: {
+                          kind: "object",
+                          fields: {
+                            quantity_decimal: {
+                              kind: "nullable",
+                              inner: { kind: "decimal_string" }
+                            },
+                            unit_cost_decimal: { kind: "decimal_string" }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+  /**
+   * [Deprecated] Approves a pending Issuing Authorization object. This request should be made within the timeout window of the [real-time authorization](https://docs.stripe.com/docs/issuing/controls/real-time-authorizations) flow.
+   * This method is deprecated. Instead, [respond directly to the webhook request to approve an authorization](https://docs.stripe.com/docs/issuing/controls/real-time-authorizations#authorization-handling).
+   * @deprecated
+   */
+  approve(id, params, options) {
+    return this._makeRequest("POST", `/v1/issuing/authorizations/${encodeURIComponent(id)}/approve`, params, options, {
+      responseSchema: {
+        kind: "object",
+        fields: {
+          fleet: {
+            kind: "nullable",
+            inner: {
+              kind: "object",
+              fields: {
+                reported_breakdown: {
+                  kind: "nullable",
+                  inner: {
+                    kind: "object",
+                    fields: {
+                      fuel: {
+                        kind: "nullable",
+                        inner: {
+                          kind: "object",
+                          fields: {
+                            gross_amount_decimal: {
+                              kind: "nullable",
+                              inner: { kind: "decimal_string" }
+                            }
+                          }
+                        }
+                      },
+                      non_fuel: {
+                        kind: "nullable",
+                        inner: {
+                          kind: "object",
+                          fields: {
+                            gross_amount_decimal: {
+                              kind: "nullable",
+                              inner: { kind: "decimal_string" }
+                            }
+                          }
+                        }
+                      },
+                      tax: {
+                        kind: "nullable",
+                        inner: {
+                          kind: "object",
+                          fields: {
+                            local_amount_decimal: {
+                              kind: "nullable",
+                              inner: { kind: "decimal_string" }
+                            },
+                            national_amount_decimal: {
+                              kind: "nullable",
+                              inner: { kind: "decimal_string" }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          fuel: {
+            kind: "nullable",
+            inner: {
+              kind: "object",
+              fields: {
+                quantity_decimal: {
+                  kind: "nullable",
+                  inner: { kind: "decimal_string" }
+                },
+                unit_cost_decimal: {
+                  kind: "nullable",
+                  inner: { kind: "decimal_string" }
+                }
+              }
+            }
+          },
+          transactions: {
+            kind: "array",
+            element: {
+              kind: "object",
+              fields: {
+                purchase_details: {
+                  kind: "nullable",
+                  inner: {
+                    kind: "object",
+                    fields: {
+                      fleet: {
+                        kind: "nullable",
+                        inner: {
+                          kind: "object",
+                          fields: {
+                            reported_breakdown: {
+                              kind: "nullable",
+                              inner: {
+                                kind: "object",
+                                fields: {
+                                  fuel: {
+                                    kind: "nullable",
+                                    inner: {
+                                      kind: "object",
+                                      fields: {
+                                        gross_amount_decimal: {
+                                          kind: "nullable",
+                                          inner: { kind: "decimal_string" }
+                                        }
+                                      }
+                                    }
+                                  },
+                                  non_fuel: {
+                                    kind: "nullable",
+                                    inner: {
+                                      kind: "object",
+                                      fields: {
+                                        gross_amount_decimal: {
+                                          kind: "nullable",
+                                          inner: { kind: "decimal_string" }
+                                        }
+                                      }
+                                    }
+                                  },
+                                  tax: {
+                                    kind: "nullable",
+                                    inner: {
+                                      kind: "object",
+                                      fields: {
+                                        local_amount_decimal: {
+                                          kind: "nullable",
+                                          inner: { kind: "decimal_string" }
+                                        },
+                                        national_amount_decimal: {
+                                          kind: "nullable",
+                                          inner: { kind: "decimal_string" }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      },
+                      fuel: {
+                        kind: "nullable",
+                        inner: {
+                          kind: "object",
+                          fields: {
+                            quantity_decimal: {
+                              kind: "nullable",
+                              inner: { kind: "decimal_string" }
+                            },
+                            unit_cost_decimal: { kind: "decimal_string" }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+  /**
+   * [Deprecated] Declines a pending Issuing Authorization object. This request should be made within the timeout window of the [real time authorization](https://docs.stripe.com/docs/issuing/controls/real-time-authorizations) flow.
+   * This method is deprecated. Instead, [respond directly to the webhook request to decline an authorization](https://docs.stripe.com/docs/issuing/controls/real-time-authorizations#authorization-handling).
+   * @deprecated
+   */
+  decline(id, params, options) {
+    return this._makeRequest("POST", `/v1/issuing/authorizations/${encodeURIComponent(id)}/decline`, params, options, {
+      responseSchema: {
+        kind: "object",
+        fields: {
+          fleet: {
+            kind: "nullable",
+            inner: {
+              kind: "object",
+              fields: {
+                reported_breakdown: {
+                  kind: "nullable",
+                  inner: {
+                    kind: "object",
+                    fields: {
+                      fuel: {
+                        kind: "nullable",
+                        inner: {
+                          kind: "object",
+                          fields: {
+                            gross_amount_decimal: {
+                              kind: "nullable",
+                              inner: { kind: "decimal_string" }
+                            }
+                          }
+                        }
+                      },
+                      non_fuel: {
+                        kind: "nullable",
+                        inner: {
+                          kind: "object",
+                          fields: {
+                            gross_amount_decimal: {
+                              kind: "nullable",
+                              inner: { kind: "decimal_string" }
+                            }
+                          }
+                        }
+                      },
+                      tax: {
+                        kind: "nullable",
+                        inner: {
+                          kind: "object",
+                          fields: {
+                            local_amount_decimal: {
+                              kind: "nullable",
+                              inner: { kind: "decimal_string" }
+                            },
+                            national_amount_decimal: {
+                              kind: "nullable",
+                              inner: { kind: "decimal_string" }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          fuel: {
+            kind: "nullable",
+            inner: {
+              kind: "object",
+              fields: {
+                quantity_decimal: {
+                  kind: "nullable",
+                  inner: { kind: "decimal_string" }
+                },
+                unit_cost_decimal: {
+                  kind: "nullable",
+                  inner: { kind: "decimal_string" }
+                }
+              }
+            }
+          },
+          transactions: {
+            kind: "array",
+            element: {
+              kind: "object",
+              fields: {
+                purchase_details: {
+                  kind: "nullable",
+                  inner: {
+                    kind: "object",
+                    fields: {
+                      fleet: {
+                        kind: "nullable",
+                        inner: {
+                          kind: "object",
+                          fields: {
+                            reported_breakdown: {
+                              kind: "nullable",
+                              inner: {
+                                kind: "object",
+                                fields: {
+                                  fuel: {
+                                    kind: "nullable",
+                                    inner: {
+                                      kind: "object",
+                                      fields: {
+                                        gross_amount_decimal: {
+                                          kind: "nullable",
+                                          inner: { kind: "decimal_string" }
+                                        }
+                                      }
+                                    }
+                                  },
+                                  non_fuel: {
+                                    kind: "nullable",
+                                    inner: {
+                                      kind: "object",
+                                      fields: {
+                                        gross_amount_decimal: {
+                                          kind: "nullable",
+                                          inner: { kind: "decimal_string" }
+                                        }
+                                      }
+                                    }
+                                  },
+                                  tax: {
+                                    kind: "nullable",
+                                    inner: {
+                                      kind: "object",
+                                      fields: {
+                                        local_amount_decimal: {
+                                          kind: "nullable",
+                                          inner: { kind: "decimal_string" }
+                                        },
+                                        national_amount_decimal: {
+                                          kind: "nullable",
+                                          inner: { kind: "decimal_string" }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      },
+                      fuel: {
+                        kind: "nullable",
+                        inner: {
+                          kind: "object",
+                          fields: {
+                            quantity_decimal: {
+                              kind: "nullable",
+                              inner: { kind: "decimal_string" }
+                            },
+                            unit_cost_decimal: { kind: "decimal_string" }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+};
+
+// node_modules/stripe/esm/resources/TestHelpers/Issuing/Authorizations.js
+var AuthorizationResource2 = class extends StripeResource {
+  /**
+   * Create a test-mode authorization.
+   */
+  create(params, options) {
+    return this._makeRequest("POST", "/v1/test_helpers/issuing/authorizations", params, options, {
+      requestSchema: {
+        kind: "object",
+        fields: {
+          fleet: {
+            kind: "object",
+            fields: {
+              reported_breakdown: {
+                kind: "object",
+                fields: {
+                  fuel: {
+                    kind: "object",
+                    fields: { gross_amount_decimal: { kind: "decimal_string" } }
+                  },
+                  non_fuel: {
+                    kind: "object",
+                    fields: { gross_amount_decimal: { kind: "decimal_string" } }
+                  },
+                  tax: {
+                    kind: "object",
+                    fields: {
+                      local_amount_decimal: { kind: "decimal_string" },
+                      national_amount_decimal: { kind: "decimal_string" }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          fuel: {
+            kind: "object",
+            fields: {
+              quantity_decimal: { kind: "decimal_string" },
+              unit_cost_decimal: { kind: "decimal_string" }
+            }
+          }
+        }
+      },
+      responseSchema: {
+        kind: "object",
+        fields: {
+          fleet: {
+            kind: "nullable",
+            inner: {
+              kind: "object",
+              fields: {
+                reported_breakdown: {
+                  kind: "nullable",
+                  inner: {
+                    kind: "object",
+                    fields: {
+                      fuel: {
+                        kind: "nullable",
+                        inner: {
+                          kind: "object",
+                          fields: {
+                            gross_amount_decimal: {
+                              kind: "nullable",
+                              inner: { kind: "decimal_string" }
+                            }
+                          }
+                        }
+                      },
+                      non_fuel: {
+                        kind: "nullable",
+                        inner: {
+                          kind: "object",
+                          fields: {
+                            gross_amount_decimal: {
+                              kind: "nullable",
+                              inner: { kind: "decimal_string" }
+                            }
+                          }
+                        }
+                      },
+                      tax: {
+                        kind: "nullable",
+                        inner: {
+                          kind: "object",
+                          fields: {
+                            local_amount_decimal: {
+                              kind: "nullable",
+                              inner: { kind: "decimal_string" }
+                            },
+                            national_amount_decimal: {
+                              kind: "nullable",
+                              inner: { kind: "decimal_string" }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          fuel: {
+            kind: "nullable",
+            inner: {
+              kind: "object",
+              fields: {
+                quantity_decimal: {
+                  kind: "nullable",
+                  inner: { kind: "decimal_string" }
+                },
+                unit_cost_decimal: {
+                  kind: "nullable",
+                  inner: { kind: "decimal_string" }
+                }
+              }
+            }
+          },
+          transactions: {
+            kind: "array",
+            element: {
+              kind: "object",
+              fields: {
+                purchase_details: {
+                  kind: "nullable",
+                  inner: {
+                    kind: "object",
+                    fields: {
+                      fleet: {
+                        kind: "nullable",
+                        inner: {
+                          kind: "object",
+                          fields: {
+                            reported_breakdown: {
+                              kind: "nullable",
+                              inner: {
+                                kind: "object",
+                                fields: {
+                                  fuel: {
+                                    kind: "nullable",
+                                    inner: {
+                                      kind: "object",
+                                      fields: {
+                                        gross_amount_decimal: {
+                                          kind: "nullable",
+                                          inner: { kind: "decimal_string" }
+                                        }
+                                      }
+                                    }
+                                  },
+                                  non_fuel: {
+                                    kind: "nullable",
+                                    inner: {
+                                      kind: "object",
+                                      fields: {
+                                        gross_amount_decimal: {
+                                          kind: "nullable",
+                                          inner: { kind: "decimal_string" }
+                                        }
+                                      }
+                                    }
+                                  },
+                                  tax: {
+                                    kind: "nullable",
+                                    inner: {
+                                      kind: "object",
+                                      fields: {
+                                        local_amount_decimal: {
+                                          kind: "nullable",
+                                          inner: { kind: "decimal_string" }
+                                        },
+                                        national_amount_decimal: {
+                                          kind: "nullable",
+                                          inner: { kind: "decimal_string" }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      },
+                      fuel: {
+                        kind: "nullable",
+                        inner: {
+                          kind: "object",
+                          fields: {
+                            quantity_decimal: {
+                              kind: "nullable",
+                              inner: { kind: "decimal_string" }
+                            },
+                            unit_cost_decimal: { kind: "decimal_string" }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+  /**
+   * Capture a test-mode authorization.
+   */
+  capture(id, params, options) {
+    return this._makeRequest("POST", `/v1/test_helpers/issuing/authorizations/${encodeURIComponent(id)}/capture`, params, options, {
+      requestSchema: {
+        kind: "object",
+        fields: {
+          purchase_details: {
+            kind: "object",
+            fields: {
+              fleet: {
+                kind: "object",
+                fields: {
+                  reported_breakdown: {
+                    kind: "object",
+                    fields: {
+                      fuel: {
+                        kind: "object",
+                        fields: {
+                          gross_amount_decimal: { kind: "decimal_string" }
+                        }
+                      },
+                      non_fuel: {
+                        kind: "object",
+                        fields: {
+                          gross_amount_decimal: { kind: "decimal_string" }
+                        }
+                      },
+                      tax: {
+                        kind: "object",
+                        fields: {
+                          local_amount_decimal: { kind: "decimal_string" },
+                          national_amount_decimal: { kind: "decimal_string" }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              fuel: {
+                kind: "object",
+                fields: {
+                  quantity_decimal: { kind: "decimal_string" },
+                  unit_cost_decimal: { kind: "decimal_string" }
+                }
+              },
+              receipt: {
+                kind: "array",
+                element: {
+                  kind: "object",
+                  fields: { quantity: { kind: "decimal_string" } }
+                }
+              }
+            }
+          }
+        }
+      },
+      responseSchema: {
+        kind: "object",
+        fields: {
+          fleet: {
+            kind: "nullable",
+            inner: {
+              kind: "object",
+              fields: {
+                reported_breakdown: {
+                  kind: "nullable",
+                  inner: {
+                    kind: "object",
+                    fields: {
+                      fuel: {
+                        kind: "nullable",
+                        inner: {
+                          kind: "object",
+                          fields: {
+                            gross_amount_decimal: {
+                              kind: "nullable",
+                              inner: { kind: "decimal_string" }
+                            }
+                          }
+                        }
+                      },
+                      non_fuel: {
+                        kind: "nullable",
+                        inner: {
+                          kind: "object",
+                          fields: {
+                            gross_amount_decimal: {
+                              kind: "nullable",
+                              inner: { kind: "decimal_string" }
+                            }
+                          }
+                        }
+                      },
+                      tax: {
+                        kind: "nullable",
+                        inner: {
+                          kind: "object",
+                          fields: {
+                            local_amount_decimal: {
+                              kind: "nullable",
+                              inner: { kind: "decimal_string" }
+                            },
+                            national_amount_decimal: {
+                              kind: "nullable",
+                              inner: { kind: "decimal_string" }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          fuel: {
+            kind: "nullable",
+            inner: {
+              kind: "object",
+              fields: {
+                quantity_decimal: {
+                  kind: "nullable",
+                  inner: { kind: "decimal_string" }
+                },
+                unit_cost_decimal: {
+                  kind: "nullable",
+                  inner: { kind: "decimal_string" }
+                }
+              }
+            }
+          },
+          transactions: {
+            kind: "array",
+            element: {
+              kind: "object",
+              fields: {
+                purchase_details: {
+                  kind: "nullable",
+                  inner: {
+                    kind: "object",
+                    fields: {
+                      fleet: {
+                        kind: "nullable",
+                        inner: {
+                          kind: "object",
+                          fields: {
+                            reported_breakdown: {
+                              kind: "nullable",
+                              inner: {
+                                kind: "object",
+                                fields: {
+                                  fuel: {
+                                    kind: "nullable",
+                                    inner: {
+                                      kind: "object",
+                                      fields: {
+                                        gross_amount_decimal: {
+                                          kind: "nullable",
+                                          inner: { kind: "decimal_string" }
+                                        }
+                                      }
+                                    }
+                                  },
+                                  non_fuel: {
+                                    kind: "nullable",
+                                    inner: {
+                                      kind: "object",
+                                      fields: {
+                                        gross_amount_decimal: {
+                                          kind: "nullable",
+                                          inner: { kind: "decimal_string" }
+                                        }
+                                      }
+                                    }
+                                  },
+                                  tax: {
+                                    kind: "nullable",
+                                    inner: {
+                                      kind: "object",
+                                      fields: {
+                                        local_amount_decimal: {
+                                          kind: "nullable",
+                                          inner: { kind: "decimal_string" }
+                                        },
+                                        national_amount_decimal: {
+                                          kind: "nullable",
+                                          inner: { kind: "decimal_string" }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      },
+                      fuel: {
+                        kind: "nullable",
+                        inner: {
+                          kind: "object",
+                          fields: {
+                            quantity_decimal: {
+                              kind: "nullable",
+                              inner: { kind: "decimal_string" }
+                            },
+                            unit_cost_decimal: { kind: "decimal_string" }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+  /**
+   * Expire a test-mode Authorization.
+   */
+  expire(id, params, options) {
+    return this._makeRequest("POST", `/v1/test_helpers/issuing/authorizations/${encodeURIComponent(id)}/expire`, params, options, {
+      responseSchema: {
+        kind: "object",
+        fields: {
+          fleet: {
+            kind: "nullable",
+            inner: {
+              kind: "object",
+              fields: {
+                reported_breakdown: {
+                  kind: "nullable",
+                  inner: {
+                    kind: "object",
+                    fields: {
+                      fuel: {
+                        kind: "nullable",
+                        inner: {
+                          kind: "object",
+                          fields: {
+                            gross_amount_decimal: {
+                              kind: "nullable",
+                              inner: { kind: "decimal_string" }
+                            }
+                          }
+                        }
+                      },
+                      non_fuel: {
+                        kind: "nullable",
+                        inner: {
+                          kind: "object",
+                          fields: {
+                            gross_amount_decimal: {
+                              kind: "nullable",
+                              inner: { kind: "decimal_string" }
+                            }
+                          }
+                        }
+                      },
+                      tax: {
+                        kind: "nullable",
+                        inner: {
+                          kind: "object",
+                          fields: {
+                            local_amount_decimal: {
+                              kind: "nullable",
+                              inner: { kind: "decimal_string" }
+                            },
+                            national_amount_decimal: {
+                              kind: "nullable",
+                              inner: { kind: "decimal_string" }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          fuel: {
+            kind: "nullable",
+            inner: {
+              kind: "object",
+              fields: {
+                quantity_decimal: {
+                  kind: "nullable",
+                  inner: { kind: "decimal_string" }
+                },
+                unit_cost_decimal: {
+                  kind: "nullable",
+                  inner: { kind: "decimal_string" }
+                }
+              }
+            }
+          },
+          transactions: {
+            kind: "array",
+            element: {
+              kind: "object",
+              fields: {
+                purchase_details: {
+                  kind: "nullable",
+                  inner: {
+                    kind: "object",
+                    fields: {
+                      fleet: {
+                        kind: "nullable",
+                        inner: {
+                          kind: "object",
+                          fields: {
+                            reported_breakdown: {
+                              kind: "nullable",
+                              inner: {
+                                kind: "object",
+                                fields: {
+                                  fuel: {
+                                    kind: "nullable",
+                                    inner: {
+                                      kind: "object",
+                                      fields: {
+                                        gross_amount_decimal: {
+                                          kind: "nullable",
+                                          inner: { kind: "decimal_string" }
+                                        }
+                                      }
+                                    }
+                                  },
+                                  non_fuel: {
+                                    kind: "nullable",
+                                    inner: {
+                                      kind: "object",
+                                      fields: {
+                                        gross_amount_decimal: {
+                                          kind: "nullable",
+                                          inner: { kind: "decimal_string" }
+                                        }
+                                      }
+                                    }
+                                  },
+                                  tax: {
+                                    kind: "nullable",
+                                    inner: {
+                                      kind: "object",
+                                      fields: {
+                                        local_amount_decimal: {
+                                          kind: "nullable",
+                                          inner: { kind: "decimal_string" }
+                                        },
+                                        national_amount_decimal: {
+                                          kind: "nullable",
+                                          inner: { kind: "decimal_string" }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      },
+                      fuel: {
+                        kind: "nullable",
+                        inner: {
+                          kind: "object",
+                          fields: {
+                            quantity_decimal: {
+                              kind: "nullable",
+                              inner: { kind: "decimal_string" }
+                            },
+                            unit_cost_decimal: { kind: "decimal_string" }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+  /**
+   * Finalize the amount on an Authorization prior to capture, when the initial authorization was for an estimated amount.
+   */
+  finalizeAmount(id, params, options) {
+    return this._makeRequest("POST", `/v1/test_helpers/issuing/authorizations/${encodeURIComponent(id)}/finalize_amount`, params, options, {
+      requestSchema: {
+        kind: "object",
+        fields: {
+          fleet: {
+            kind: "object",
+            fields: {
+              reported_breakdown: {
+                kind: "object",
+                fields: {
+                  fuel: {
+                    kind: "object",
+                    fields: { gross_amount_decimal: { kind: "decimal_string" } }
+                  },
+                  non_fuel: {
+                    kind: "object",
+                    fields: { gross_amount_decimal: { kind: "decimal_string" } }
+                  },
+                  tax: {
+                    kind: "object",
+                    fields: {
+                      local_amount_decimal: { kind: "decimal_string" },
+                      national_amount_decimal: { kind: "decimal_string" }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          fuel: {
+            kind: "object",
+            fields: {
+              quantity_decimal: { kind: "decimal_string" },
+              unit_cost_decimal: { kind: "decimal_string" }
+            }
+          }
+        }
+      },
+      responseSchema: {
+        kind: "object",
+        fields: {
+          fleet: {
+            kind: "nullable",
+            inner: {
+              kind: "object",
+              fields: {
+                reported_breakdown: {
+                  kind: "nullable",
+                  inner: {
+                    kind: "object",
+                    fields: {
+                      fuel: {
+                        kind: "nullable",
+                        inner: {
+                          kind: "object",
+                          fields: {
+                            gross_amount_decimal: {
+                              kind: "nullable",
+                              inner: { kind: "decimal_string" }
+                            }
+                          }
+                        }
+                      },
+                      non_fuel: {
+                        kind: "nullable",
+                        inner: {
+                          kind: "object",
+                          fields: {
+                            gross_amount_decimal: {
+                              kind: "nullable",
+                              inner: { kind: "decimal_string" }
+                            }
+                          }
+                        }
+                      },
+                      tax: {
+                        kind: "nullable",
+                        inner: {
+                          kind: "object",
+                          fields: {
+                            local_amount_decimal: {
+                              kind: "nullable",
+                              inner: { kind: "decimal_string" }
+                            },
+                            national_amount_decimal: {
+                              kind: "nullable",
+                              inner: { kind: "decimal_string" }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          fuel: {
+            kind: "nullable",
+            inner: {
+              kind: "object",
+              fields: {
+                quantity_decimal: {
+                  kind: "nullable",
+                  inner: { kind: "decimal_string" }
+                },
+                unit_cost_decimal: {
+                  kind: "nullable",
+                  inner: { kind: "decimal_string" }
+                }
+              }
+            }
+          },
+          transactions: {
+            kind: "array",
+            element: {
+              kind: "object",
+              fields: {
+                purchase_details: {
+                  kind: "nullable",
+                  inner: {
+                    kind: "object",
+                    fields: {
+                      fleet: {
+                        kind: "nullable",
+                        inner: {
+                          kind: "object",
+                          fields: {
+                            reported_breakdown: {
+                              kind: "nullable",
+                              inner: {
+                                kind: "object",
+                                fields: {
+                                  fuel: {
+                                    kind: "nullable",
+                                    inner: {
+                                      kind: "object",
+                                      fields: {
+                                        gross_amount_decimal: {
+                                          kind: "nullable",
+                                          inner: { kind: "decimal_string" }
+                                        }
+                                      }
+                                    }
+                                  },
+                                  non_fuel: {
+                                    kind: "nullable",
+                                    inner: {
+                                      kind: "object",
+                                      fields: {
+                                        gross_amount_decimal: {
+                                          kind: "nullable",
+                                          inner: { kind: "decimal_string" }
+                                        }
+                                      }
+                                    }
+                                  },
+                                  tax: {
+                                    kind: "nullable",
+                                    inner: {
+                                      kind: "object",
+                                      fields: {
+                                        local_amount_decimal: {
+                                          kind: "nullable",
+                                          inner: { kind: "decimal_string" }
+                                        },
+                                        national_amount_decimal: {
+                                          kind: "nullable",
+                                          inner: { kind: "decimal_string" }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      },
+                      fuel: {
+                        kind: "nullable",
+                        inner: {
+                          kind: "object",
+                          fields: {
+                            quantity_decimal: {
+                              kind: "nullable",
+                              inner: { kind: "decimal_string" }
+                            },
+                            unit_cost_decimal: { kind: "decimal_string" }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+  /**
+   * Respond to a fraud challenge on a testmode Issuing authorization, simulating either a confirmation of fraud or a correction of legitimacy.
+   */
+  respond(id, params, options) {
+    return this._makeRequest("POST", `/v1/test_helpers/issuing/authorizations/${encodeURIComponent(id)}/fraud_challenges/respond`, params, options, {
+      responseSchema: {
+        kind: "object",
+        fields: {
+          fleet: {
+            kind: "nullable",
+            inner: {
+              kind: "object",
+              fields: {
+                reported_breakdown: {
+                  kind: "nullable",
+                  inner: {
+                    kind: "object",
+                    fields: {
+                      fuel: {
+                        kind: "nullable",
+                        inner: {
+                          kind: "object",
+                          fields: {
+                            gross_amount_decimal: {
+                              kind: "nullable",
+                              inner: { kind: "decimal_string" }
+                            }
+                          }
+                        }
+                      },
+                      non_fuel: {
+                        kind: "nullable",
+                        inner: {
+                          kind: "object",
+                          fields: {
+                            gross_amount_decimal: {
+                              kind: "nullable",
+                              inner: { kind: "decimal_string" }
+                            }
+                          }
+                        }
+                      },
+                      tax: {
+                        kind: "nullable",
+                        inner: {
+                          kind: "object",
+                          fields: {
+                            local_amount_decimal: {
+                              kind: "nullable",
+                              inner: { kind: "decimal_string" }
+                            },
+                            national_amount_decimal: {
+                              kind: "nullable",
+                              inner: { kind: "decimal_string" }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          fuel: {
+            kind: "nullable",
+            inner: {
+              kind: "object",
+              fields: {
+                quantity_decimal: {
+                  kind: "nullable",
+                  inner: { kind: "decimal_string" }
+                },
+                unit_cost_decimal: {
+                  kind: "nullable",
+                  inner: { kind: "decimal_string" }
+                }
+              }
+            }
+          },
+          transactions: {
+            kind: "array",
+            element: {
+              kind: "object",
+              fields: {
+                purchase_details: {
+                  kind: "nullable",
+                  inner: {
+                    kind: "object",
+                    fields: {
+                      fleet: {
+                        kind: "nullable",
+                        inner: {
+                          kind: "object",
+                          fields: {
+                            reported_breakdown: {
+                              kind: "nullable",
+                              inner: {
+                                kind: "object",
+                                fields: {
+                                  fuel: {
+                                    kind: "nullable",
+                                    inner: {
+                                      kind: "object",
+                                      fields: {
+                                        gross_amount_decimal: {
+                                          kind: "nullable",
+                                          inner: { kind: "decimal_string" }
+                                        }
+                                      }
+                                    }
+                                  },
+                                  non_fuel: {
+                                    kind: "nullable",
+                                    inner: {
+                                      kind: "object",
+                                      fields: {
+                                        gross_amount_decimal: {
+                                          kind: "nullable",
+                                          inner: { kind: "decimal_string" }
+                                        }
+                                      }
+                                    }
+                                  },
+                                  tax: {
+                                    kind: "nullable",
+                                    inner: {
+                                      kind: "object",
+                                      fields: {
+                                        local_amount_decimal: {
+                                          kind: "nullable",
+                                          inner: { kind: "decimal_string" }
+                                        },
+                                        national_amount_decimal: {
+                                          kind: "nullable",
+                                          inner: { kind: "decimal_string" }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      },
+                      fuel: {
+                        kind: "nullable",
+                        inner: {
+                          kind: "object",
+                          fields: {
+                            quantity_decimal: {
+                              kind: "nullable",
+                              inner: { kind: "decimal_string" }
+                            },
+                            unit_cost_decimal: { kind: "decimal_string" }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+  /**
+   * Increment a test-mode Authorization.
+   */
+  increment(id, params, options) {
+    return this._makeRequest("POST", `/v1/test_helpers/issuing/authorizations/${encodeURIComponent(id)}/increment`, params, options, {
+      responseSchema: {
+        kind: "object",
+        fields: {
+          fleet: {
+            kind: "nullable",
+            inner: {
+              kind: "object",
+              fields: {
+                reported_breakdown: {
+                  kind: "nullable",
+                  inner: {
+                    kind: "object",
+                    fields: {
+                      fuel: {
+                        kind: "nullable",
+                        inner: {
+                          kind: "object",
+                          fields: {
+                            gross_amount_decimal: {
+                              kind: "nullable",
+                              inner: { kind: "decimal_string" }
+                            }
+                          }
+                        }
+                      },
+                      non_fuel: {
+                        kind: "nullable",
+                        inner: {
+                          kind: "object",
+                          fields: {
+                            gross_amount_decimal: {
+                              kind: "nullable",
+                              inner: { kind: "decimal_string" }
+                            }
+                          }
+                        }
+                      },
+                      tax: {
+                        kind: "nullable",
+                        inner: {
+                          kind: "object",
+                          fields: {
+                            local_amount_decimal: {
+                              kind: "nullable",
+                              inner: { kind: "decimal_string" }
+                            },
+                            national_amount_decimal: {
+                              kind: "nullable",
+                              inner: { kind: "decimal_string" }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          fuel: {
+            kind: "nullable",
+            inner: {
+              kind: "object",
+              fields: {
+                quantity_decimal: {
+                  kind: "nullable",
+                  inner: { kind: "decimal_string" }
+                },
+                unit_cost_decimal: {
+                  kind: "nullable",
+                  inner: { kind: "decimal_string" }
+                }
+              }
+            }
+          },
+          transactions: {
+            kind: "array",
+            element: {
+              kind: "object",
+              fields: {
+                purchase_details: {
+                  kind: "nullable",
+                  inner: {
+                    kind: "object",
+                    fields: {
+                      fleet: {
+                        kind: "nullable",
+                        inner: {
+                          kind: "object",
+                          fields: {
+                            reported_breakdown: {
+                              kind: "nullable",
+                              inner: {
+                                kind: "object",
+                                fields: {
+                                  fuel: {
+                                    kind: "nullable",
+                                    inner: {
+                                      kind: "object",
+                                      fields: {
+                                        gross_amount_decimal: {
+                                          kind: "nullable",
+                                          inner: { kind: "decimal_string" }
+                                        }
+                                      }
+                                    }
+                                  },
+                                  non_fuel: {
+                                    kind: "nullable",
+                                    inner: {
+                                      kind: "object",
+                                      fields: {
+                                        gross_amount_decimal: {
+                                          kind: "nullable",
+                                          inner: { kind: "decimal_string" }
+                                        }
+                                      }
+                                    }
+                                  },
+                                  tax: {
+                                    kind: "nullable",
+                                    inner: {
+                                      kind: "object",
+                                      fields: {
+                                        local_amount_decimal: {
+                                          kind: "nullable",
+                                          inner: { kind: "decimal_string" }
+                                        },
+                                        national_amount_decimal: {
+                                          kind: "nullable",
+                                          inner: { kind: "decimal_string" }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      },
+                      fuel: {
+                        kind: "nullable",
+                        inner: {
+                          kind: "object",
+                          fields: {
+                            quantity_decimal: {
+                              kind: "nullable",
+                              inner: { kind: "decimal_string" }
+                            },
+                            unit_cost_decimal: { kind: "decimal_string" }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+  /**
+   * Reverse a test-mode Authorization.
+   */
+  reverse(id, params, options) {
+    return this._makeRequest("POST", `/v1/test_helpers/issuing/authorizations/${encodeURIComponent(id)}/reverse`, params, options, {
+      responseSchema: {
+        kind: "object",
+        fields: {
+          fleet: {
+            kind: "nullable",
+            inner: {
+              kind: "object",
+              fields: {
+                reported_breakdown: {
+                  kind: "nullable",
+                  inner: {
+                    kind: "object",
+                    fields: {
+                      fuel: {
+                        kind: "nullable",
+                        inner: {
+                          kind: "object",
+                          fields: {
+                            gross_amount_decimal: {
+                              kind: "nullable",
+                              inner: { kind: "decimal_string" }
+                            }
+                          }
+                        }
+                      },
+                      non_fuel: {
+                        kind: "nullable",
+                        inner: {
+                          kind: "object",
+                          fields: {
+                            gross_amount_decimal: {
+                              kind: "nullable",
+                              inner: { kind: "decimal_string" }
+                            }
+                          }
+                        }
+                      },
+                      tax: {
+                        kind: "nullable",
+                        inner: {
+                          kind: "object",
+                          fields: {
+                            local_amount_decimal: {
+                              kind: "nullable",
+                              inner: { kind: "decimal_string" }
+                            },
+                            national_amount_decimal: {
+                              kind: "nullable",
+                              inner: { kind: "decimal_string" }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          fuel: {
+            kind: "nullable",
+            inner: {
+              kind: "object",
+              fields: {
+                quantity_decimal: {
+                  kind: "nullable",
+                  inner: { kind: "decimal_string" }
+                },
+                unit_cost_decimal: {
+                  kind: "nullable",
+                  inner: { kind: "decimal_string" }
+                }
+              }
+            }
+          },
+          transactions: {
+            kind: "array",
+            element: {
+              kind: "object",
+              fields: {
+                purchase_details: {
+                  kind: "nullable",
+                  inner: {
+                    kind: "object",
+                    fields: {
+                      fleet: {
+                        kind: "nullable",
+                        inner: {
+                          kind: "object",
+                          fields: {
+                            reported_breakdown: {
+                              kind: "nullable",
+                              inner: {
+                                kind: "object",
+                                fields: {
+                                  fuel: {
+                                    kind: "nullable",
+                                    inner: {
+                                      kind: "object",
+                                      fields: {
+                                        gross_amount_decimal: {
+                                          kind: "nullable",
+                                          inner: { kind: "decimal_string" }
+                                        }
+                                      }
+                                    }
+                                  },
+                                  non_fuel: {
+                                    kind: "nullable",
+                                    inner: {
+                                      kind: "object",
+                                      fields: {
+                                        gross_amount_decimal: {
+                                          kind: "nullable",
+                                          inner: { kind: "decimal_string" }
+                                        }
+                                      }
+                                    }
+                                  },
+                                  tax: {
+                                    kind: "nullable",
+                                    inner: {
+                                      kind: "object",
+                                      fields: {
+                                        local_amount_decimal: {
+                                          kind: "nullable",
+                                          inner: { kind: "decimal_string" }
+                                        },
+                                        national_amount_decimal: {
+                                          kind: "nullable",
+                                          inner: { kind: "decimal_string" }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      },
+                      fuel: {
+                        kind: "nullable",
+                        inner: {
+                          kind: "object",
+                          fields: {
+                            quantity_decimal: {
+                              kind: "nullable",
+                              inner: { kind: "decimal_string" }
+                            },
+                            unit_cost_decimal: { kind: "decimal_string" }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+};
+
+// node_modules/stripe/esm/resources/Tax/Calculations.js
+var CalculationResource = class extends StripeResource {
+  /**
+   * Retrieves a Tax Calculation object, if the calculation hasn't expired.
+   */
+  retrieve(id, params, options) {
+    return this._makeRequest("GET", `/v1/tax/calculations/${encodeURIComponent(id)}`, params, options);
+  }
+  /**
+   * Calculates tax based on the input and returns a Tax Calculation object.
+   */
+  create(params, options) {
+    return this._makeRequest("POST", "/v1/tax/calculations", params, options);
+  }
+  /**
+   * Retrieves the line items of a tax calculation as a collection, if the calculation hasn't expired.
+   */
+  listLineItems(id, params, options) {
+    return this._makeRequest("GET", `/v1/tax/calculations/${encodeURIComponent(id)}/line_items`, params, options, {
+      methodType: "list"
+    });
+  }
+};
+
+// node_modules/stripe/esm/resources/Issuing/Cardholders.js
+var CardholderResource = class extends StripeResource {
+  /**
+   * Returns a list of Issuing Cardholder objects. The objects are sorted in descending order by creation date, with the most recently created object appearing first.
+   */
+  list(params, options) {
+    return this._makeRequest("GET", "/v1/issuing/cardholders", params, options, {
+      methodType: "list"
+    });
+  }
+  /**
+   * Creates a new Issuing Cardholder object that can be issued cards.
+   */
+  create(params, options) {
+    return this._makeRequest("POST", "/v1/issuing/cardholders", params, options);
+  }
+  /**
+   * Retrieves an Issuing Cardholder object.
+   */
+  retrieve(id, params, options) {
+    return this._makeRequest("GET", `/v1/issuing/cardholders/${encodeURIComponent(id)}`, params, options);
+  }
+  /**
+   * Updates the specified Issuing Cardholder object by setting the values of the parameters passed. Any parameters not provided will be left unchanged.
+   */
+  update(id, params, options) {
+    return this._makeRequest("POST", `/v1/issuing/cardholders/${encodeURIComponent(id)}`, params, options);
+  }
+};
+
+// node_modules/stripe/esm/resources/Issuing/Cards.js
+var CardResource = class extends StripeResource {
+  /**
+   * Returns a list of Issuing Card objects. The objects are sorted in descending order by creation date, with the most recently created object appearing first.
+   */
+  list(params, options) {
+    return this._makeRequest("GET", "/v1/issuing/cards", params, options, {
+      methodType: "list"
+    });
+  }
+  /**
+   * Creates an Issuing Card object.
+   */
+  create(params, options) {
+    return this._makeRequest("POST", "/v1/issuing/cards", params, options);
+  }
+  /**
+   * Retrieves an Issuing Card object.
+   */
+  retrieve(id, params, options) {
+    return this._makeRequest("GET", `/v1/issuing/cards/${encodeURIComponent(id)}`, params, options);
+  }
+  /**
+   * Updates the specified Issuing Card object by setting the values of the parameters passed. Any parameters not provided will be left unchanged.
+   */
+  update(id, params, options) {
+    return this._makeRequest("POST", `/v1/issuing/cards/${encodeURIComponent(id)}`, params, options);
+  }
+};
+
+// node_modules/stripe/esm/resources/TestHelpers/Issuing/Cards.js
+var CardResource2 = class extends StripeResource {
+  /**
+   * Updates the shipping status of the specified Issuing Card object to delivered.
+   */
+  deliverCard(id, params, options) {
+    return this._makeRequest("POST", `/v1/test_helpers/issuing/cards/${encodeURIComponent(id)}/shipping/deliver`, params, options);
+  }
+  /**
+   * Updates the shipping status of the specified Issuing Card object to failure.
+   */
+  failCard(id, params, options) {
+    return this._makeRequest("POST", `/v1/test_helpers/issuing/cards/${encodeURIComponent(id)}/shipping/fail`, params, options);
+  }
+  /**
+   * Updates the shipping status of the specified Issuing Card object to returned.
+   */
+  returnCard(id, params, options) {
+    return this._makeRequest("POST", `/v1/test_helpers/issuing/cards/${encodeURIComponent(id)}/shipping/return`, params, options);
+  }
+  /**
+   * Updates the shipping status of the specified Issuing Card object to shipped.
+   */
+  shipCard(id, params, options) {
+    return this._makeRequest("POST", `/v1/test_helpers/issuing/cards/${encodeURIComponent(id)}/shipping/ship`, params, options);
+  }
+  /**
+   * Updates the shipping status of the specified Issuing Card object to submitted. This method requires Stripe Version ‘2024-09-30.acacia' or later.
+   */
+  submitCard(id, params, options) {
+    return this._makeRequest("POST", `/v1/test_helpers/issuing/cards/${encodeURIComponent(id)}/shipping/submit`, params, options);
+  }
+};
+
+// node_modules/stripe/esm/resources/BillingPortal/Configurations.js
+var ConfigurationResource = class extends StripeResource {
+  /**
+   * Returns a list of configurations that describe the functionality of the customer portal.
+   */
+  list(params, options) {
+    return this._makeRequest("GET", "/v1/billing_portal/configurations", params, options, {
+      methodType: "list"
+    });
+  }
+  /**
+   * Creates a configuration that describes the functionality and behavior of a PortalSession
+   */
+  create(params, options) {
+    return this._makeRequest("POST", "/v1/billing_portal/configurations", params, options);
+  }
+  /**
+   * Retrieves a configuration that describes the functionality of the customer portal.
+   */
+  retrieve(id, params, options) {
+    return this._makeRequest("GET", `/v1/billing_portal/configurations/${encodeURIComponent(id)}`, params, options);
+  }
+  /**
+   * Updates a configuration that describes the functionality of the customer portal.
+   */
+  update(id, params, options) {
+    return this._makeRequest("POST", `/v1/billing_portal/configurations/${encodeURIComponent(id)}`, params, options);
+  }
+};
+
+// node_modules/stripe/esm/resources/Terminal/Configurations.js
+var ConfigurationResource2 = class extends StripeResource {
+  /**
+   * Deletes a Configuration object.
+   */
+  del(id, params, options) {
+    return this._makeRequest("DELETE", `/v1/terminal/configurations/${encodeURIComponent(id)}`, params, options);
+  }
+  /**
+   * Retrieves a Configuration object.
+   */
+  retrieve(id, params, options) {
+    return this._makeRequest("GET", `/v1/terminal/configurations/${encodeURIComponent(id)}`, params, options);
+  }
+  /**
+   * Updates a new Configuration object.
+   */
+  update(id, params, options) {
+    return this._makeRequest("POST", `/v1/terminal/configurations/${encodeURIComponent(id)}`, params, options);
+  }
+  /**
+   * Returns a list of Configuration objects.
+   */
+  list(params, options) {
+    return this._makeRequest("GET", "/v1/terminal/configurations", params, options, {
+      methodType: "list"
+    });
+  }
+  /**
+   * Creates a new Configuration object.
+   */
+  create(params, options) {
+    return this._makeRequest("POST", "/v1/terminal/configurations", params, options);
+  }
+};
+
+// node_modules/stripe/esm/resources/TestHelpers/ConfirmationTokens.js
+var ConfirmationTokenResource = class extends StripeResource {
+  /**
+   * Creates a test mode Confirmation Token server side for your integration tests.
+   */
+  create(params, options) {
+    return this._makeRequest("POST", "/v1/test_helpers/confirmation_tokens", params, options);
+  }
+};
+
+// node_modules/stripe/esm/resources/Terminal/ConnectionTokens.js
+var ConnectionTokenResource = class extends StripeResource {
+  /**
+   * To connect to a reader the Stripe Terminal SDK needs to retrieve a short-lived connection token from Stripe, proxied through your server. On your backend, add an endpoint that creates and returns a connection token.
+   */
+  create(params, options) {
+    return this._makeRequest("POST", "/v1/terminal/connection_tokens", params, options);
+  }
+};
+
+// node_modules/stripe/esm/resources/Billing/CreditBalanceSummary.js
+var CreditBalanceSummaryResource = class extends StripeResource {
+  /**
+   * Retrieves the credit balance summary for a customer.
+   */
+  retrieve(params, options) {
+    return this._makeRequest("GET", "/v1/billing/credit_balance_summary", params, options);
+  }
+};
+
+// node_modules/stripe/esm/resources/Billing/CreditBalanceTransactions.js
+var CreditBalanceTransactionResource = class extends StripeResource {
+  /**
+   * Retrieve a list of credit balance transactions.
+   */
+  list(params, options) {
+    return this._makeRequest("GET", "/v1/billing/credit_balance_transactions", params, options, {
+      methodType: "list"
+    });
+  }
+  /**
+   * Retrieves a credit balance transaction.
+   */
+  retrieve(id, params, options) {
+    return this._makeRequest("GET", `/v1/billing/credit_balance_transactions/${encodeURIComponent(id)}`, params, options);
+  }
+};
+
+// node_modules/stripe/esm/resources/Billing/CreditGrants.js
+var CreditGrantResource = class extends StripeResource {
+  /**
+   * Retrieve a list of credit grants.
+   */
+  list(params, options) {
+    return this._makeRequest("GET", "/v1/billing/credit_grants", params, options, {
+      methodType: "list"
+    });
+  }
+  /**
+   * Creates a credit grant.
+   */
+  create(params, options) {
+    return this._makeRequest("POST", "/v1/billing/credit_grants", params, options);
+  }
+  /**
+   * Retrieves a credit grant.
+   */
+  retrieve(id, params, options) {
+    return this._makeRequest("GET", `/v1/billing/credit_grants/${encodeURIComponent(id)}`, params, options);
+  }
+  /**
+   * Updates a credit grant.
+   */
+  update(id, params, options) {
+    return this._makeRequest("POST", `/v1/billing/credit_grants/${encodeURIComponent(id)}`, params, options);
+  }
+  /**
+   * Expires a credit grant.
+   */
+  expire(id, params, options) {
+    return this._makeRequest("POST", `/v1/billing/credit_grants/${encodeURIComponent(id)}/expire`, params, options);
+  }
+  /**
+   * Voids a credit grant.
+   */
+  voidGrant(id, params, options) {
+    return this._makeRequest("POST", `/v1/billing/credit_grants/${encodeURIComponent(id)}/void`, params, options);
+  }
+};
+
+// node_modules/stripe/esm/resources/Treasury/CreditReversals.js
+var CreditReversalResource = class extends StripeResource {
+  /**
+   * Returns a list of CreditReversals.
+   */
+  list(params, options) {
+    return this._makeRequest("GET", "/v1/treasury/credit_reversals", params, options, {
+      methodType: "list"
+    });
+  }
+  /**
+   * Reverses a ReceivedCredit and creates a CreditReversal object.
+   */
+  create(params, options) {
+    return this._makeRequest("POST", "/v1/treasury/credit_reversals", params, options);
+  }
+  /**
+   * Retrieves the details of an existing CreditReversal by passing the unique CreditReversal ID from either the CreditReversal creation request or CreditReversal list
+   */
+  retrieve(id, params, options) {
+    return this._makeRequest("GET", `/v1/treasury/credit_reversals/${encodeURIComponent(id)}`, params, options);
+  }
+};
+
+// node_modules/stripe/esm/resources/TestHelpers/Customers.js
+var CustomerResource = class extends StripeResource {
+  /**
+   * Create an incoming testmode bank transfer
+   */
+  fundCashBalance(id, params, options) {
+    return this._makeRequest("POST", `/v1/test_helpers/customers/${encodeURIComponent(id)}/fund_cash_balance`, params, options);
+  }
+};
+
+// node_modules/stripe/esm/resources/Treasury/DebitReversals.js
+var DebitReversalResource = class extends StripeResource {
+  /**
+   * Returns a list of DebitReversals.
+   */
+  list(params, options) {
+    return this._makeRequest("GET", "/v1/treasury/debit_reversals", params, options, {
+      methodType: "list"
+    });
+  }
+  /**
+   * Reverses a ReceivedDebit and creates a DebitReversal object.
+   */
+  create(params, options) {
+    return this._makeRequest("POST", "/v1/treasury/debit_reversals", params, options);
+  }
+  /**
+   * Retrieves a DebitReversal object.
+   */
+  retrieve(id, params, options) {
+    return this._makeRequest("GET", `/v1/treasury/debit_reversals/${encodeURIComponent(id)}`, params, options);
+  }
+};
+
+// node_modules/stripe/esm/resources/Issuing/Disputes.js
+var DisputeResource = class extends StripeResource {
+  /**
+   * Returns a list of Issuing Dispute objects. The objects are sorted in descending order by creation date, with the most recently created object appearing first.
+   */
+  list(params, options) {
+    return this._makeRequest("GET", "/v1/issuing/disputes", params, options, {
+      methodType: "list"
+    });
+  }
+  /**
+   * Creates an Issuing Dispute object. Individual pieces of evidence within the evidence object are optional at this point. Stripe only validates that required evidence is present during submission. Refer to [Dispute reasons and evidence](https://docs.stripe.com/docs/issuing/purchases/disputes#dispute-reasons-and-evidence) for more details about evidence requirements.
+   */
+  create(params, options) {
+    return this._makeRequest("POST", "/v1/issuing/disputes", params, options);
+  }
+  /**
+   * Retrieves an Issuing Dispute object.
+   */
+  retrieve(id, params, options) {
+    return this._makeRequest("GET", `/v1/issuing/disputes/${encodeURIComponent(id)}`, params, options);
+  }
+  /**
+   * Updates the specified Issuing Dispute object by setting the values of the parameters passed. Any parameters not provided will be left unchanged. Properties on the evidence object can be unset by passing in an empty string.
+   */
+  update(id, params, options) {
+    return this._makeRequest("POST", `/v1/issuing/disputes/${encodeURIComponent(id)}`, params, options);
+  }
+  /**
+   * Submits an Issuing Dispute to the card network. Stripe validates that all evidence fields required for the dispute's reason are present. For more details, see [Dispute reasons and evidence](https://docs.stripe.com/docs/issuing/purchases/disputes#dispute-reasons-and-evidence).
+   */
+  submit(id, params, options) {
+    return this._makeRequest("POST", `/v1/issuing/disputes/${encodeURIComponent(id)}/submit`, params, options);
+  }
+};
+
+// node_modules/stripe/esm/resources/Radar/EarlyFraudWarnings.js
+var EarlyFraudWarningResource = class extends StripeResource {
+  /**
+   * Returns a list of early fraud warnings.
+   */
+  list(params, options) {
+    return this._makeRequest("GET", "/v1/radar/early_fraud_warnings", params, options, {
+      methodType: "list"
+    });
+  }
+  /**
+   * Retrieves the details of an early fraud warning that has previously been created.
+   *
+   * Please refer to the [early fraud warning](https://docs.stripe.com/api#early_fraud_warning_object) object reference for more details.
+   */
+  retrieve(id, params, options) {
+    return this._makeRequest("GET", `/v1/radar/early_fraud_warnings/${encodeURIComponent(id)}`, params, options);
+  }
+};
+
+// node_modules/stripe/esm/resources/V2/Core/EventDestinations.js
+var EventDestinationResource = class extends StripeResource {
+  /**
+   * Lists all event destinations.
+   */
+  list(params, options) {
+    return this._makeRequest("GET", "/v2/core/event_destinations", params, options, {
+      methodType: "list"
+    });
+  }
+  /**
+   * Create a new event destination.
+   */
+  create(params, options) {
+    return this._makeRequest("POST", "/v2/core/event_destinations", params, options);
+  }
+  /**
+   * Delete an event destination.
+   */
+  del(id, params, options) {
+    return this._makeRequest("DELETE", `/v2/core/event_destinations/${encodeURIComponent(id)}`, params, options);
+  }
+  /**
+   * Retrieves the details of an event destination.
+   */
+  retrieve(id, params, options) {
+    return this._makeRequest("GET", `/v2/core/event_destinations/${encodeURIComponent(id)}`, params, options);
+  }
+  /**
+   * Update the details of an event destination.
+   */
+  update(id, params, options) {
+    return this._makeRequest("POST", `/v2/core/event_destinations/${encodeURIComponent(id)}`, params, options);
+  }
+  /**
+   * Disable an event destination.
+   */
+  disable(id, params, options) {
+    return this._makeRequest("POST", `/v2/core/event_destinations/${encodeURIComponent(id)}/disable`, params, options);
+  }
+  /**
+   * Enable an event destination.
+   */
+  enable(id, params, options) {
+    return this._makeRequest("POST", `/v2/core/event_destinations/${encodeURIComponent(id)}/enable`, params, options);
+  }
+  /**
+   * Send a `ping` event to an event destination.
+   */
+  ping(id, params, options) {
+    return this._makeRequest("POST", `/v2/core/event_destinations/${encodeURIComponent(id)}/ping`, params, options);
+  }
+};
+
+// node_modules/stripe/esm/resources/V2/Core/Events.js
+var EventResource = class extends StripeResource {
+  /**
+   * List events, going back up to 30 days.
+   */
+  list(params, options) {
+    const transformResponseData = (response) => {
+      return {
+        ...response,
+        data: response.data.map(this.addFetchRelatedObjectIfNeeded.bind(this))
+      };
+    };
+    return this._makeRequest("GET", "/v2/core/events", params, options, {
+      methodType: "list",
+      transformResponseData
+    });
+  }
+  /**
+   * Retrieves the details of an event if it was created in the last 30 days. Supply the unique
+   * identifier of the event, which might have been delivered to your event destination.
+   */
+  retrieve(id, params, options) {
+    const transformResponseData = (response) => {
+      return this.addFetchRelatedObjectIfNeeded(response);
+    };
+    return this._makeRequest("GET", `/v2/core/events/${encodeURIComponent(id)}`, params, options, {
+      transformResponseData
+    });
+  }
+  /**
+   * @private
+   *
+   * For internal use in stripe-node.
+   *
+   * @param pulledEvent The retrieved event object
+   * @returns The retrieved event object with a fetchRelatedObject method,
+   * if pulledEvent.related_object is valid (non-null and has a url)
+   */
+  addFetchRelatedObjectIfNeeded(pulledEvent) {
+    if (!pulledEvent.related_object || !pulledEvent.related_object.url) {
+      return pulledEvent;
+    }
+    return {
+      ...pulledEvent,
+      fetchRelatedObject: () => this._makeRequest("GET", pulledEvent.related_object.url, void 0, {
+        stripeContext: pulledEvent.context,
+        headers: {
+          "Stripe-Request-Trigger": `event=${pulledEvent.id}`
+        }
+      })
+    };
+  }
+};
+
+// node_modules/stripe/esm/resources/Entitlements/Features.js
+var FeatureResource = class extends StripeResource {
+  /**
+   * Retrieve a list of features
+   */
+  list(params, options) {
+    return this._makeRequest("GET", "/v1/entitlements/features", params, options, {
+      methodType: "list"
+    });
+  }
+  /**
+   * Creates a feature
+   */
+  create(params, options) {
+    return this._makeRequest("POST", "/v1/entitlements/features", params, options);
+  }
+  /**
+   * Retrieves a feature
+   */
+  retrieve(id, params, options) {
+    return this._makeRequest("GET", `/v1/entitlements/features/${encodeURIComponent(id)}`, params, options);
+  }
+  /**
+   * Update a feature's metadata or permanently deactivate it.
+   */
+  update(id, params, options) {
+    return this._makeRequest("POST", `/v1/entitlements/features/${encodeURIComponent(id)}`, params, options);
+  }
+};
+
+// node_modules/stripe/esm/resources/Billing/FeedbackOptions.js
+var FeedbackOptionResource = class extends StripeResource {
+  /**
+   * Returns a list of your feedback options.
+   */
+  list(params, options) {
+    return this._makeRequest("GET", "/v1/billing/feedback_options", params, options, {
+      methodType: "list"
+    });
+  }
+  /**
+   * Creates a new feedback option.
+   */
+  create(params, options) {
+    return this._makeRequest("POST", "/v1/billing/feedback_options", params, options);
+  }
+  /**
+   * Retrieves a feedback option object given an ID.
+   */
+  retrieve(id, params, options) {
+    return this._makeRequest("GET", `/v1/billing/feedback_options/${encodeURIComponent(id)}`, params, options);
+  }
+  /**
+   * Updates the description of an existing feedback option.
+   */
+  update(id, params, options) {
+    return this._makeRequest("POST", `/v1/billing/feedback_options/${encodeURIComponent(id)}`, params, options);
+  }
+  /**
+   * Deactivates a feedback option. Deactivated feedback options cannot be used in portal configurations.
+   */
+  deactivate(id, params, options) {
+    return this._makeRequest("POST", `/v1/billing/feedback_options/${encodeURIComponent(id)}/deactivate`, params, options);
+  }
+};
+
+// node_modules/stripe/esm/resources/Treasury/FinancialAccounts.js
+var FinancialAccountResource = class extends StripeResource {
+  /**
+   * Returns a list of FinancialAccounts.
+   */
+  list(params, options) {
+    return this._makeRequest("GET", "/v1/treasury/financial_accounts", params, options, {
+      methodType: "list"
+    });
+  }
+  /**
+   * Creates a new FinancialAccount. Each connected account can have up to three FinancialAccounts by default.
+   */
+  create(params, options) {
+    return this._makeRequest("POST", "/v1/treasury/financial_accounts", params, options);
+  }
+  /**
+   * Retrieves the details of a FinancialAccount.
+   */
+  retrieve(id, params, options) {
+    return this._makeRequest("GET", `/v1/treasury/financial_accounts/${encodeURIComponent(id)}`, params, options);
+  }
+  /**
+   * Updates the details of a FinancialAccount.
+   */
+  update(id, params, options) {
+    return this._makeRequest("POST", `/v1/treasury/financial_accounts/${encodeURIComponent(id)}`, params, options);
+  }
+  /**
+   * Closes a FinancialAccount. A FinancialAccount can only be closed if it has a zero balance, has no pending InboundTransfers, and has canceled all attached Issuing cards.
+   */
+  close(id, params, options) {
+    return this._makeRequest("POST", `/v1/treasury/financial_accounts/${encodeURIComponent(id)}/close`, params, options);
+  }
+  /**
+   * Updates the Features associated with a FinancialAccount.
+   */
+  updateFeatures(id, params, options) {
+    return this._makeRequest("POST", `/v1/treasury/financial_accounts/${encodeURIComponent(id)}/features`, params, options);
+  }
+  /**
+   * Retrieves Features information associated with the FinancialAccount.
+   */
+  retrieveFeatures(id, params, options) {
+    return this._makeRequest("GET", `/v1/treasury/financial_accounts/${encodeURIComponent(id)}/features`, params, options);
+  }
+};
+
+// node_modules/stripe/esm/resources/V2/Commerce/ProductCatalog/Imports.js
+var ImportResource = class extends StripeResource {
+  /**
+   * Returns a list of ProductCatalogImport objects.
+   */
+  list(params, options) {
+    return this._makeRequest("GET", "/v2/commerce/product_catalog/imports", params, options, {
+      methodType: "list",
+      responseSchema: {
+        kind: "object",
+        fields: {
+          data: {
+            kind: "array",
+            element: {
+              kind: "object",
+              fields: {
+                status_details: {
+                  kind: "object",
+                  fields: {
+                    processing: {
+                      kind: "object",
+                      fields: {
+                        error_count: { kind: "int64_string" },
+                        success_count: { kind: "int64_string" }
+                      }
+                    },
+                    succeeded: {
+                      kind: "object",
+                      fields: { success_count: { kind: "int64_string" } }
+                    },
+                    succeeded_with_errors: {
+                      kind: "object",
+                      fields: {
+                        error_count: { kind: "int64_string" },
+                        error_file: {
+                          kind: "object",
+                          fields: { size: { kind: "int64_string" } }
+                        },
+                        samples: {
+                          kind: "array",
+                          element: {
+                            kind: "object",
+                            fields: { row: { kind: "int64_string" } }
+                          }
+                        },
+                        success_count: { kind: "int64_string" }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+  /**
+   * Creates a ProductCatalogImport.
+   */
+  create(params, options) {
+    return this._makeRequest("POST", "/v2/commerce/product_catalog/imports", params, options, {
+      responseSchema: {
+        kind: "object",
+        fields: {
+          status_details: {
+            kind: "object",
+            fields: {
+              processing: {
+                kind: "object",
+                fields: {
+                  error_count: { kind: "int64_string" },
+                  success_count: { kind: "int64_string" }
+                }
+              },
+              succeeded: {
+                kind: "object",
+                fields: { success_count: { kind: "int64_string" } }
+              },
+              succeeded_with_errors: {
+                kind: "object",
+                fields: {
+                  error_count: { kind: "int64_string" },
+                  error_file: {
+                    kind: "object",
+                    fields: { size: { kind: "int64_string" } }
+                  },
+                  samples: {
+                    kind: "array",
+                    element: {
+                      kind: "object",
+                      fields: { row: { kind: "int64_string" } }
+                    }
+                  },
+                  success_count: { kind: "int64_string" }
+                }
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+  /**
+   * Retrieves a ProductCatalogImport by ID.
+   */
+  retrieve(id, params, options) {
+    return this._makeRequest("GET", `/v2/commerce/product_catalog/imports/${encodeURIComponent(id)}`, params, options, {
+      responseSchema: {
+        kind: "object",
+        fields: {
+          status_details: {
+            kind: "object",
+            fields: {
+              processing: {
+                kind: "object",
+                fields: {
+                  error_count: { kind: "int64_string" },
+                  success_count: { kind: "int64_string" }
+                }
+              },
+              succeeded: {
+                kind: "object",
+                fields: { success_count: { kind: "int64_string" } }
+              },
+              succeeded_with_errors: {
+                kind: "object",
+                fields: {
+                  error_count: { kind: "int64_string" },
+                  error_file: {
+                    kind: "object",
+                    fields: { size: { kind: "int64_string" } }
+                  },
+                  samples: {
+                    kind: "array",
+                    element: {
+                      kind: "object",
+                      fields: { row: { kind: "int64_string" } }
+                    }
+                  },
+                  success_count: { kind: "int64_string" }
+                }
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+};
+
+// node_modules/stripe/esm/resources/TestHelpers/Treasury/InboundTransfers.js
+var InboundTransferResource = class extends StripeResource {
+  /**
+   * Transitions a test mode created InboundTransfer to the failed status. The InboundTransfer must already be in the processing state.
+   */
+  fail(id, params, options) {
+    return this._makeRequest("POST", `/v1/test_helpers/treasury/inbound_transfers/${encodeURIComponent(id)}/fail`, params, options);
+  }
+  /**
+   * Marks the test mode InboundTransfer object as returned and links the InboundTransfer to a ReceivedDebit. The InboundTransfer must already be in the succeeded state.
+   */
+  returnInboundTransfer(id, params, options) {
+    return this._makeRequest("POST", `/v1/test_helpers/treasury/inbound_transfers/${encodeURIComponent(id)}/return`, params, options);
+  }
+  /**
+   * Transitions a test mode created InboundTransfer to the succeeded status. The InboundTransfer must already be in the processing state.
+   */
+  succeed(id, params, options) {
+    return this._makeRequest("POST", `/v1/test_helpers/treasury/inbound_transfers/${encodeURIComponent(id)}/succeed`, params, options);
+  }
+};
+
+// node_modules/stripe/esm/resources/Treasury/InboundTransfers.js
+var InboundTransferResource2 = class extends StripeResource {
+  /**
+   * Returns a list of InboundTransfers sent from the specified FinancialAccount.
+   */
+  list(params, options) {
+    return this._makeRequest("GET", "/v1/treasury/inbound_transfers", params, options, {
+      methodType: "list"
+    });
+  }
+  /**
+   * Creates an InboundTransfer.
+   */
+  create(params, options) {
+    return this._makeRequest("POST", "/v1/treasury/inbound_transfers", params, options);
+  }
+  /**
+   * Retrieves the details of an existing InboundTransfer.
+   */
+  retrieve(id, params, options) {
+    return this._makeRequest("GET", `/v1/treasury/inbound_transfers/${encodeURIComponent(id)}`, params, options);
+  }
+  /**
+   * Cancels an InboundTransfer.
+   */
+  cancel(id, params, options) {
+    return this._makeRequest("POST", `/v1/treasury/inbound_transfers/${encodeURIComponent(id)}/cancel`, params, options);
+  }
+};
+
+// node_modules/stripe/esm/resources/Apps/Installs.js
+var InstallResource = class extends StripeResource {
+  /**
+   * Returns a list of app installs. An app developer or embedding platform filtering by its own app sees the installs across the accounts that installed it; other callers see the installs on their own account. The key selects the environment: a live key lists live installs, a sandbox API key lists the installs on that sandbox, and the key of an app's managed sandbox filtering by app lists that app's installs across every sandbox. For existing accounts that still use legacy test mode, a test mode key lists legacy test mode installs.
+   */
+  list(params, options) {
+    return this._makeRequest("GET", "/v1/apps/installs", params, options, {
+      methodType: "list"
+    });
+  }
+  /**
+   * Creates an app install. An account installs its own private app with its own key; public and testing installs are made from the Dashboard. An app developer or embedding platform acting on a connected account through Stripe-Account installs or reinstalls its app there. For a private app, creating an install installs the newest completed upload; when that version is already installed with nothing pending, the existing install is returned.
+   */
+  create(params, options) {
+    return this._makeRequest("POST", "/v1/apps/installs", params, options);
+  }
+  /**
+   * Retrieves an app install. The installing account, the app's developer (with the keys of the account that owns the app or of the app's managed sandbox), and the embedding platform that created the install can retrieve it.
+   */
+  retrieve(id, params, options) {
+    return this._makeRequest("GET", `/v1/apps/installs/${encodeURIComponent(id)}`, params, options);
+  }
+  /**
+   * Reauthorizes an app install. The installer grants the permissions, content security policy entries, and endpoints that the version being installed requests. An account reauthorizes its own installs on any channel with its own key; app developers and embedding platforms reauthorize installs on connected accounts through Stripe-Account. For private apps, the version being installed is the newest completed upload.
+   */
+  update(id, params, options) {
+    return this._makeRequest("POST", `/v1/apps/installs/${encodeURIComponent(id)}`, params, options);
+  }
+  /**
+   * Uninstalls an app from the account that installed it.
+   */
+  uninstall(id, params, options) {
+    return this._makeRequest("POST", `/v1/apps/installs/${encodeURIComponent(id)}/uninstall`, params, options);
+  }
+};
+
+// node_modules/stripe/esm/resources/Tax/Locations.js
+var LocationResource = class extends StripeResource {
+  /**
+   * Retrieve a list of all tax locations. Tax locations can represent the venues for services, tickets, or other product types.
+   *
+   * The response includes detailed information for each tax location, such as its address, type, and description.
+   *
+   * You can paginate through the list by using the limit parameter to control the number of results returned in each request.
+   */
+  list(params, options) {
+    return this._makeRequest("GET", "/v1/tax/locations", params, options, {
+      methodType: "list"
+    });
+  }
+  /**
+   * Create a tax location to use in calculating taxes for a service, ticket, or other type of product. The resulting object contains the ID, address, type, and description of the tax location.
+   */
+  create(params, options) {
+    return this._makeRequest("POST", "/v1/tax/locations", params, options);
+  }
+  /**
+   * Fetch the details of a specific tax location using its unique identifier. Use a tax location to calculate taxes based on the location of the end product, such as a performance, instead of the customer address. For more details, check the [integration guide](https://docs.stripe.com/tax/tax-for-tickets/integration-guide).
+   */
+  retrieve(id, params, options) {
+    return this._makeRequest("GET", `/v1/tax/locations/${encodeURIComponent(id)}`, params, options);
+  }
+};
+
+// node_modules/stripe/esm/resources/Terminal/Locations.js
+var LocationResource2 = class extends StripeResource {
+  /**
+   * Deletes a Location object.
+   */
+  del(id, params, options) {
+    return this._makeRequest("DELETE", `/v1/terminal/locations/${encodeURIComponent(id)}`, params, options);
+  }
+  /**
+   * Retrieves a Location object.
+   */
+  retrieve(id, params, options) {
+    return this._makeRequest("GET", `/v1/terminal/locations/${encodeURIComponent(id)}`, params, options);
+  }
+  /**
+   * Updates a Location object by setting the values of the parameters passed. Any parameters not provided will be left unchanged.
+   */
+  update(id, params, options) {
+    return this._makeRequest("POST", `/v1/terminal/locations/${encodeURIComponent(id)}`, params, options);
+  }
+  /**
+   * Returns a list of Location objects.
+   */
+  list(params, options) {
+    return this._makeRequest("GET", "/v1/terminal/locations", params, options, {
+      methodType: "list"
+    });
+  }
+  /**
+   * Creates a new Location object.
+   * For further details, including which address fields are required in each country, see the [Manage locations](https://docs.stripe.com/docs/terminal/fleet/locations) guide.
+   */
+  create(params, options) {
+    return this._makeRequest("POST", "/v1/terminal/locations", params, options);
+  }
+};
+
+// node_modules/stripe/esm/resources/Billing/MeterEventAdjustments.js
+var MeterEventAdjustmentResource = class extends StripeResource {
+  /**
+   * Creates a billing meter event adjustment.
+   */
+  create(params, options) {
+    return this._makeRequest("POST", "/v1/billing/meter_event_adjustments", params, options);
+  }
+};
+
+// node_modules/stripe/esm/resources/V2/Billing/MeterEventAdjustments.js
+var MeterEventAdjustmentResource2 = class extends StripeResource {
+  /**
+   * Creates a meter event adjustment to cancel a previously sent meter event.
+   */
+  create(params, options) {
+    return this._makeRequest("POST", "/v2/billing/meter_event_adjustments", params, options);
+  }
+};
+
+// node_modules/stripe/esm/resources/V2/Billing/MeterEventSession.js
+var MeterEventSessionResource = class extends StripeResource {
+  /**
+   * Creates a meter event session to send usage on the high-throughput meter event stream. Authentication tokens are only valid for 15 minutes, so you need to create a new meter event session when your token expires.
+   */
+  create(params, options) {
+    return this._makeRequest("POST", "/v2/billing/meter_event_session", params, options);
+  }
+};
+
+// node_modules/stripe/esm/resources/V2/Billing/MeterEventStream.js
+var MeterEventStreamResource = class extends StripeResource {
+  /**
+   * Creates meter events. Events are processed asynchronously, including validation. Requires a meter event session for authentication. Supports up to 10,000 requests per second in livemode. For even higher rate-limits, contact sales.
+   * @throws Stripe.TemporarySessionExpiredError
+   */
+  create(params, options) {
+    return this._makeRequest("POST", "/v2/billing/meter_event_stream", params, options, {
+      apiBase: "meter_events"
+    });
+  }
+};
+
+// node_modules/stripe/esm/resources/Billing/MeterEvents.js
+var MeterEventResource = class extends StripeResource {
+  /**
+   * Creates a billing meter event.
+   */
+  create(params, options) {
+    return this._makeRequest("POST", "/v1/billing/meter_events", params, options);
+  }
+};
+
+// node_modules/stripe/esm/resources/V2/Billing/MeterEvents.js
+var MeterEventResource2 = class extends StripeResource {
+  /**
+   * Creates a meter event. Events are validated synchronously, but are processed asynchronously. Supports up to 1,000 events per second in livemode. For higher rate-limits, please use meter event streams instead.
+   */
+  create(params, options) {
+    return this._makeRequest("POST", "/v2/billing/meter_events", params, options);
+  }
+};
+
+// node_modules/stripe/esm/resources/Billing/Meters.js
+var MeterResource = class extends StripeResource {
+  /**
+   * Retrieve a list of billing meters.
+   */
+  list(params, options) {
+    return this._makeRequest("GET", "/v1/billing/meters", params, options, {
+      methodType: "list"
+    });
+  }
+  /**
+   * Creates a billing meter.
+   */
+  create(params, options) {
+    return this._makeRequest("POST", "/v1/billing/meters", params, options);
+  }
+  /**
+   * Retrieves a billing meter given an ID.
+   */
+  retrieve(id, params, options) {
+    return this._makeRequest("GET", `/v1/billing/meters/${encodeURIComponent(id)}`, params, options);
+  }
+  /**
+   * Updates a billing meter.
+   */
+  update(id, params, options) {
+    return this._makeRequest("POST", `/v1/billing/meters/${encodeURIComponent(id)}`, params, options);
+  }
+  /**
+   * When a meter is deactivated, no more meter events will be accepted for this meter. You can't attach a deactivated meter to a price.
+   */
+  deactivate(id, params, options) {
+    return this._makeRequest("POST", `/v1/billing/meters/${encodeURIComponent(id)}/deactivate`, params, options);
+  }
+  /**
+   * When a meter is reactivated, events for this meter can be accepted and you can attach the meter to a price.
+   */
+  reactivate(id, params, options) {
+    return this._makeRequest("POST", `/v1/billing/meters/${encodeURIComponent(id)}/reactivate`, params, options);
+  }
+  /**
+   * Retrieve a list of billing meter event summaries.
+   */
+  listEventSummaries(id, params, options) {
+    return this._makeRequest("GET", `/v1/billing/meters/${encodeURIComponent(id)}/event_summaries`, params, options, {
+      methodType: "list"
+    });
+  }
+};
+
+// node_modules/stripe/esm/resources/Terminal/OnboardingLinks.js
+var OnboardingLinkResource = class extends StripeResource {
+  /**
+   * Creates a new OnboardingLink object that contains a redirect_url used for onboarding onto Tap to Pay on iPhone.
+   */
+  create(params, options) {
+    return this._makeRequest("POST", "/v1/terminal/onboarding_links", params, options);
+  }
+};
+
+// node_modules/stripe/esm/resources/Climate/Orders.js
+var OrderResource = class extends StripeResource {
+  /**
+   * Lists all Climate order objects. The orders are returned sorted by creation date, with the
+   * most recently created orders appearing first.
+   */
+  list(params, options) {
+    return this._makeRequest("GET", "/v1/climate/orders", params, options, {
+      methodType: "list",
+      responseSchema: {
+        kind: "object",
+        fields: {
+          data: {
+            kind: "array",
+            element: {
+              kind: "object",
+              fields: { metric_tons: { kind: "decimal_string" } }
+            }
+          }
+        }
+      }
+    });
+  }
+  /**
+   * Creates a Climate order object for a given Climate product. The order will be processed immediately
+   * after creation and payment will be deducted your Stripe balance.
+   */
+  create(params, options) {
+    return this._makeRequest("POST", "/v1/climate/orders", params, options, {
+      requestSchema: {
+        kind: "object",
+        fields: { metric_tons: { kind: "decimal_string" } }
+      },
+      responseSchema: {
+        kind: "object",
+        fields: { metric_tons: { kind: "decimal_string" } }
+      }
+    });
+  }
+  /**
+   * Retrieves the details of a Climate order object with the given ID.
+   */
+  retrieve(id, params, options) {
+    return this._makeRequest("GET", `/v1/climate/orders/${encodeURIComponent(id)}`, params, options, {
+      responseSchema: {
+        kind: "object",
+        fields: { metric_tons: { kind: "decimal_string" } }
+      }
+    });
+  }
+  /**
+   * Updates the specified order by setting the values of the parameters passed.
+   */
+  update(id, params, options) {
+    return this._makeRequest("POST", `/v1/climate/orders/${encodeURIComponent(id)}`, params, options, {
+      responseSchema: {
+        kind: "object",
+        fields: { metric_tons: { kind: "decimal_string" } }
+      }
+    });
+  }
+  /**
+   * Cancels a Climate order. You can cancel an order within 24 hours of creation. Stripe refunds the
+   * reservation amount_subtotal, but not the amount_fees for user-triggered cancellations. Frontier
+   * might cancel reservations if suppliers fail to deliver. If Frontier cancels the reservation, Stripe
+   * provides 90 days advance notice and refunds the amount_total.
+   */
+  cancel(id, params, options) {
+    return this._makeRequest("POST", `/v1/climate/orders/${encodeURIComponent(id)}/cancel`, params, options, {
+      responseSchema: {
+        kind: "object",
+        fields: { metric_tons: { kind: "decimal_string" } }
+      }
+    });
+  }
+};
+
+// node_modules/stripe/esm/resources/TestHelpers/Treasury/OutboundPayments.js
+var OutboundPaymentResource = class extends StripeResource {
+  /**
+   * Updates a test mode created OutboundPayment with tracking details. The OutboundPayment must not be cancelable, and cannot be in the canceled or failed states.
+   */
+  update(id, params, options) {
+    return this._makeRequest("POST", `/v1/test_helpers/treasury/outbound_payments/${encodeURIComponent(id)}`, params, options);
+  }
+  /**
+   * Transitions a test mode created OutboundPayment to the failed status. The OutboundPayment must already be in the processing state.
+   */
+  fail(id, params, options) {
+    return this._makeRequest("POST", `/v1/test_helpers/treasury/outbound_payments/${encodeURIComponent(id)}/fail`, params, options);
+  }
+  /**
+   * Transitions a test mode created OutboundPayment to the posted status. The OutboundPayment must already be in the processing state.
+   */
+  post(id, params, options) {
+    return this._makeRequest("POST", `/v1/test_helpers/treasury/outbound_payments/${encodeURIComponent(id)}/post`, params, options);
+  }
+  /**
+   * Transitions a test mode created OutboundPayment to the returned status. The OutboundPayment must already be in the processing state.
+   */
+  returnOutboundPayment(id, params, options) {
+    return this._makeRequest("POST", `/v1/test_helpers/treasury/outbound_payments/${encodeURIComponent(id)}/return`, params, options);
+  }
+};
+
+// node_modules/stripe/esm/resources/Treasury/OutboundPayments.js
+var OutboundPaymentResource2 = class extends StripeResource {
+  /**
+   * Returns a list of OutboundPayments sent from the specified FinancialAccount.
+   */
+  list(params, options) {
+    return this._makeRequest("GET", "/v1/treasury/outbound_payments", params, options, {
+      methodType: "list"
+    });
+  }
+  /**
+   * Creates an OutboundPayment.
+   */
+  create(params, options) {
+    return this._makeRequest("POST", "/v1/treasury/outbound_payments", params, options);
+  }
+  /**
+   * Retrieves the details of an existing OutboundPayment by passing the unique OutboundPayment ID from either the OutboundPayment creation request or OutboundPayment list.
+   */
+  retrieve(id, params, options) {
+    return this._makeRequest("GET", `/v1/treasury/outbound_payments/${encodeURIComponent(id)}`, params, options);
+  }
+  /**
+   * Cancel an OutboundPayment.
+   */
+  cancel(id, params, options) {
+    return this._makeRequest("POST", `/v1/treasury/outbound_payments/${encodeURIComponent(id)}/cancel`, params, options);
+  }
+};
+
+// node_modules/stripe/esm/resources/TestHelpers/Treasury/OutboundTransfers.js
+var OutboundTransferResource = class extends StripeResource {
+  /**
+   * Updates a test mode created OutboundTransfer with tracking details. The OutboundTransfer must not be cancelable, and cannot be in the canceled or failed states.
+   */
+  update(id, params, options) {
+    return this._makeRequest("POST", `/v1/test_helpers/treasury/outbound_transfers/${encodeURIComponent(id)}`, params, options);
+  }
+  /**
+   * Transitions a test mode created OutboundTransfer to the failed status. The OutboundTransfer must already be in the processing state.
+   */
+  fail(id, params, options) {
+    return this._makeRequest("POST", `/v1/test_helpers/treasury/outbound_transfers/${encodeURIComponent(id)}/fail`, params, options);
+  }
+  /**
+   * Transitions a test mode created OutboundTransfer to the posted status. The OutboundTransfer must already be in the processing state.
+   */
+  post(id, params, options) {
+    return this._makeRequest("POST", `/v1/test_helpers/treasury/outbound_transfers/${encodeURIComponent(id)}/post`, params, options);
+  }
+  /**
+   * Transitions a test mode created OutboundTransfer to the returned status. The OutboundTransfer must already be in the processing state.
+   */
+  returnOutboundTransfer(id, params, options) {
+    return this._makeRequest("POST", `/v1/test_helpers/treasury/outbound_transfers/${encodeURIComponent(id)}/return`, params, options);
+  }
+};
+
+// node_modules/stripe/esm/resources/Treasury/OutboundTransfers.js
+var OutboundTransferResource2 = class extends StripeResource {
+  /**
+   * Returns a list of OutboundTransfers sent from the specified FinancialAccount.
+   */
+  list(params, options) {
+    return this._makeRequest("GET", "/v1/treasury/outbound_transfers", params, options, {
+      methodType: "list"
+    });
+  }
+  /**
+   * Creates an OutboundTransfer.
+   */
+  create(params, options) {
+    return this._makeRequest("POST", "/v1/treasury/outbound_transfers", params, options);
+  }
+  /**
+   * Retrieves the details of an existing OutboundTransfer by passing the unique OutboundTransfer ID from either the OutboundTransfer creation request or OutboundTransfer list.
+   */
+  retrieve(id, params, options) {
+    return this._makeRequest("GET", `/v1/treasury/outbound_transfers/${encodeURIComponent(id)}`, params, options);
+  }
+  /**
+   * An OutboundTransfer can be canceled if the funds have not yet been paid out.
+   */
+  cancel(id, params, options) {
+    return this._makeRequest("POST", `/v1/treasury/outbound_transfers/${encodeURIComponent(id)}/cancel`, params, options);
+  }
+};
+
+// node_modules/stripe/esm/resources/Radar/PaymentEvaluations.js
+var PaymentEvaluationResource = class extends StripeResource {
+  /**
+   * Request a Radar API fraud risk score from Stripe for a payment before sending it for external processor authorization.
+   */
+  create(params, options) {
+    return this._makeRequest("POST", "/v1/radar/payment_evaluations", params, options);
+  }
+};
+
+// node_modules/stripe/esm/resources/Issuing/PersonalizationDesigns.js
+var PersonalizationDesignResource = class extends StripeResource {
+  /**
+   * Returns a list of personalization design objects. The objects are sorted in descending order by creation date, with the most recently created object appearing first.
+   */
+  list(params, options) {
+    return this._makeRequest("GET", "/v1/issuing/personalization_designs", params, options, {
+      methodType: "list"
+    });
+  }
+  /**
+   * Creates a personalization design object.
+   */
+  create(params, options) {
+    return this._makeRequest("POST", "/v1/issuing/personalization_designs", params, options);
+  }
+  /**
+   * Retrieves a personalization design object.
+   */
+  retrieve(id, params, options) {
+    return this._makeRequest("GET", `/v1/issuing/personalization_designs/${encodeURIComponent(id)}`, params, options);
+  }
+  /**
+   * Updates a card personalization object.
+   */
+  update(id, params, options) {
+    return this._makeRequest("POST", `/v1/issuing/personalization_designs/${encodeURIComponent(id)}`, params, options);
+  }
+};
+
+// node_modules/stripe/esm/resources/TestHelpers/Issuing/PersonalizationDesigns.js
+var PersonalizationDesignResource2 = class extends StripeResource {
+  /**
+   * Updates the status of the specified testmode personalization design object to active.
+   */
+  activate(id, params, options) {
+    return this._makeRequest("POST", `/v1/test_helpers/issuing/personalization_designs/${encodeURIComponent(id)}/activate`, params, options);
+  }
+  /**
+   * Updates the status of the specified testmode personalization design object to inactive.
+   */
+  deactivate(id, params, options) {
+    return this._makeRequest("POST", `/v1/test_helpers/issuing/personalization_designs/${encodeURIComponent(id)}/deactivate`, params, options);
+  }
+  /**
+   * Updates the status of the specified testmode personalization design object to rejected.
+   */
+  reject(id, params, options) {
+    return this._makeRequest("POST", `/v1/test_helpers/issuing/personalization_designs/${encodeURIComponent(id)}/reject`, params, options);
+  }
+};
+
+// node_modules/stripe/esm/resources/Issuing/PhysicalBundles.js
+var PhysicalBundleResource = class extends StripeResource {
+  /**
+   * Returns a list of physical bundle objects. The objects are sorted in descending order by creation date, with the most recently created object appearing first.
+   */
+  list(params, options) {
+    return this._makeRequest("GET", "/v1/issuing/physical_bundles", params, options, {
+      methodType: "list"
+    });
+  }
+  /**
+   * Retrieves a physical bundle object.
+   */
+  retrieve(id, params, options) {
+    return this._makeRequest("GET", `/v1/issuing/physical_bundles/${encodeURIComponent(id)}`, params, options);
+  }
+};
+
+// node_modules/stripe/esm/resources/Climate/Products.js
+var ProductResource = class extends StripeResource {
+  /**
+   * Lists all available Climate product objects.
+   */
+  list(params, options) {
+    return this._makeRequest("GET", "/v1/climate/products", params, options, {
+      methodType: "list",
+      responseSchema: {
+        kind: "object",
+        fields: {
+          data: {
+            kind: "array",
+            element: {
+              kind: "object",
+              fields: { metric_tons_available: { kind: "decimal_string" } }
+            }
+          }
+        }
+      }
+    });
+  }
+  /**
+   * Retrieves the details of a Climate product with the given ID.
+   */
+  retrieve(id, params, options) {
+    return this._makeRequest("GET", `/v1/climate/products/${encodeURIComponent(id)}`, params, options, {
+      responseSchema: {
+        kind: "object",
+        fields: { metric_tons_available: { kind: "decimal_string" } }
+      }
+    });
+  }
+};
+
+// node_modules/stripe/esm/resources/Terminal/Readers.js
+var ReaderResource = class extends StripeResource {
+  /**
+   * Deletes a Reader object.
+   */
+  del(id, params, options) {
+    return this._makeRequest("DELETE", `/v1/terminal/readers/${encodeURIComponent(id)}`, params, options);
+  }
+  /**
+   * Retrieves a Reader object.
+   */
+  retrieve(id, params, options) {
+    return this._makeRequest("GET", `/v1/terminal/readers/${encodeURIComponent(id)}`, params, options);
+  }
+  /**
+   * Updates a Reader object by setting the values of the parameters passed. Any parameters not provided will be left unchanged.
+   */
+  update(id, params, options) {
+    return this._makeRequest("POST", `/v1/terminal/readers/${encodeURIComponent(id)}`, params, options);
+  }
+  /**
+   * Returns a list of Reader objects.
+   */
+  list(params, options) {
+    return this._makeRequest("GET", "/v1/terminal/readers", params, options, {
+      methodType: "list"
+    });
+  }
+  /**
+   * Creates a new Reader object.
+   */
+  create(params, options) {
+    return this._makeRequest("POST", "/v1/terminal/readers", params, options);
+  }
+  /**
+   * Cancels the current reader action. See [Programmatic Cancellation](https://docs.stripe.com/docs/terminal/payments/collect-card-payment?terminal-sdk-platform=server-driven#programmatic-cancellation) for more details.
+   */
+  cancelAction(id, params, options) {
+    return this._makeRequest("POST", `/v1/terminal/readers/${encodeURIComponent(id)}/cancel_action`, params, options);
+  }
+  /**
+   * Initiates an [input collection flow](https://docs.stripe.com/docs/terminal/features/collect-inputs) on a Reader to display input forms and collect information from your customers.
+   */
+  collectInputs(id, params, options) {
+    return this._makeRequest("POST", `/v1/terminal/readers/${encodeURIComponent(id)}/collect_inputs`, params, options);
+  }
+  /**
+   * Initiates a payment flow on a Reader and updates the PaymentIntent with card details before manual confirmation. See [Collecting a Payment method](https://docs.stripe.com/docs/terminal/payments/collect-card-payment?terminal-sdk-platform=server-driven&process=inspect#collect-a-paymentmethod) for more details.
+   */
+  collectPaymentMethod(id, params, options) {
+    return this._makeRequest("POST", `/v1/terminal/readers/${encodeURIComponent(id)}/collect_payment_method`, params, options);
+  }
+  /**
+   * Finalizes a payment on a Reader. See [Confirming a Payment](https://docs.stripe.com/docs/terminal/payments/collect-card-payment?terminal-sdk-platform=server-driven&process=inspect#confirm-the-paymentintent) for more details.
+   */
+  confirmPaymentIntent(id, params, options) {
+    return this._makeRequest("POST", `/v1/terminal/readers/${encodeURIComponent(id)}/confirm_payment_intent`, params, options);
+  }
+  /**
+   * Initiates a payment flow on a Reader. See [process the payment](https://docs.stripe.com/docs/terminal/payments/collect-card-payment?terminal-sdk-platform=server-driven&process=immediately#process-payment) for more details.
+   */
+  processPaymentIntent(id, params, options) {
+    return this._makeRequest("POST", `/v1/terminal/readers/${encodeURIComponent(id)}/process_payment_intent`, params, options);
+  }
+  /**
+   * Initiates a SetupIntent flow on a Reader. See [Save directly without charging](https://docs.stripe.com/docs/terminal/features/saving-payment-details/save-directly) for more details.
+   */
+  processSetupIntent(id, params, options) {
+    return this._makeRequest("POST", `/v1/terminal/readers/${encodeURIComponent(id)}/process_setup_intent`, params, options);
+  }
+  /**
+   * Initiates an in-person refund on a Reader. See [Refund an Interac Payment](https://docs.stripe.com/docs/terminal/payments/regional?integration-country=CA#refund-an-interac-payment) for more details.
+   */
+  refundPayment(id, params, options) {
+    return this._makeRequest("POST", `/v1/terminal/readers/${encodeURIComponent(id)}/refund_payment`, params, options);
+  }
+  /**
+   * Sets the reader display to show [cart details](https://docs.stripe.com/docs/terminal/features/display).
+   */
+  setReaderDisplay(id, params, options) {
+    return this._makeRequest("POST", `/v1/terminal/readers/${encodeURIComponent(id)}/set_reader_display`, params, options);
+  }
+};
+
+// node_modules/stripe/esm/resources/TestHelpers/Terminal/Readers.js
+var ReaderResource2 = class extends StripeResource {
+  /**
+   * Presents a payment method on a simulated reader. Can be used to simulate accepting a payment, saving a card or refunding a transaction.
+   */
+  presentPaymentMethod(id, params, options) {
+    return this._makeRequest("POST", `/v1/test_helpers/terminal/readers/${encodeURIComponent(id)}/present_payment_method`, params, options);
+  }
+  /**
+   * Use this endpoint to trigger a successful input collection on a simulated reader.
+   */
+  succeedInputCollection(id, params, options) {
+    return this._makeRequest("POST", `/v1/test_helpers/terminal/readers/${encodeURIComponent(id)}/succeed_input_collection`, params, options);
+  }
+  /**
+   * Use this endpoint to complete an input collection with a timeout error on a simulated reader.
+   */
+  timeoutInputCollection(id, params, options) {
+    return this._makeRequest("POST", `/v1/test_helpers/terminal/readers/${encodeURIComponent(id)}/timeout_input_collection`, params, options);
+  }
+};
+
+// node_modules/stripe/esm/resources/TestHelpers/Treasury/ReceivedCredits.js
+var ReceivedCreditResource = class extends StripeResource {
+  /**
+   * Use this endpoint to simulate a test mode ReceivedCredit initiated by a third party. In live mode, you can't directly create ReceivedCredits initiated by third parties.
+   */
+  create(params, options) {
+    return this._makeRequest("POST", "/v1/test_helpers/treasury/received_credits", params, options);
+  }
+};
+
+// node_modules/stripe/esm/resources/Treasury/ReceivedCredits.js
+var ReceivedCreditResource2 = class extends StripeResource {
+  /**
+   * Returns a list of ReceivedCredits.
+   */
+  list(params, options) {
+    return this._makeRequest("GET", "/v1/treasury/received_credits", params, options, {
+      methodType: "list"
+    });
+  }
+  /**
+   * Retrieves the details of an existing ReceivedCredit by passing the unique ReceivedCredit ID from the ReceivedCredit list.
+   */
+  retrieve(id, params, options) {
+    return this._makeRequest("GET", `/v1/treasury/received_credits/${encodeURIComponent(id)}`, params, options);
+  }
+};
+
+// node_modules/stripe/esm/resources/TestHelpers/Treasury/ReceivedDebits.js
+var ReceivedDebitResource = class extends StripeResource {
+  /**
+   * Use this endpoint to simulate a test mode ReceivedDebit initiated by a third party. In live mode, you can't directly create ReceivedDebits initiated by third parties.
+   */
+  create(params, options) {
+    return this._makeRequest("POST", "/v1/test_helpers/treasury/received_debits", params, options);
+  }
+};
+
+// node_modules/stripe/esm/resources/Treasury/ReceivedDebits.js
+var ReceivedDebitResource2 = class extends StripeResource {
+  /**
+   * Returns a list of ReceivedDebits.
+   */
+  list(params, options) {
+    return this._makeRequest("GET", "/v1/treasury/received_debits", params, options, {
+      methodType: "list"
+    });
+  }
+  /**
+   * Retrieves the details of an existing ReceivedDebit by passing the unique ReceivedDebit ID from the ReceivedDebit list
+   */
+  retrieve(id, params, options) {
+    return this._makeRequest("GET", `/v1/treasury/received_debits/${encodeURIComponent(id)}`, params, options);
+  }
+};
+
+// node_modules/stripe/esm/resources/TestHelpers/Refunds.js
+var RefundResource = class extends StripeResource {
+  /**
+   * Expire a refund with a status of requires_action.
+   */
+  expire(id, params, options) {
+    return this._makeRequest("POST", `/v1/test_helpers/refunds/${encodeURIComponent(id)}/expire`, params, options);
+  }
+};
+
+// node_modules/stripe/esm/resources/Tax/Registrations.js
+var RegistrationResource = class extends StripeResource {
+  /**
+   * Returns a list of Tax Registration objects.
+   */
+  list(params, options) {
+    return this._makeRequest("GET", "/v1/tax/registrations", params, options, {
+      methodType: "list"
+    });
+  }
+  /**
+   * Creates a new Tax Registration object.
+   */
+  create(params, options) {
+    return this._makeRequest("POST", "/v1/tax/registrations", params, options);
+  }
+  /**
+   * Returns a Tax Registration object.
+   */
+  retrieve(id, params, options) {
+    return this._makeRequest("GET", `/v1/tax/registrations/${encodeURIComponent(id)}`, params, options);
+  }
+  /**
+   * Updates an existing Tax Registration object.
+   *
+   * A registration cannot be deleted after it has been created. If you wish to end a registration you may do so by setting expires_at.
+   */
+  update(id, params, options) {
+    return this._makeRequest("POST", `/v1/tax/registrations/${encodeURIComponent(id)}`, params, options);
+  }
+};
+
+// node_modules/stripe/esm/resources/Reporting/ReportRuns.js
+var ReportRunResource = class extends StripeResource {
+  /**
+   * Returns a list of Report Runs, with the most recent appearing first.
+   */
+  list(params, options) {
+    return this._makeRequest("GET", "/v1/reporting/report_runs", params, options, {
+      methodType: "list"
+    });
+  }
+  /**
+   * Creates a new object and begin running the report. (Certain report types require a [live-mode API key](https://stripe.com/docs/keys#test-live-modes).)
+   */
+  create(params, options) {
+    return this._makeRequest("POST", "/v1/reporting/report_runs", params, options);
+  }
+  /**
+   * Retrieves the details of an existing Report Run.
+   */
+  retrieve(id, params, options) {
+    return this._makeRequest("GET", `/v1/reporting/report_runs/${encodeURIComponent(id)}`, params, options);
+  }
+};
+
+// node_modules/stripe/esm/resources/Reporting/ReportTypes.js
+var ReportTypeResource = class extends StripeResource {
+  /**
+   * Returns a full list of Report Types.
+   */
+  list(params, options) {
+    return this._makeRequest("GET", "/v1/reporting/report_types", params, options, {
+      methodType: "list"
+    });
+  }
+  /**
+   * Retrieves the details of a Report Type. (Certain report types require a [live-mode API key](https://stripe.com/docs/keys#test-live-modes).)
+   */
+  retrieve(id, params, options) {
+    return this._makeRequest("GET", `/v1/reporting/report_types/${encodeURIComponent(id)}`, params, options);
+  }
+};
+
+// node_modules/stripe/esm/resources/Forwarding/Requests.js
+var RequestResource = class extends StripeResource {
+  /**
+   * Lists all ForwardingRequest objects.
+   */
+  list(params, options) {
+    return this._makeRequest("GET", "/v1/forwarding/requests", params, options, {
+      methodType: "list"
+    });
+  }
+  /**
+   * Creates a ForwardingRequest object.
+   */
+  create(params, options) {
+    return this._makeRequest("POST", "/v1/forwarding/requests", params, options);
+  }
+  /**
+   * Retrieves a ForwardingRequest object.
+   */
+  retrieve(id, params, options) {
+    return this._makeRequest("GET", `/v1/forwarding/requests/${encodeURIComponent(id)}`, params, options);
+  }
+};
+
+// node_modules/stripe/esm/resources/Sigma/ScheduledQueryRuns.js
+var ScheduledQueryRunResource = class extends StripeResource {
+  /**
+   * Returns a list of scheduled query runs.
+   */
+  list(params, options) {
+    return this._makeRequest("GET", "/v1/sigma/scheduled_query_runs", params, options, {
+      methodType: "list"
+    });
+  }
+  /**
+   * Retrieves the details of a scheduled query run.
+   */
+  retrieve(id, params, options) {
+    return this._makeRequest("GET", `/v1/sigma/scheduled_query_runs/${encodeURIComponent(id)}`, params, options);
+  }
+};
+
+// node_modules/stripe/esm/resources/Apps/Secrets.js
+var SecretResource = class extends StripeResource {
+  /**
+   * List all secrets stored on the given scope.
+   */
+  list(params, options) {
+    return this._makeRequest("GET", "/v1/apps/secrets", params, options, {
+      methodType: "list"
+    });
+  }
+  /**
+   * Create or replace a secret in the secret store.
+   */
+  create(params, options) {
+    return this._makeRequest("POST", "/v1/apps/secrets", params, options);
+  }
+  /**
+   * Finds a secret in the secret store by name and scope.
+   */
+  find(params, options) {
+    return this._makeRequest("GET", "/v1/apps/secrets/find", params, options);
+  }
+  /**
+   * Deletes a secret from the secret store by name and scope.
+   */
+  deleteWhere(params, options) {
+    return this._makeRequest("POST", "/v1/apps/secrets/delete", params, options);
+  }
+};
+
+// node_modules/stripe/esm/resources/BillingPortal/Sessions.js
+var SessionResource = class extends StripeResource {
+  /**
+   * Creates a session of the customer portal.
+   */
+  create(params, options) {
+    return this._makeRequest("POST", "/v1/billing_portal/sessions", params, options);
+  }
+};
+
+// node_modules/stripe/esm/resources/Checkout/Sessions.js
+var SessionResource2 = class extends StripeResource {
+  /**
+   * Returns a list of Checkout Sessions.
+   */
+  list(params, options) {
+    return this._makeRequest("GET", "/v1/checkout/sessions", params, options, {
+      methodType: "list",
+      responseSchema: {
+        kind: "object",
+        fields: {
+          data: {
+            kind: "array",
+            element: {
+              kind: "object",
+              fields: {
+                currency_conversion: {
+                  kind: "nullable",
+                  inner: {
+                    kind: "object",
+                    fields: { fx_rate: { kind: "decimal_string" } }
+                  }
+                },
+                line_items: {
+                  kind: "object",
+                  fields: {
+                    data: {
+                      kind: "array",
+                      element: {
+                        kind: "object",
+                        fields: {
+                          price: {
+                            kind: "nullable",
+                            inner: {
+                              kind: "object",
+                              fields: {
+                                currency_options: {
+                                  kind: "array",
+                                  element: {
+                                    kind: "object",
+                                    fields: {
+                                      tiers: {
+                                        kind: "array",
+                                        element: {
+                                          kind: "object",
+                                          fields: {
+                                            flat_amount_decimal: {
+                                              kind: "nullable",
+                                              inner: { kind: "decimal_string" }
+                                            },
+                                            unit_amount_decimal: {
+                                              kind: "nullable",
+                                              inner: { kind: "decimal_string" }
+                                            }
+                                          }
+                                        }
+                                      },
+                                      unit_amount_decimal: {
+                                        kind: "nullable",
+                                        inner: { kind: "decimal_string" }
+                                      }
+                                    }
+                                  }
+                                },
+                                tiers: {
+                                  kind: "array",
+                                  element: {
+                                    kind: "object",
+                                    fields: {
+                                      flat_amount_decimal: {
+                                        kind: "nullable",
+                                        inner: { kind: "decimal_string" }
+                                      },
+                                      unit_amount_decimal: {
+                                        kind: "nullable",
+                                        inner: { kind: "decimal_string" }
+                                      }
+                                    }
+                                  }
+                                },
+                                unit_amount_decimal: {
+                                  kind: "nullable",
+                                  inner: { kind: "decimal_string" }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+  /**
+   * Creates a Checkout Session object.
+   */
+  create(params, options) {
+    return this._makeRequest("POST", "/v1/checkout/sessions", params, options, {
+      requestSchema: {
+        kind: "object",
+        fields: {
+          line_items: {
+            kind: "array",
+            element: {
+              kind: "object",
+              fields: {
+                price_data: {
+                  kind: "object",
+                  fields: { unit_amount_decimal: { kind: "decimal_string" } }
+                }
+              }
+            }
+          }
+        }
+      },
+      responseSchema: {
+        kind: "object",
+        fields: {
+          currency_conversion: {
+            kind: "nullable",
+            inner: {
+              kind: "object",
+              fields: { fx_rate: { kind: "decimal_string" } }
+            }
+          },
+          line_items: {
+            kind: "object",
+            fields: {
+              data: {
+                kind: "array",
+                element: {
+                  kind: "object",
+                  fields: {
+                    price: {
+                      kind: "nullable",
+                      inner: {
+                        kind: "object",
+                        fields: {
+                          currency_options: {
+                            kind: "array",
+                            element: {
+                              kind: "object",
+                              fields: {
+                                tiers: {
+                                  kind: "array",
+                                  element: {
+                                    kind: "object",
+                                    fields: {
+                                      flat_amount_decimal: {
+                                        kind: "nullable",
+                                        inner: { kind: "decimal_string" }
+                                      },
+                                      unit_amount_decimal: {
+                                        kind: "nullable",
+                                        inner: { kind: "decimal_string" }
+                                      }
+                                    }
+                                  }
+                                },
+                                unit_amount_decimal: {
+                                  kind: "nullable",
+                                  inner: { kind: "decimal_string" }
+                                }
+                              }
+                            }
+                          },
+                          tiers: {
+                            kind: "array",
+                            element: {
+                              kind: "object",
+                              fields: {
+                                flat_amount_decimal: {
+                                  kind: "nullable",
+                                  inner: { kind: "decimal_string" }
+                                },
+                                unit_amount_decimal: {
+                                  kind: "nullable",
+                                  inner: { kind: "decimal_string" }
+                                }
+                              }
+                            }
+                          },
+                          unit_amount_decimal: {
+                            kind: "nullable",
+                            inner: { kind: "decimal_string" }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+  /**
+   * Retrieves a Checkout Session object.
+   */
+  retrieve(id, params, options) {
+    return this._makeRequest("GET", `/v1/checkout/sessions/${encodeURIComponent(id)}`, params, options, {
+      responseSchema: {
+        kind: "object",
+        fields: {
+          currency_conversion: {
+            kind: "nullable",
+            inner: {
+              kind: "object",
+              fields: { fx_rate: { kind: "decimal_string" } }
+            }
+          },
+          line_items: {
+            kind: "object",
+            fields: {
+              data: {
+                kind: "array",
+                element: {
+                  kind: "object",
+                  fields: {
+                    price: {
+                      kind: "nullable",
+                      inner: {
+                        kind: "object",
+                        fields: {
+                          currency_options: {
+                            kind: "array",
+                            element: {
+                              kind: "object",
+                              fields: {
+                                tiers: {
+                                  kind: "array",
+                                  element: {
+                                    kind: "object",
+                                    fields: {
+                                      flat_amount_decimal: {
+                                        kind: "nullable",
+                                        inner: { kind: "decimal_string" }
+                                      },
+                                      unit_amount_decimal: {
+                                        kind: "nullable",
+                                        inner: { kind: "decimal_string" }
+                                      }
+                                    }
+                                  }
+                                },
+                                unit_amount_decimal: {
+                                  kind: "nullable",
+                                  inner: { kind: "decimal_string" }
+                                }
+                              }
+                            }
+                          },
+                          tiers: {
+                            kind: "array",
+                            element: {
+                              kind: "object",
+                              fields: {
+                                flat_amount_decimal: {
+                                  kind: "nullable",
+                                  inner: { kind: "decimal_string" }
+                                },
+                                unit_amount_decimal: {
+                                  kind: "nullable",
+                                  inner: { kind: "decimal_string" }
+                                }
+                              }
+                            }
+                          },
+                          unit_amount_decimal: {
+                            kind: "nullable",
+                            inner: { kind: "decimal_string" }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+  /**
+   * Updates a Checkout Session object.
+   *
+   * Related guide: [Dynamically update a Checkout Session](https://docs.stripe.com/payments/advanced/dynamic-updates)
+   */
+  update(id, params, options) {
+    return this._makeRequest("POST", `/v1/checkout/sessions/${encodeURIComponent(id)}`, params, options, {
+      requestSchema: {
+        kind: "object",
+        fields: {
+          line_items: {
+            kind: "array",
+            element: {
+              kind: "object",
+              fields: {
+                price_data: {
+                  kind: "object",
+                  fields: { unit_amount_decimal: { kind: "decimal_string" } }
+                }
+              }
+            }
+          }
+        }
+      },
+      responseSchema: {
+        kind: "object",
+        fields: {
+          currency_conversion: {
+            kind: "nullable",
+            inner: {
+              kind: "object",
+              fields: { fx_rate: { kind: "decimal_string" } }
+            }
+          },
+          line_items: {
+            kind: "object",
+            fields: {
+              data: {
+                kind: "array",
+                element: {
+                  kind: "object",
+                  fields: {
+                    price: {
+                      kind: "nullable",
+                      inner: {
+                        kind: "object",
+                        fields: {
+                          currency_options: {
+                            kind: "array",
+                            element: {
+                              kind: "object",
+                              fields: {
+                                tiers: {
+                                  kind: "array",
+                                  element: {
+                                    kind: "object",
+                                    fields: {
+                                      flat_amount_decimal: {
+                                        kind: "nullable",
+                                        inner: { kind: "decimal_string" }
+                                      },
+                                      unit_amount_decimal: {
+                                        kind: "nullable",
+                                        inner: { kind: "decimal_string" }
+                                      }
+                                    }
+                                  }
+                                },
+                                unit_amount_decimal: {
+                                  kind: "nullable",
+                                  inner: { kind: "decimal_string" }
+                                }
+                              }
+                            }
+                          },
+                          tiers: {
+                            kind: "array",
+                            element: {
+                              kind: "object",
+                              fields: {
+                                flat_amount_decimal: {
+                                  kind: "nullable",
+                                  inner: { kind: "decimal_string" }
+                                },
+                                unit_amount_decimal: {
+                                  kind: "nullable",
+                                  inner: { kind: "decimal_string" }
+                                }
+                              }
+                            }
+                          },
+                          unit_amount_decimal: {
+                            kind: "nullable",
+                            inner: { kind: "decimal_string" }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+  /**
+   * A Checkout Session can be expired when it is in one of these statuses: open
+   *
+   * After it expires, a customer can't complete a Checkout Session and customers loading the Checkout Session see a message saying the Checkout Session is expired.
+   */
+  expire(id, params, options) {
+    return this._makeRequest("POST", `/v1/checkout/sessions/${encodeURIComponent(id)}/expire`, params, options, {
+      responseSchema: {
+        kind: "object",
+        fields: {
+          currency_conversion: {
+            kind: "nullable",
+            inner: {
+              kind: "object",
+              fields: { fx_rate: { kind: "decimal_string" } }
+            }
+          },
+          line_items: {
+            kind: "object",
+            fields: {
+              data: {
+                kind: "array",
+                element: {
+                  kind: "object",
+                  fields: {
+                    price: {
+                      kind: "nullable",
+                      inner: {
+                        kind: "object",
+                        fields: {
+                          currency_options: {
+                            kind: "array",
+                            element: {
+                              kind: "object",
+                              fields: {
+                                tiers: {
+                                  kind: "array",
+                                  element: {
+                                    kind: "object",
+                                    fields: {
+                                      flat_amount_decimal: {
+                                        kind: "nullable",
+                                        inner: { kind: "decimal_string" }
+                                      },
+                                      unit_amount_decimal: {
+                                        kind: "nullable",
+                                        inner: { kind: "decimal_string" }
+                                      }
+                                    }
+                                  }
+                                },
+                                unit_amount_decimal: {
+                                  kind: "nullable",
+                                  inner: { kind: "decimal_string" }
+                                }
+                              }
+                            }
+                          },
+                          tiers: {
+                            kind: "array",
+                            element: {
+                              kind: "object",
+                              fields: {
+                                flat_amount_decimal: {
+                                  kind: "nullable",
+                                  inner: { kind: "decimal_string" }
+                                },
+                                unit_amount_decimal: {
+                                  kind: "nullable",
+                                  inner: { kind: "decimal_string" }
+                                }
+                              }
+                            }
+                          },
+                          unit_amount_decimal: {
+                            kind: "nullable",
+                            inner: { kind: "decimal_string" }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+  /**
+   * When retrieving a Checkout Session, there is an includable line_items property containing the first handful of those items. There is also a URL where you can retrieve the full (paginated) list of line items.
+   */
+  listLineItems(id, params, options) {
+    return this._makeRequest("GET", `/v1/checkout/sessions/${encodeURIComponent(id)}/line_items`, params, options, {
+      methodType: "list",
+      responseSchema: {
+        kind: "object",
+        fields: {
+          data: {
+            kind: "array",
+            element: {
+              kind: "object",
+              fields: {
+                price: {
+                  kind: "nullable",
+                  inner: {
+                    kind: "object",
+                    fields: {
+                      currency_options: {
+                        kind: "array",
+                        element: {
+                          kind: "object",
+                          fields: {
+                            tiers: {
+                              kind: "array",
+                              element: {
+                                kind: "object",
+                                fields: {
+                                  flat_amount_decimal: {
+                                    kind: "nullable",
+                                    inner: { kind: "decimal_string" }
+                                  },
+                                  unit_amount_decimal: {
+                                    kind: "nullable",
+                                    inner: { kind: "decimal_string" }
+                                  }
+                                }
+                              }
+                            },
+                            unit_amount_decimal: {
+                              kind: "nullable",
+                              inner: { kind: "decimal_string" }
+                            }
+                          }
+                        }
+                      },
+                      tiers: {
+                        kind: "array",
+                        element: {
+                          kind: "object",
+                          fields: {
+                            flat_amount_decimal: {
+                              kind: "nullable",
+                              inner: { kind: "decimal_string" }
+                            },
+                            unit_amount_decimal: {
+                              kind: "nullable",
+                              inner: { kind: "decimal_string" }
+                            }
+                          }
+                        }
+                      },
+                      unit_amount_decimal: {
+                        kind: "nullable",
+                        inner: { kind: "decimal_string" }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+};
+
+// node_modules/stripe/esm/resources/FinancialConnections/Sessions.js
+var SessionResource3 = class extends StripeResource {
+  /**
+   * Retrieves the details of a Financial Connections Session
+   */
+  retrieve(id, params, options) {
+    return this._makeRequest("GET", `/v1/financial_connections/sessions/${encodeURIComponent(id)}`, params, options);
+  }
+  /**
+   * To launch the Financial Connections authorization flow, create a Session. The session's client_secret can be used to launch the flow using Stripe.js.
+   */
+  create(params, options) {
+    return this._makeRequest("POST", "/v1/financial_connections/sessions", params, options);
+  }
+};
+
+// node_modules/stripe/esm/resources/Tax/Settings.js
+var SettingResource = class extends StripeResource {
+  /**
+   * Retrieves Tax Settings for a merchant.
+   */
+  retrieve(params, options) {
+    return this._makeRequest("GET", "/v1/tax/settings", params, options);
+  }
+  /**
+   * Updates Tax Settings parameters used in tax calculations. All parameters are editable but none can be removed once set. Check the returned Tax Settings object and validate that its status is active.
+   */
+  update(params, options) {
+    return this._makeRequest("POST", "/v1/tax/settings", params, options);
+  }
+};
+
+// node_modules/stripe/esm/resources/Climate/Suppliers.js
+var SupplierResource = class extends StripeResource {
+  /**
+   * Lists all available Climate supplier objects.
+   */
+  list(params, options) {
+    return this._makeRequest("GET", "/v1/climate/suppliers", params, options, {
+      methodType: "list"
+    });
+  }
+  /**
+   * Retrieves a Climate supplier object.
+   */
+  retrieve(id, params, options) {
+    return this._makeRequest("GET", `/v1/climate/suppliers/${encodeURIComponent(id)}`, params, options);
+  }
+};
+
+// node_modules/stripe/esm/resources/TestHelpers/TestClocks.js
+var TestClockResource = class extends StripeResource {
+  /**
+   * Deletes a test clock.
+   */
+  del(id, params, options) {
+    return this._makeRequest("DELETE", `/v1/test_helpers/test_clocks/${encodeURIComponent(id)}`, params, options);
+  }
+  /**
+   * Retrieves a test clock.
+   */
+  retrieve(id, params, options) {
+    return this._makeRequest("GET", `/v1/test_helpers/test_clocks/${encodeURIComponent(id)}`, params, options);
+  }
+  /**
+   * Returns a list of your test clocks.
+   */
+  list(params, options) {
+    return this._makeRequest("GET", "/v1/test_helpers/test_clocks", params, options, {
+      methodType: "list"
+    });
+  }
+  /**
+   * Creates a new test clock that can be attached to new customers and quotes.
+   */
+  create(params, options) {
+    return this._makeRequest("POST", "/v1/test_helpers/test_clocks", params, options);
+  }
+  /**
+   * Starts advancing a test clock to a specified time in the future. Advancement is done when status changes to Ready.
+   */
+  advance(id, params, options) {
+    return this._makeRequest("POST", `/v1/test_helpers/test_clocks/${encodeURIComponent(id)}/advance`, params, options);
+  }
+};
+
+// node_modules/stripe/esm/resources/Issuing/Tokens.js
+var TokenResource = class extends StripeResource {
+  /**
+   * Lists all Issuing Token objects for a given card.
+   */
+  list(params, options) {
+    return this._makeRequest("GET", "/v1/issuing/tokens", params, options, {
+      methodType: "list"
+    });
+  }
+  /**
+   * Retrieves an Issuing Token object.
+   */
+  retrieve(id, params, options) {
+    return this._makeRequest("GET", `/v1/issuing/tokens/${encodeURIComponent(id)}`, params, options);
+  }
+  /**
+   * Attempts to update the specified Issuing Token object to the status specified.
+   */
+  update(id, params, options) {
+    return this._makeRequest("POST", `/v1/issuing/tokens/${encodeURIComponent(id)}`, params, options);
+  }
+};
+
+// node_modules/stripe/esm/resources/Treasury/TransactionEntries.js
+var TransactionEntryResource = class extends StripeResource {
+  /**
+   * Retrieves a list of TransactionEntry objects.
+   */
+  list(params, options) {
+    return this._makeRequest("GET", "/v1/treasury/transaction_entries", params, options, {
+      methodType: "list",
+      responseSchema: {
+        kind: "object",
+        fields: {
+          data: {
+            kind: "array",
+            element: {
+              kind: "object",
+              fields: {
+                flow_details: {
+                  kind: "nullable",
+                  inner: {
+                    kind: "object",
+                    fields: {
+                      issuing_authorization: {
+                        kind: "object",
+                        fields: {
+                          fleet: {
+                            kind: "nullable",
+                            inner: {
+                              kind: "object",
+                              fields: {
+                                reported_breakdown: {
+                                  kind: "nullable",
+                                  inner: {
+                                    kind: "object",
+                                    fields: {
+                                      fuel: {
+                                        kind: "nullable",
+                                        inner: {
+                                          kind: "object",
+                                          fields: {
+                                            gross_amount_decimal: {
+                                              kind: "nullable",
+                                              inner: { kind: "decimal_string" }
+                                            }
+                                          }
+                                        }
+                                      },
+                                      non_fuel: {
+                                        kind: "nullable",
+                                        inner: {
+                                          kind: "object",
+                                          fields: {
+                                            gross_amount_decimal: {
+                                              kind: "nullable",
+                                              inner: { kind: "decimal_string" }
+                                            }
+                                          }
+                                        }
+                                      },
+                                      tax: {
+                                        kind: "nullable",
+                                        inner: {
+                                          kind: "object",
+                                          fields: {
+                                            local_amount_decimal: {
+                                              kind: "nullable",
+                                              inner: { kind: "decimal_string" }
+                                            },
+                                            national_amount_decimal: {
+                                              kind: "nullable",
+                                              inner: { kind: "decimal_string" }
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          fuel: {
+                            kind: "nullable",
+                            inner: {
+                              kind: "object",
+                              fields: {
+                                quantity_decimal: {
+                                  kind: "nullable",
+                                  inner: { kind: "decimal_string" }
+                                },
+                                unit_cost_decimal: {
+                                  kind: "nullable",
+                                  inner: { kind: "decimal_string" }
+                                }
+                              }
+                            }
+                          },
+                          transactions: {
+                            kind: "array",
+                            element: {
+                              kind: "object",
+                              fields: {
+                                purchase_details: {
+                                  kind: "nullable",
+                                  inner: {
+                                    kind: "object",
+                                    fields: {
+                                      fleet: {
+                                        kind: "nullable",
+                                        inner: {
+                                          kind: "object",
+                                          fields: {
+                                            reported_breakdown: {
+                                              kind: "nullable",
+                                              inner: {
+                                                kind: "object",
+                                                fields: {
+                                                  fuel: {
+                                                    kind: "nullable",
+                                                    inner: {
+                                                      kind: "object",
+                                                      fields: {
+                                                        gross_amount_decimal: {
+                                                          kind: "nullable",
+                                                          inner: {
+                                                            kind: "decimal_string"
+                                                          }
+                                                        }
+                                                      }
+                                                    }
+                                                  },
+                                                  non_fuel: {
+                                                    kind: "nullable",
+                                                    inner: {
+                                                      kind: "object",
+                                                      fields: {
+                                                        gross_amount_decimal: {
+                                                          kind: "nullable",
+                                                          inner: {
+                                                            kind: "decimal_string"
+                                                          }
+                                                        }
+                                                      }
+                                                    }
+                                                  },
+                                                  tax: {
+                                                    kind: "nullable",
+                                                    inner: {
+                                                      kind: "object",
+                                                      fields: {
+                                                        local_amount_decimal: {
+                                                          kind: "nullable",
+                                                          inner: {
+                                                            kind: "decimal_string"
+                                                          }
+                                                        },
+                                                        national_amount_decimal: {
+                                                          kind: "nullable",
+                                                          inner: {
+                                                            kind: "decimal_string"
+                                                          }
+                                                        }
+                                                      }
+                                                    }
+                                                  }
+                                                }
+                                              }
+                                            }
+                                          }
+                                        }
+                                      },
+                                      fuel: {
+                                        kind: "nullable",
+                                        inner: {
+                                          kind: "object",
+                                          fields: {
+                                            quantity_decimal: {
+                                              kind: "nullable",
+                                              inner: { kind: "decimal_string" }
+                                            },
+                                            unit_cost_decimal: {
+                                              kind: "decimal_string"
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+  /**
+   * Retrieves a TransactionEntry object.
+   */
+  retrieve(id, params, options) {
+    return this._makeRequest("GET", `/v1/treasury/transaction_entries/${encodeURIComponent(id)}`, params, options, {
+      responseSchema: {
+        kind: "object",
+        fields: {
+          flow_details: {
+            kind: "nullable",
+            inner: {
+              kind: "object",
+              fields: {
+                issuing_authorization: {
+                  kind: "object",
+                  fields: {
+                    fleet: {
+                      kind: "nullable",
+                      inner: {
+                        kind: "object",
+                        fields: {
+                          reported_breakdown: {
+                            kind: "nullable",
+                            inner: {
+                              kind: "object",
+                              fields: {
+                                fuel: {
+                                  kind: "nullable",
+                                  inner: {
+                                    kind: "object",
+                                    fields: {
+                                      gross_amount_decimal: {
+                                        kind: "nullable",
+                                        inner: { kind: "decimal_string" }
+                                      }
+                                    }
+                                  }
+                                },
+                                non_fuel: {
+                                  kind: "nullable",
+                                  inner: {
+                                    kind: "object",
+                                    fields: {
+                                      gross_amount_decimal: {
+                                        kind: "nullable",
+                                        inner: { kind: "decimal_string" }
+                                      }
+                                    }
+                                  }
+                                },
+                                tax: {
+                                  kind: "nullable",
+                                  inner: {
+                                    kind: "object",
+                                    fields: {
+                                      local_amount_decimal: {
+                                        kind: "nullable",
+                                        inner: { kind: "decimal_string" }
+                                      },
+                                      national_amount_decimal: {
+                                        kind: "nullable",
+                                        inner: { kind: "decimal_string" }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    fuel: {
+                      kind: "nullable",
+                      inner: {
+                        kind: "object",
+                        fields: {
+                          quantity_decimal: {
+                            kind: "nullable",
+                            inner: { kind: "decimal_string" }
+                          },
+                          unit_cost_decimal: {
+                            kind: "nullable",
+                            inner: { kind: "decimal_string" }
+                          }
+                        }
+                      }
+                    },
+                    transactions: {
+                      kind: "array",
+                      element: {
+                        kind: "object",
+                        fields: {
+                          purchase_details: {
+                            kind: "nullable",
+                            inner: {
+                              kind: "object",
+                              fields: {
+                                fleet: {
+                                  kind: "nullable",
+                                  inner: {
+                                    kind: "object",
+                                    fields: {
+                                      reported_breakdown: {
+                                        kind: "nullable",
+                                        inner: {
+                                          kind: "object",
+                                          fields: {
+                                            fuel: {
+                                              kind: "nullable",
+                                              inner: {
+                                                kind: "object",
+                                                fields: {
+                                                  gross_amount_decimal: {
+                                                    kind: "nullable",
+                                                    inner: {
+                                                      kind: "decimal_string"
+                                                    }
+                                                  }
+                                                }
+                                              }
+                                            },
+                                            non_fuel: {
+                                              kind: "nullable",
+                                              inner: {
+                                                kind: "object",
+                                                fields: {
+                                                  gross_amount_decimal: {
+                                                    kind: "nullable",
+                                                    inner: {
+                                                      kind: "decimal_string"
+                                                    }
+                                                  }
+                                                }
+                                              }
+                                            },
+                                            tax: {
+                                              kind: "nullable",
+                                              inner: {
+                                                kind: "object",
+                                                fields: {
+                                                  local_amount_decimal: {
+                                                    kind: "nullable",
+                                                    inner: {
+                                                      kind: "decimal_string"
+                                                    }
+                                                  },
+                                                  national_amount_decimal: {
+                                                    kind: "nullable",
+                                                    inner: {
+                                                      kind: "decimal_string"
+                                                    }
+                                                  }
+                                                }
+                                              }
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                },
+                                fuel: {
+                                  kind: "nullable",
+                                  inner: {
+                                    kind: "object",
+                                    fields: {
+                                      quantity_decimal: {
+                                        kind: "nullable",
+                                        inner: { kind: "decimal_string" }
+                                      },
+                                      unit_cost_decimal: {
+                                        kind: "decimal_string"
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+};
+
+// node_modules/stripe/esm/resources/FinancialConnections/Transactions.js
+var TransactionResource = class extends StripeResource {
+  /**
+   * Returns a list of Financial Connections Transaction objects.
+   */
+  list(params, options) {
+    return this._makeRequest("GET", "/v1/financial_connections/transactions", params, options, {
+      methodType: "list"
+    });
+  }
+  /**
+   * Retrieves the details of a Financial Connections Transaction
+   */
+  retrieve(id, params, options) {
+    return this._makeRequest("GET", `/v1/financial_connections/transactions/${encodeURIComponent(id)}`, params, options);
+  }
+};
+
+// node_modules/stripe/esm/resources/Issuing/Transactions.js
+var TransactionResource2 = class extends StripeResource {
+  /**
+   * Returns a list of Issuing Transaction objects. The objects are sorted in descending order by creation date, with the most recently created object appearing first.
+   */
+  list(params, options) {
+    return this._makeRequest("GET", "/v1/issuing/transactions", params, options, {
+      methodType: "list",
+      responseSchema: {
+        kind: "object",
+        fields: {
+          data: {
+            kind: "array",
+            element: {
+              kind: "object",
+              fields: {
+                purchase_details: {
+                  kind: "nullable",
+                  inner: {
+                    kind: "object",
+                    fields: {
+                      fleet: {
+                        kind: "nullable",
+                        inner: {
+                          kind: "object",
+                          fields: {
+                            reported_breakdown: {
+                              kind: "nullable",
+                              inner: {
+                                kind: "object",
+                                fields: {
+                                  fuel: {
+                                    kind: "nullable",
+                                    inner: {
+                                      kind: "object",
+                                      fields: {
+                                        gross_amount_decimal: {
+                                          kind: "nullable",
+                                          inner: { kind: "decimal_string" }
+                                        }
+                                      }
+                                    }
+                                  },
+                                  non_fuel: {
+                                    kind: "nullable",
+                                    inner: {
+                                      kind: "object",
+                                      fields: {
+                                        gross_amount_decimal: {
+                                          kind: "nullable",
+                                          inner: { kind: "decimal_string" }
+                                        }
+                                      }
+                                    }
+                                  },
+                                  tax: {
+                                    kind: "nullable",
+                                    inner: {
+                                      kind: "object",
+                                      fields: {
+                                        local_amount_decimal: {
+                                          kind: "nullable",
+                                          inner: { kind: "decimal_string" }
+                                        },
+                                        national_amount_decimal: {
+                                          kind: "nullable",
+                                          inner: { kind: "decimal_string" }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      },
+                      fuel: {
+                        kind: "nullable",
+                        inner: {
+                          kind: "object",
+                          fields: {
+                            quantity_decimal: {
+                              kind: "nullable",
+                              inner: { kind: "decimal_string" }
+                            },
+                            unit_cost_decimal: { kind: "decimal_string" }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+  /**
+   * Retrieves an Issuing Transaction object.
+   */
+  retrieve(id, params, options) {
+    return this._makeRequest("GET", `/v1/issuing/transactions/${encodeURIComponent(id)}`, params, options, {
+      responseSchema: {
+        kind: "object",
+        fields: {
+          purchase_details: {
+            kind: "nullable",
+            inner: {
+              kind: "object",
+              fields: {
+                fleet: {
+                  kind: "nullable",
+                  inner: {
+                    kind: "object",
+                    fields: {
+                      reported_breakdown: {
+                        kind: "nullable",
+                        inner: {
+                          kind: "object",
+                          fields: {
+                            fuel: {
+                              kind: "nullable",
+                              inner: {
+                                kind: "object",
+                                fields: {
+                                  gross_amount_decimal: {
+                                    kind: "nullable",
+                                    inner: { kind: "decimal_string" }
+                                  }
+                                }
+                              }
+                            },
+                            non_fuel: {
+                              kind: "nullable",
+                              inner: {
+                                kind: "object",
+                                fields: {
+                                  gross_amount_decimal: {
+                                    kind: "nullable",
+                                    inner: { kind: "decimal_string" }
+                                  }
+                                }
+                              }
+                            },
+                            tax: {
+                              kind: "nullable",
+                              inner: {
+                                kind: "object",
+                                fields: {
+                                  local_amount_decimal: {
+                                    kind: "nullable",
+                                    inner: { kind: "decimal_string" }
+                                  },
+                                  national_amount_decimal: {
+                                    kind: "nullable",
+                                    inner: { kind: "decimal_string" }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                fuel: {
+                  kind: "nullable",
+                  inner: {
+                    kind: "object",
+                    fields: {
+                      quantity_decimal: {
+                        kind: "nullable",
+                        inner: { kind: "decimal_string" }
+                      },
+                      unit_cost_decimal: { kind: "decimal_string" }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+  /**
+   * Updates the specified Issuing Transaction object by setting the values of the parameters passed. Any parameters not provided will be left unchanged.
+   */
+  update(id, params, options) {
+    return this._makeRequest("POST", `/v1/issuing/transactions/${encodeURIComponent(id)}`, params, options, {
+      responseSchema: {
+        kind: "object",
+        fields: {
+          purchase_details: {
+            kind: "nullable",
+            inner: {
+              kind: "object",
+              fields: {
+                fleet: {
+                  kind: "nullable",
+                  inner: {
+                    kind: "object",
+                    fields: {
+                      reported_breakdown: {
+                        kind: "nullable",
+                        inner: {
+                          kind: "object",
+                          fields: {
+                            fuel: {
+                              kind: "nullable",
+                              inner: {
+                                kind: "object",
+                                fields: {
+                                  gross_amount_decimal: {
+                                    kind: "nullable",
+                                    inner: { kind: "decimal_string" }
+                                  }
+                                }
+                              }
+                            },
+                            non_fuel: {
+                              kind: "nullable",
+                              inner: {
+                                kind: "object",
+                                fields: {
+                                  gross_amount_decimal: {
+                                    kind: "nullable",
+                                    inner: { kind: "decimal_string" }
+                                  }
+                                }
+                              }
+                            },
+                            tax: {
+                              kind: "nullable",
+                              inner: {
+                                kind: "object",
+                                fields: {
+                                  local_amount_decimal: {
+                                    kind: "nullable",
+                                    inner: { kind: "decimal_string" }
+                                  },
+                                  national_amount_decimal: {
+                                    kind: "nullable",
+                                    inner: { kind: "decimal_string" }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                fuel: {
+                  kind: "nullable",
+                  inner: {
+                    kind: "object",
+                    fields: {
+                      quantity_decimal: {
+                        kind: "nullable",
+                        inner: { kind: "decimal_string" }
+                      },
+                      unit_cost_decimal: { kind: "decimal_string" }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+};
+
+// node_modules/stripe/esm/resources/Tax/Transactions.js
+var TransactionResource3 = class extends StripeResource {
+  /**
+   * Retrieves a Tax Transaction object.
+   */
+  retrieve(id, params, options) {
+    return this._makeRequest("GET", `/v1/tax/transactions/${encodeURIComponent(id)}`, params, options);
+  }
+  /**
+   * Creates a Tax Transaction from a calculation, if that calculation hasn't expired. Calculations expire after 90 days.
+   */
+  createFromCalculation(params, options) {
+    return this._makeRequest("POST", "/v1/tax/transactions/create_from_calculation", params, options);
+  }
+  /**
+   * Partially or fully reverses a previously created Transaction.
+   */
+  createReversal(params, options) {
+    return this._makeRequest("POST", "/v1/tax/transactions/create_reversal", params, options);
+  }
+  /**
+   * Retrieves the line items of a committed standalone transaction as a collection.
+   */
+  listLineItems(id, params, options) {
+    return this._makeRequest("GET", `/v1/tax/transactions/${encodeURIComponent(id)}/line_items`, params, options, {
+      methodType: "list"
+    });
+  }
+};
+
+// node_modules/stripe/esm/resources/TestHelpers/Issuing/Transactions.js
+var TransactionResource4 = class extends StripeResource {
+  /**
+   * Refund a test-mode Transaction.
+   */
+  refund(id, params, options) {
+    return this._makeRequest("POST", `/v1/test_helpers/issuing/transactions/${encodeURIComponent(id)}/refund`, params, options, {
+      responseSchema: {
+        kind: "object",
+        fields: {
+          purchase_details: {
+            kind: "nullable",
+            inner: {
+              kind: "object",
+              fields: {
+                fleet: {
+                  kind: "nullable",
+                  inner: {
+                    kind: "object",
+                    fields: {
+                      reported_breakdown: {
+                        kind: "nullable",
+                        inner: {
+                          kind: "object",
+                          fields: {
+                            fuel: {
+                              kind: "nullable",
+                              inner: {
+                                kind: "object",
+                                fields: {
+                                  gross_amount_decimal: {
+                                    kind: "nullable",
+                                    inner: { kind: "decimal_string" }
+                                  }
+                                }
+                              }
+                            },
+                            non_fuel: {
+                              kind: "nullable",
+                              inner: {
+                                kind: "object",
+                                fields: {
+                                  gross_amount_decimal: {
+                                    kind: "nullable",
+                                    inner: { kind: "decimal_string" }
+                                  }
+                                }
+                              }
+                            },
+                            tax: {
+                              kind: "nullable",
+                              inner: {
+                                kind: "object",
+                                fields: {
+                                  local_amount_decimal: {
+                                    kind: "nullable",
+                                    inner: { kind: "decimal_string" }
+                                  },
+                                  national_amount_decimal: {
+                                    kind: "nullable",
+                                    inner: { kind: "decimal_string" }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                fuel: {
+                  kind: "nullable",
+                  inner: {
+                    kind: "object",
+                    fields: {
+                      quantity_decimal: {
+                        kind: "nullable",
+                        inner: { kind: "decimal_string" }
+                      },
+                      unit_cost_decimal: { kind: "decimal_string" }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+  /**
+   * Allows the user to capture an arbitrary amount, also known as a forced capture.
+   */
+  createForceCapture(params, options) {
+    return this._makeRequest("POST", "/v1/test_helpers/issuing/transactions/create_force_capture", params, options, {
+      requestSchema: {
+        kind: "object",
+        fields: {
+          purchase_details: {
+            kind: "object",
+            fields: {
+              fleet: {
+                kind: "object",
+                fields: {
+                  reported_breakdown: {
+                    kind: "object",
+                    fields: {
+                      fuel: {
+                        kind: "object",
+                        fields: {
+                          gross_amount_decimal: { kind: "decimal_string" }
+                        }
+                      },
+                      non_fuel: {
+                        kind: "object",
+                        fields: {
+                          gross_amount_decimal: { kind: "decimal_string" }
+                        }
+                      },
+                      tax: {
+                        kind: "object",
+                        fields: {
+                          local_amount_decimal: { kind: "decimal_string" },
+                          national_amount_decimal: { kind: "decimal_string" }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              fuel: {
+                kind: "object",
+                fields: {
+                  quantity_decimal: { kind: "decimal_string" },
+                  unit_cost_decimal: { kind: "decimal_string" }
+                }
+              },
+              receipt: {
+                kind: "array",
+                element: {
+                  kind: "object",
+                  fields: { quantity: { kind: "decimal_string" } }
+                }
+              }
+            }
+          }
+        }
+      },
+      responseSchema: {
+        kind: "object",
+        fields: {
+          purchase_details: {
+            kind: "nullable",
+            inner: {
+              kind: "object",
+              fields: {
+                fleet: {
+                  kind: "nullable",
+                  inner: {
+                    kind: "object",
+                    fields: {
+                      reported_breakdown: {
+                        kind: "nullable",
+                        inner: {
+                          kind: "object",
+                          fields: {
+                            fuel: {
+                              kind: "nullable",
+                              inner: {
+                                kind: "object",
+                                fields: {
+                                  gross_amount_decimal: {
+                                    kind: "nullable",
+                                    inner: { kind: "decimal_string" }
+                                  }
+                                }
+                              }
+                            },
+                            non_fuel: {
+                              kind: "nullable",
+                              inner: {
+                                kind: "object",
+                                fields: {
+                                  gross_amount_decimal: {
+                                    kind: "nullable",
+                                    inner: { kind: "decimal_string" }
+                                  }
+                                }
+                              }
+                            },
+                            tax: {
+                              kind: "nullable",
+                              inner: {
+                                kind: "object",
+                                fields: {
+                                  local_amount_decimal: {
+                                    kind: "nullable",
+                                    inner: { kind: "decimal_string" }
+                                  },
+                                  national_amount_decimal: {
+                                    kind: "nullable",
+                                    inner: { kind: "decimal_string" }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                fuel: {
+                  kind: "nullable",
+                  inner: {
+                    kind: "object",
+                    fields: {
+                      quantity_decimal: {
+                        kind: "nullable",
+                        inner: { kind: "decimal_string" }
+                      },
+                      unit_cost_decimal: { kind: "decimal_string" }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+  /**
+   * Allows the user to refund an arbitrary amount, also known as a unlinked refund.
+   */
+  createUnlinkedRefund(params, options) {
+    return this._makeRequest("POST", "/v1/test_helpers/issuing/transactions/create_unlinked_refund", params, options, {
+      requestSchema: {
+        kind: "object",
+        fields: {
+          purchase_details: {
+            kind: "object",
+            fields: {
+              fleet: {
+                kind: "object",
+                fields: {
+                  reported_breakdown: {
+                    kind: "object",
+                    fields: {
+                      fuel: {
+                        kind: "object",
+                        fields: {
+                          gross_amount_decimal: { kind: "decimal_string" }
+                        }
+                      },
+                      non_fuel: {
+                        kind: "object",
+                        fields: {
+                          gross_amount_decimal: { kind: "decimal_string" }
+                        }
+                      },
+                      tax: {
+                        kind: "object",
+                        fields: {
+                          local_amount_decimal: { kind: "decimal_string" },
+                          national_amount_decimal: { kind: "decimal_string" }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              fuel: {
+                kind: "object",
+                fields: {
+                  quantity_decimal: { kind: "decimal_string" },
+                  unit_cost_decimal: { kind: "decimal_string" }
+                }
+              },
+              receipt: {
+                kind: "array",
+                element: {
+                  kind: "object",
+                  fields: { quantity: { kind: "decimal_string" } }
+                }
+              }
+            }
+          }
+        }
+      },
+      responseSchema: {
+        kind: "object",
+        fields: {
+          purchase_details: {
+            kind: "nullable",
+            inner: {
+              kind: "object",
+              fields: {
+                fleet: {
+                  kind: "nullable",
+                  inner: {
+                    kind: "object",
+                    fields: {
+                      reported_breakdown: {
+                        kind: "nullable",
+                        inner: {
+                          kind: "object",
+                          fields: {
+                            fuel: {
+                              kind: "nullable",
+                              inner: {
+                                kind: "object",
+                                fields: {
+                                  gross_amount_decimal: {
+                                    kind: "nullable",
+                                    inner: { kind: "decimal_string" }
+                                  }
+                                }
+                              }
+                            },
+                            non_fuel: {
+                              kind: "nullable",
+                              inner: {
+                                kind: "object",
+                                fields: {
+                                  gross_amount_decimal: {
+                                    kind: "nullable",
+                                    inner: { kind: "decimal_string" }
+                                  }
+                                }
+                              }
+                            },
+                            tax: {
+                              kind: "nullable",
+                              inner: {
+                                kind: "object",
+                                fields: {
+                                  local_amount_decimal: {
+                                    kind: "nullable",
+                                    inner: { kind: "decimal_string" }
+                                  },
+                                  national_amount_decimal: {
+                                    kind: "nullable",
+                                    inner: { kind: "decimal_string" }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                fuel: {
+                  kind: "nullable",
+                  inner: {
+                    kind: "object",
+                    fields: {
+                      quantity_decimal: {
+                        kind: "nullable",
+                        inner: { kind: "decimal_string" }
+                      },
+                      unit_cost_decimal: { kind: "decimal_string" }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+};
+
+// node_modules/stripe/esm/resources/Treasury/Transactions.js
+var TransactionResource5 = class extends StripeResource {
+  /**
+   * Retrieves a list of Transaction objects.
+   */
+  list(params, options) {
+    return this._makeRequest("GET", "/v1/treasury/transactions", params, options, {
+      methodType: "list",
+      responseSchema: {
+        kind: "object",
+        fields: {
+          data: {
+            kind: "array",
+            element: {
+              kind: "object",
+              fields: {
+                entries: {
+                  kind: "nullable",
+                  inner: {
+                    kind: "object",
+                    fields: {
+                      data: {
+                        kind: "array",
+                        element: {
+                          kind: "object",
+                          fields: {
+                            flow_details: {
+                              kind: "nullable",
+                              inner: {
+                                kind: "object",
+                                fields: {
+                                  issuing_authorization: {
+                                    kind: "object",
+                                    fields: {
+                                      fleet: {
+                                        kind: "nullable",
+                                        inner: {
+                                          kind: "object",
+                                          fields: {
+                                            reported_breakdown: {
+                                              kind: "nullable",
+                                              inner: {
+                                                kind: "object",
+                                                fields: {
+                                                  fuel: {
+                                                    kind: "nullable",
+                                                    inner: {
+                                                      kind: "object",
+                                                      fields: {
+                                                        gross_amount_decimal: {
+                                                          kind: "nullable",
+                                                          inner: {
+                                                            kind: "decimal_string"
+                                                          }
+                                                        }
+                                                      }
+                                                    }
+                                                  },
+                                                  non_fuel: {
+                                                    kind: "nullable",
+                                                    inner: {
+                                                      kind: "object",
+                                                      fields: {
+                                                        gross_amount_decimal: {
+                                                          kind: "nullable",
+                                                          inner: {
+                                                            kind: "decimal_string"
+                                                          }
+                                                        }
+                                                      }
+                                                    }
+                                                  },
+                                                  tax: {
+                                                    kind: "nullable",
+                                                    inner: {
+                                                      kind: "object",
+                                                      fields: {
+                                                        local_amount_decimal: {
+                                                          kind: "nullable",
+                                                          inner: {
+                                                            kind: "decimal_string"
+                                                          }
+                                                        },
+                                                        national_amount_decimal: {
+                                                          kind: "nullable",
+                                                          inner: {
+                                                            kind: "decimal_string"
+                                                          }
+                                                        }
+                                                      }
+                                                    }
+                                                  }
+                                                }
+                                              }
+                                            }
+                                          }
+                                        }
+                                      },
+                                      fuel: {
+                                        kind: "nullable",
+                                        inner: {
+                                          kind: "object",
+                                          fields: {
+                                            quantity_decimal: {
+                                              kind: "nullable",
+                                              inner: { kind: "decimal_string" }
+                                            },
+                                            unit_cost_decimal: {
+                                              kind: "nullable",
+                                              inner: { kind: "decimal_string" }
+                                            }
+                                          }
+                                        }
+                                      },
+                                      transactions: {
+                                        kind: "array",
+                                        element: {
+                                          kind: "object",
+                                          fields: {
+                                            purchase_details: {
+                                              kind: "nullable",
+                                              inner: {
+                                                kind: "object",
+                                                fields: {
+                                                  fleet: {
+                                                    kind: "nullable",
+                                                    inner: {
+                                                      kind: "object",
+                                                      fields: {
+                                                        reported_breakdown: {
+                                                          kind: "nullable",
+                                                          inner: {
+                                                            kind: "object",
+                                                            fields: {
+                                                              fuel: {
+                                                                kind: "nullable",
+                                                                inner: {
+                                                                  kind: "object",
+                                                                  fields: {
+                                                                    gross_amount_decimal: {
+                                                                      kind: "nullable",
+                                                                      inner: {
+                                                                        kind: "decimal_string"
+                                                                      }
+                                                                    }
+                                                                  }
+                                                                }
+                                                              },
+                                                              non_fuel: {
+                                                                kind: "nullable",
+                                                                inner: {
+                                                                  kind: "object",
+                                                                  fields: {
+                                                                    gross_amount_decimal: {
+                                                                      kind: "nullable",
+                                                                      inner: {
+                                                                        kind: "decimal_string"
+                                                                      }
+                                                                    }
+                                                                  }
+                                                                }
+                                                              },
+                                                              tax: {
+                                                                kind: "nullable",
+                                                                inner: {
+                                                                  kind: "object",
+                                                                  fields: {
+                                                                    local_amount_decimal: {
+                                                                      kind: "nullable",
+                                                                      inner: {
+                                                                        kind: "decimal_string"
+                                                                      }
+                                                                    },
+                                                                    national_amount_decimal: {
+                                                                      kind: "nullable",
+                                                                      inner: {
+                                                                        kind: "decimal_string"
+                                                                      }
+                                                                    }
+                                                                  }
+                                                                }
+                                                              }
+                                                            }
+                                                          }
+                                                        }
+                                                      }
+                                                    }
+                                                  },
+                                                  fuel: {
+                                                    kind: "nullable",
+                                                    inner: {
+                                                      kind: "object",
+                                                      fields: {
+                                                        quantity_decimal: {
+                                                          kind: "nullable",
+                                                          inner: {
+                                                            kind: "decimal_string"
+                                                          }
+                                                        },
+                                                        unit_cost_decimal: {
+                                                          kind: "decimal_string"
+                                                        }
+                                                      }
+                                                    }
+                                                  }
+                                                }
+                                              }
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+  /**
+   * Retrieves the details of an existing Transaction.
+   */
+  retrieve(id, params, options) {
+    return this._makeRequest("GET", `/v1/treasury/transactions/${encodeURIComponent(id)}`, params, options, {
+      responseSchema: {
+        kind: "object",
+        fields: {
+          entries: {
+            kind: "nullable",
+            inner: {
+              kind: "object",
+              fields: {
+                data: {
+                  kind: "array",
+                  element: {
+                    kind: "object",
+                    fields: {
+                      flow_details: {
+                        kind: "nullable",
+                        inner: {
+                          kind: "object",
+                          fields: {
+                            issuing_authorization: {
+                              kind: "object",
+                              fields: {
+                                fleet: {
+                                  kind: "nullable",
+                                  inner: {
+                                    kind: "object",
+                                    fields: {
+                                      reported_breakdown: {
+                                        kind: "nullable",
+                                        inner: {
+                                          kind: "object",
+                                          fields: {
+                                            fuel: {
+                                              kind: "nullable",
+                                              inner: {
+                                                kind: "object",
+                                                fields: {
+                                                  gross_amount_decimal: {
+                                                    kind: "nullable",
+                                                    inner: {
+                                                      kind: "decimal_string"
+                                                    }
+                                                  }
+                                                }
+                                              }
+                                            },
+                                            non_fuel: {
+                                              kind: "nullable",
+                                              inner: {
+                                                kind: "object",
+                                                fields: {
+                                                  gross_amount_decimal: {
+                                                    kind: "nullable",
+                                                    inner: {
+                                                      kind: "decimal_string"
+                                                    }
+                                                  }
+                                                }
+                                              }
+                                            },
+                                            tax: {
+                                              kind: "nullable",
+                                              inner: {
+                                                kind: "object",
+                                                fields: {
+                                                  local_amount_decimal: {
+                                                    kind: "nullable",
+                                                    inner: {
+                                                      kind: "decimal_string"
+                                                    }
+                                                  },
+                                                  national_amount_decimal: {
+                                                    kind: "nullable",
+                                                    inner: {
+                                                      kind: "decimal_string"
+                                                    }
+                                                  }
+                                                }
+                                              }
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                },
+                                fuel: {
+                                  kind: "nullable",
+                                  inner: {
+                                    kind: "object",
+                                    fields: {
+                                      quantity_decimal: {
+                                        kind: "nullable",
+                                        inner: { kind: "decimal_string" }
+                                      },
+                                      unit_cost_decimal: {
+                                        kind: "nullable",
+                                        inner: { kind: "decimal_string" }
+                                      }
+                                    }
+                                  }
+                                },
+                                transactions: {
+                                  kind: "array",
+                                  element: {
+                                    kind: "object",
+                                    fields: {
+                                      purchase_details: {
+                                        kind: "nullable",
+                                        inner: {
+                                          kind: "object",
+                                          fields: {
+                                            fleet: {
+                                              kind: "nullable",
+                                              inner: {
+                                                kind: "object",
+                                                fields: {
+                                                  reported_breakdown: {
+                                                    kind: "nullable",
+                                                    inner: {
+                                                      kind: "object",
+                                                      fields: {
+                                                        fuel: {
+                                                          kind: "nullable",
+                                                          inner: {
+                                                            kind: "object",
+                                                            fields: {
+                                                              gross_amount_decimal: {
+                                                                kind: "nullable",
+                                                                inner: {
+                                                                  kind: "decimal_string"
+                                                                }
+                                                              }
+                                                            }
+                                                          }
+                                                        },
+                                                        non_fuel: {
+                                                          kind: "nullable",
+                                                          inner: {
+                                                            kind: "object",
+                                                            fields: {
+                                                              gross_amount_decimal: {
+                                                                kind: "nullable",
+                                                                inner: {
+                                                                  kind: "decimal_string"
+                                                                }
+                                                              }
+                                                            }
+                                                          }
+                                                        },
+                                                        tax: {
+                                                          kind: "nullable",
+                                                          inner: {
+                                                            kind: "object",
+                                                            fields: {
+                                                              local_amount_decimal: {
+                                                                kind: "nullable",
+                                                                inner: {
+                                                                  kind: "decimal_string"
+                                                                }
+                                                              },
+                                                              national_amount_decimal: {
+                                                                kind: "nullable",
+                                                                inner: {
+                                                                  kind: "decimal_string"
+                                                                }
+                                                              }
+                                                            }
+                                                          }
+                                                        }
+                                                      }
+                                                    }
+                                                  }
+                                                }
+                                              }
+                                            },
+                                            fuel: {
+                                              kind: "nullable",
+                                              inner: {
+                                                kind: "object",
+                                                fields: {
+                                                  quantity_decimal: {
+                                                    kind: "nullable",
+                                                    inner: {
+                                                      kind: "decimal_string"
+                                                    }
+                                                  },
+                                                  unit_cost_decimal: {
+                                                    kind: "decimal_string"
+                                                  }
+                                                }
+                                              }
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+};
+
+// node_modules/stripe/esm/resources/ProductCatalog/TrialOffers.js
+var TrialOfferResource = class extends StripeResource {
+  /**
+   * Returns a list of trial offers.
+   */
+  list(params, options) {
+    return this._makeRequest("GET", "/v1/product_catalog/trial_offers", params, options, {
+      methodType: "list"
+    });
+  }
+  /**
+   * Creates a trial offer.
+   */
+  create(params, options) {
+    return this._makeRequest("POST", "/v1/product_catalog/trial_offers", params, options);
+  }
+  /**
+   * Retrieves the trial offer with the given ID.
+   */
+  retrieve(id, params, options) {
+    return this._makeRequest("GET", `/v1/product_catalog/trial_offers/${encodeURIComponent(id)}`, params, options);
+  }
+  /**
+   * Updates the specified trial offer by setting the values of the parameters passed. Any parameters not provided are left unchanged.
+   */
+  update(id, params, options) {
+    return this._makeRequest("POST", `/v1/product_catalog/trial_offers/${encodeURIComponent(id)}`, params, options);
+  }
+};
+
+// node_modules/stripe/esm/resources/Radar/ValueListItems.js
+var ValueListItemResource = class extends StripeResource {
+  /**
+   * Deletes a ValueListItem object, removing it from its parent value list.
+   */
+  del(id, params, options) {
+    return this._makeRequest("DELETE", `/v1/radar/value_list_items/${encodeURIComponent(id)}`, params, options);
+  }
+  /**
+   * Retrieves a ValueListItem object.
+   */
+  retrieve(id, params, options) {
+    return this._makeRequest("GET", `/v1/radar/value_list_items/${encodeURIComponent(id)}`, params, options);
+  }
+  /**
+   * Returns a list of ValueListItem objects. The objects are sorted in descending order by creation date, with the most recently created object appearing first.
+   */
+  list(params, options) {
+    return this._makeRequest("GET", "/v1/radar/value_list_items", params, options, {
+      methodType: "list"
+    });
+  }
+  /**
+   * Creates a new ValueListItem object, which is added to the specified parent value list.
+   */
+  create(params, options) {
+    return this._makeRequest("POST", "/v1/radar/value_list_items", params, options);
+  }
+};
+
+// node_modules/stripe/esm/resources/Radar/ValueLists.js
+var ValueListResource = class extends StripeResource {
+  /**
+   * Deletes a ValueList object, also deleting any items contained within the value list. To be deleted, a value list must not be referenced in any rules.
+   */
+  del(id, params, options) {
+    return this._makeRequest("DELETE", `/v1/radar/value_lists/${encodeURIComponent(id)}`, params, options);
+  }
+  /**
+   * Retrieves a ValueList object.
+   */
+  retrieve(id, params, options) {
+    return this._makeRequest("GET", `/v1/radar/value_lists/${encodeURIComponent(id)}`, params, options);
+  }
+  /**
+   * Updates a ValueList object by setting the values of the parameters passed. Any parameters not provided will be left unchanged. Note that item_type is immutable.
+   */
+  update(id, params, options) {
+    return this._makeRequest("POST", `/v1/radar/value_lists/${encodeURIComponent(id)}`, params, options);
+  }
+  /**
+   * Returns a list of ValueList objects. The objects are sorted in descending order by creation date, with the most recently created object appearing first.
+   */
+  list(params, options) {
+    return this._makeRequest("GET", "/v1/radar/value_lists", params, options, {
+      methodType: "list"
+    });
+  }
+  /**
+   * Creates a new ValueList object, which can then be referenced in rules.
+   */
+  create(params, options) {
+    return this._makeRequest("POST", "/v1/radar/value_lists", params, options);
+  }
+};
+
+// node_modules/stripe/esm/resources/Identity/VerificationReports.js
+var VerificationReportResource = class extends StripeResource {
+  /**
+   * List all verification reports.
+   */
+  list(params, options) {
+    return this._makeRequest("GET", "/v1/identity/verification_reports", params, options, {
+      methodType: "list"
+    });
+  }
+  /**
+   * Retrieves an existing VerificationReport
+   */
+  retrieve(id, params, options) {
+    return this._makeRequest("GET", `/v1/identity/verification_reports/${encodeURIComponent(id)}`, params, options);
+  }
+};
+
+// node_modules/stripe/esm/resources/Identity/VerificationSessions.js
+var VerificationSessionResource = class extends StripeResource {
+  /**
+   * Returns a list of VerificationSessions
+   */
+  list(params, options) {
+    return this._makeRequest("GET", "/v1/identity/verification_sessions", params, options, {
+      methodType: "list"
+    });
+  }
+  /**
+   * Creates a VerificationSession object.
+   *
+   * After the VerificationSession is created, display a verification modal using the session client_secret or send your users to the session's url.
+   *
+   * If your API key is in test mode, verification checks won't actually process, though everything else will occur as if in live mode.
+   *
+   * Related guide: [Verify your users' identity documents](https://docs.stripe.com/docs/identity/verify-identity-documents)
+   */
+  create(params, options) {
+    return this._makeRequest("POST", "/v1/identity/verification_sessions", params, options);
+  }
+  /**
+   * Retrieves the details of a VerificationSession that was previously created.
+   *
+   * When the session status is requires_input, you can use this method to retrieve a valid
+   * client_secret or url to allow re-submission.
+   */
+  retrieve(id, params, options) {
+    return this._makeRequest("GET", `/v1/identity/verification_sessions/${encodeURIComponent(id)}`, params, options);
+  }
+  /**
+   * Updates a VerificationSession object.
+   *
+   * When the session status is requires_input, you can use this method to update the
+   * verification check and options.
+   */
+  update(id, params, options) {
+    return this._makeRequest("POST", `/v1/identity/verification_sessions/${encodeURIComponent(id)}`, params, options);
+  }
+  /**
+   * A VerificationSession object can be canceled when it is in requires_input [status](https://docs.stripe.com/docs/identity/how-sessions-work).
+   *
+   * Once canceled, future submission attempts are disabled. This cannot be undone. [Learn more](https://docs.stripe.com/docs/identity/verification-sessions#cancel).
+   */
+  cancel(id, params, options) {
+    return this._makeRequest("POST", `/v1/identity/verification_sessions/${encodeURIComponent(id)}/cancel`, params, options);
+  }
+  /**
+   * Redact a VerificationSession to remove all collected information from Stripe. This will redact
+   * the VerificationSession and all objects related to it, including VerificationReports, Events,
+   * request logs, etc.
+   *
+   * A VerificationSession object can be redacted when it is in requires_input or verified
+   * [status](https://docs.stripe.com/docs/identity/how-sessions-work). Redacting a VerificationSession in requires_action
+   * state will automatically cancel it.
+   *
+   * The redaction process may take up to four days. When the redaction process is in progress, the
+   * VerificationSession's redaction.status field will be set to processing; when the process is
+   * finished, it will change to redacted and an identity.verification_session.redacted event
+   * will be emitted.
+   *
+   * Redaction is irreversible. Redacted objects are still accessible in the Stripe API, but all the
+   * fields that contain personal data will be replaced by the string [redacted] or a similar
+   * placeholder. The metadata field will also be erased. Redacted objects cannot be updated or
+   * used for any purpose.
+   *
+   * [Learn more](https://docs.stripe.com/docs/identity/verification-sessions#redact).
+   */
+  redact(id, params, options) {
+    return this._makeRequest("POST", `/v1/identity/verification_sessions/${encodeURIComponent(id)}/redact`, params, options);
+  }
+};
+
+// node_modules/stripe/esm/resources/Accounts.js
+var AccountResource3 = class extends StripeResource {
+  /**
+   * With [Connect](https://docs.stripe.com/connect), you can delete accounts you manage.
+   *
+   * Test-mode accounts can be deleted at any time.
+   *
+   * Live-mode accounts that have access to the standard dashboard and Stripe is responsible for negative account balances cannot be deleted, which includes Standard accounts. All other Live-mode accounts, can be deleted when all [balances](https://docs.stripe.com/api/balance/balance_object) are zero.
+   *
+   * If you want to delete your own account, use the [account information tab in your account settings](https://dashboard.stripe.com/settings/account) instead.
+   */
+  del(id, params, options) {
+    return this._makeRequest("DELETE", `/v1/accounts/${encodeURIComponent(id)}`, params, options);
+  }
+  /**
+   * Retrieves the details of an account. Pass `null` as the account id to retrieve details about your own account.
+   */
+  retrieve(id, params, options) {
+    if (typeof id === "string") {
+      return this._makeRequest("GET", `/v1/accounts/${encodeURIComponent(id)}`, params, options);
+    } else {
+      return this._makeRequest("GET", "/v1/account", params, options);
+    }
+  }
+  /**
+   * Updates a [connected account](https://docs.stripe.com/connect/accounts) by setting the values of the parameters passed. Any parameters not provided are
+   * left unchanged.
+   *
+   * For accounts where [controller.requirement_collection](https://docs.stripe.com/api/accounts/object#account_object-controller-requirement_collection)
+   * is application, which includes Custom accounts, you can update any information on the account.
+   *
+   * For accounts where [controller.requirement_collection](https://docs.stripe.com/api/accounts/object#account_object-controller-requirement_collection)
+   * is stripe, which includes Standard and Express accounts, you can update all information until you create
+   * an [Account Link or <a href="/api/account_sessions">Account Session](https://docs.stripe.com/api/account_links) to start Connect onboarding,
+   * after which some properties can no longer be updated.
+   *
+   * To update your own account, use the [Dashboard](https://dashboard.stripe.com/settings/account). Refer to our
+   * [Connect](https://docs.stripe.com/docs/connect/updating-accounts) documentation to learn more about updating accounts.
+   */
+  update(id, params, options) {
+    return this._makeRequest("POST", `/v1/accounts/${encodeURIComponent(id)}`, params, options);
+  }
+  /**
+   * Retrieves the details of an account.
+   */
+  retrieveCurrent(params, options) {
+    return this._makeRequest("GET", "/v1/account", params, options);
+  }
+  /**
+   * Returns a list of accounts connected to your platform via [Connect](https://docs.stripe.com/docs/connect). If you're not a platform, the list is empty.
+   */
+  list(params, options) {
+    return this._makeRequest("GET", "/v1/accounts", params, options, {
+      methodType: "list"
+    });
+  }
+  /**
+   * With [Connect](https://docs.stripe.com/docs/connect), you can create Stripe accounts for your users.
+   * To do this, you'll first need to [register your platform](https://dashboard.stripe.com/account/applications/settings).
+   *
+   * If you've already collected information for your connected accounts, you [can prefill that information](https://docs.stripe.com/connect/marketplace/tasks/create#prefill-account-information) when
+   * creating the account. Connect Onboarding won't ask for the prefilled information during account onboarding.
+   * You can prefill any information on the account.
+   */
+  create(params, options) {
+    return this._makeRequest("POST", "/v1/accounts", params, options);
+  }
+  /**
+   * With [Connect](https://docs.stripe.com/connect), you can reject accounts that you have flagged as suspicious.
+   *
+   * Only accounts where your platform is liable for negative account balances, which includes Custom and Express accounts, can be rejected.
+   */
+  reject(id, params, options) {
+    return this._makeRequest("POST", `/v1/accounts/${encodeURIComponent(id)}/reject`, params, options);
+  }
+  /**
+   * With Connect, you can unreject accounts that you have previously rejected.
+   *
+   * Only accounts that were rejected by your platform can be unrejected. This API cannot be used to unreject accounts that were rejected by Stripe.
+   *
+   * Unreject will only enable charges and/or payouts if there are no other restrictions other than those placed by a previous rejection. If you have separately paused charges and/or payouts outside of rejection, those pauses will remain in place after unrejection.
+   */
+  unreject(id, params, options) {
+    return this._makeRequest("POST", `/v1/accounts/${encodeURIComponent(id)}/unreject`, params, options);
+  }
+  /**
+   * Returns a list of capabilities associated with the account. The capabilities are returned sorted by creation date, with the most recent capability appearing first.
+   */
+  listCapabilities(id, params, options) {
+    return this._makeRequest("GET", `/v1/accounts/${encodeURIComponent(id)}/capabilities`, params, options, {
+      methodType: "list"
+    });
+  }
+  /**
+   * Retrieves information about the specified Account Capability.
+   */
+  retrieveCapability(accountId, id, params, options) {
+    return this._makeRequest("GET", `/v1/accounts/${encodeURIComponent(accountId)}/capabilities/${encodeURIComponent(id)}`, params, options);
+  }
+  /**
+   * Updates an existing Account Capability. Request or remove a capability by updating its requested parameter.
+   */
+  updateCapability(accountId, id, params, options) {
+    return this._makeRequest("POST", `/v1/accounts/${encodeURIComponent(accountId)}/capabilities/${encodeURIComponent(id)}`, params, options);
+  }
+  /**
+   * Delete a specified external account for a given account.
+   */
+  deleteExternalAccount(accountId, id, params, options) {
+    return this._makeRequest("DELETE", `/v1/accounts/${encodeURIComponent(accountId)}/external_accounts/${encodeURIComponent(id)}`, params, options);
+  }
+  /**
+   * Retrieve a specified external account for a given account.
+   */
+  retrieveExternalAccount(accountId, id, params, options) {
+    return this._makeRequest("GET", `/v1/accounts/${encodeURIComponent(accountId)}/external_accounts/${encodeURIComponent(id)}`, params, options);
+  }
+  /**
+   * Updates the metadata, account holder name, account holder type of a bank account belonging to
+   * a connected account and optionally sets it as the default for its currency. Other bank account
+   * details are not editable by design.
+   *
+   * You can only update bank accounts when [account.controller.requirement_collection is application, which includes <a href="/connect/custom-accounts">Custom accounts](https://docs.stripe.com/api/accounts/object#account_object-controller-requirement_collection).
+   *
+   * You can re-enable a disabled bank account by performing an update call without providing any
+   * arguments or changes.
+   */
+  updateExternalAccount(accountId, id, params, options) {
+    return this._makeRequest("POST", `/v1/accounts/${encodeURIComponent(accountId)}/external_accounts/${encodeURIComponent(id)}`, params, options);
+  }
+  /**
+   * List external accounts for an account.
+   */
+  listExternalAccounts(id, params, options) {
+    return this._makeRequest("GET", `/v1/accounts/${encodeURIComponent(id)}/external_accounts`, params, options, {
+      methodType: "list"
+    });
+  }
+  /**
+   * Create an external account for a given account.
+   */
+  createExternalAccount(id, params, options) {
+    return this._makeRequest("POST", `/v1/accounts/${encodeURIComponent(id)}/external_accounts`, params, options);
+  }
+  /**
+   * Creates a login link for a connected account to access the Express Dashboard.
+   *
+   * You can only create login links for accounts that use the [Express Dashboard](https://docs.stripe.com/connect/express-dashboard) and are connected to your platform.
+   */
+  createLoginLink(id, params, options) {
+    return this._makeRequest("POST", `/v1/accounts/${encodeURIComponent(id)}/login_links`, params, options);
+  }
+  /**
+   * Deletes an existing person's relationship to the account's legal entity. Any person with a relationship for an account can be deleted through the API, except if the person is the representative. If your integration is using the executive parameter, you cannot delete the only verified executive on file.
+   */
+  deletePerson(accountId, id, params, options) {
+    return this._makeRequest("DELETE", `/v1/accounts/${encodeURIComponent(accountId)}/persons/${encodeURIComponent(id)}`, params, options);
+  }
+  /**
+   * Retrieves an existing person.
+   */
+  retrievePerson(accountId, id, params, options) {
+    return this._makeRequest("GET", `/v1/accounts/${encodeURIComponent(accountId)}/persons/${encodeURIComponent(id)}`, params, options);
+  }
+  /**
+   * Updates an existing person.
+   */
+  updatePerson(accountId, id, params, options) {
+    return this._makeRequest("POST", `/v1/accounts/${encodeURIComponent(accountId)}/persons/${encodeURIComponent(id)}`, params, options);
+  }
+  /**
+   * Returns a list of people associated with the account's legal entity. The people are returned sorted by creation date, with the most recent people appearing first.
+   */
+  listPersons(id, params, options) {
+    return this._makeRequest("GET", `/v1/accounts/${encodeURIComponent(id)}/persons`, params, options, {
+      methodType: "list"
+    });
+  }
+  /**
+   * Creates a new person.
+   */
+  createPerson(id, params, options) {
+    return this._makeRequest("POST", `/v1/accounts/${encodeURIComponent(id)}/persons`, params, options);
+  }
+};
+
+// node_modules/stripe/esm/resources/AccountLinks.js
+var AccountLinkResource2 = class extends StripeResource {
+  /**
+   * Creates an AccountLink object that includes a single-use Stripe URL that the platform can redirect their user to in order to take them through the Connect Onboarding flow.
+   */
+  create(params, options) {
+    return this._makeRequest("POST", "/v1/account_links", params, options);
+  }
+};
+
+// node_modules/stripe/esm/resources/AccountSessions.js
+var AccountSessionResource = class extends StripeResource {
+  /**
+   * Creates an AccountSession object that includes a single-use token that the platform can use on their front-end to grant client-side API access.
+   */
+  create(params, options) {
+    return this._makeRequest("POST", "/v1/account_sessions", params, options);
+  }
+};
+
+// node_modules/stripe/esm/resources/ApplePayDomains.js
+var ApplePayDomainResource = class extends StripeResource {
+  /**
+   * Delete an apple pay domain.
+   */
+  del(id, params, options) {
+    return this._makeRequest("DELETE", `/v1/apple_pay/domains/${encodeURIComponent(id)}`, params, options);
+  }
+  /**
+   * Retrieve an apple pay domain.
+   */
+  retrieve(id, params, options) {
+    return this._makeRequest("GET", `/v1/apple_pay/domains/${encodeURIComponent(id)}`, params, options);
+  }
+  /**
+   * List apple pay domains.
+   */
+  list(params, options) {
+    return this._makeRequest("GET", "/v1/apple_pay/domains", params, options, {
+      methodType: "list"
+    });
+  }
+  /**
+   * Create an apple pay domain.
+   */
+  create(params, options) {
+    return this._makeRequest("POST", "/v1/apple_pay/domains", params, options);
+  }
+};
+
+// node_modules/stripe/esm/resources/ApplicationFees.js
+var ApplicationFeeResource = class extends StripeResource {
+  /**
+   * Returns a list of application fees you've previously collected. The application fees are returned in sorted order, with the most recent fees appearing first.
+   */
+  list(params, options) {
+    return this._makeRequest("GET", "/v1/application_fees", params, options, {
+      methodType: "list"
+    });
+  }
+  /**
+   * Retrieves the details of an application fee that your account has collected. The same information is returned when refunding the application fee.
+   */
+  retrieve(id, params, options) {
+    return this._makeRequest("GET", `/v1/application_fees/${encodeURIComponent(id)}`, params, options);
+  }
+  /**
+   * By default, you can see the 10 most recent refunds stored directly on the application fee object, but you can also retrieve details about a specific refund stored on the application fee.
+   */
+  retrieveRefund(feeId, id, params, options) {
+    return this._makeRequest("GET", `/v1/application_fees/${encodeURIComponent(feeId)}/refunds/${encodeURIComponent(id)}`, params, options);
+  }
+  /**
+   * Updates the specified application fee refund by setting the values of the parameters passed. Any parameters not provided will be left unchanged.
+   *
+   * This request only accepts metadata as an argument.
+   */
+  updateRefund(feeId, id, params, options) {
+    return this._makeRequest("POST", `/v1/application_fees/${encodeURIComponent(feeId)}/refunds/${encodeURIComponent(id)}`, params, options);
+  }
+  /**
+   * You can see a list of the refunds belonging to a specific application fee. Note that the 10 most recent refunds are always available by default on the application fee object. If you need more than those 10, you can use this API method and the limit and starting_after parameters to page through additional refunds.
+   */
+  listRefunds(id, params, options) {
+    return this._makeRequest("GET", `/v1/application_fees/${encodeURIComponent(id)}/refunds`, params, options, {
+      methodType: "list"
+    });
+  }
+  /**
+   * Refunds an application fee that has previously been collected but not yet refunded.
+   * Funds will be refunded to the Stripe account from which the fee was originally collected.
+   *
+   * You can optionally refund only part of an application fee.
+   * You can do so multiple times, until the entire fee has been refunded.
+   *
+   * Once entirely refunded, an application fee can't be refunded again.
+   * This method will raise an error when called on an already-refunded application fee,
+   * or when trying to refund more money than is left on an application fee.
+   */
+  createRefund(id, params, options) {
+    return this._makeRequest("POST", `/v1/application_fees/${encodeURIComponent(id)}/refunds`, params, options);
+  }
+};
+
+// node_modules/stripe/esm/resources/Balance.js
+var BalanceResource = class extends StripeResource {
+  /**
+   * Retrieves the current account balance, based on the authentication that was used to make the request.
+   *  For a sample request, see [Accounting for negative balances](https://docs.stripe.com/docs/connect/account-balances#accounting-for-negative-balances).
+   */
+  retrieve(params, options) {
+    return this._makeRequest("GET", "/v1/balance", params, options);
+  }
+};
+
+// node_modules/stripe/esm/resources/BalanceSettings.js
+var BalanceSettingResource = class extends StripeResource {
+  /**
+   * Retrieves balance settings for a given connected account.
+   *  Related guide: [Making API calls for connected accounts](https://docs.stripe.com/connect/authentication)
+   */
+  retrieve(params, options) {
+    return this._makeRequest("GET", "/v1/balance_settings", params, options);
+  }
+  /**
+   * Updates balance settings for a given connected account.
+   *  Related guide: [Making API calls for connected accounts](https://docs.stripe.com/connect/authentication)
+   */
+  update(params, options) {
+    return this._makeRequest("POST", "/v1/balance_settings", params, options);
+  }
+};
+
+// node_modules/stripe/esm/resources/BalanceTransactions.js
+var BalanceTransactionResource = class extends StripeResource {
+  /**
+   * Returns a list of transactions that have contributed to the Stripe account balance (for example, charges, transfers, and so on). The transactions return in sorted order, with the most recent transactions appearing first.
+   *
+   * The previous name of this endpoint was “Balance history,” and it used the path /v1/balance/history.
+   */
+  list(params, options) {
+    return this._makeRequest("GET", "/v1/balance_transactions", params, options, {
+      methodType: "list"
+    });
+  }
+  /**
+   * Retrieves the balance transaction with the given ID.
+   *
+   * Note that this endpoint previously used the path /v1/balance/history/:id.
+   */
+  retrieve(id, params, options) {
+    return this._makeRequest("GET", `/v1/balance_transactions/${encodeURIComponent(id)}`, params, options);
+  }
+};
+
+// node_modules/stripe/esm/resources/Charges.js
+var ChargeResource = class extends StripeResource {
+  /**
+   * Returns a list of charges you've previously created. The charges are returned in sorted order, with the most recent charges appearing first.
+   */
+  list(params, options) {
+    return this._makeRequest("GET", "/v1/charges", params, options, {
+      methodType: "list"
+    });
+  }
+  /**
+   * This method is deprecated and will be removed soon. If your integration uses it, you need to update it to use a different payment flow, such as [the Payment Intents API](https://docs.stripe.com/docs/payments/payment-intents).
+   */
+  create(params, options) {
+    return this._makeRequest("POST", "/v1/charges", params, options);
+  }
+  /**
+   * Retrieves the details of a charge that has previously been created. Supply the unique charge ID that was returned from your previous request, and Stripe will return the corresponding charge information. The same information is returned when creating or refunding the charge.
+   */
+  retrieve(id, params, options) {
+    return this._makeRequest("GET", `/v1/charges/${encodeURIComponent(id)}`, params, options);
+  }
+  /**
+   * Updates the specified charge by setting the values of the parameters passed. Any parameters not provided will be left unchanged.
+   */
+  update(id, params, options) {
+    return this._makeRequest("POST", `/v1/charges/${encodeURIComponent(id)}`, params, options);
+  }
+  /**
+   * Search for charges you've previously created using Stripe's [Search Query Language](https://docs.stripe.com/docs/search#search-query-language).
+   * Don't use search in read-after-write flows where strict consistency is necessary. Under normal operating
+   * conditions, data is searchable in less than a minute. Occasionally, propagation of new or updated data can be up
+   * to an hour behind during outages. Search functionality is not available to merchants in India.
+   */
+  search(params, options) {
+    return this._makeRequest("GET", "/v1/charges/search", params, options, {
+      methodType: "search"
+    });
+  }
+  /**
+   * This method is deprecated and will be removed soon. If your integration uses it, you need to update it to use a different payment flow, such as [the Payment Intents API](https://docs.stripe.com/docs/payments/payment-intents).
+   */
+  capture(id, params, options) {
+    return this._makeRequest("POST", `/v1/charges/${encodeURIComponent(id)}/capture`, params, options);
+  }
+};
+
+// node_modules/stripe/esm/resources/ConfirmationTokens.js
+var ConfirmationTokenResource2 = class extends StripeResource {
+  /**
+   * Retrieves an existing ConfirmationToken object
+   */
+  retrieve(id, params, options) {
+    return this._makeRequest("GET", `/v1/confirmation_tokens/${encodeURIComponent(id)}`, params, options);
+  }
+};
+
+// node_modules/stripe/esm/resources/CountrySpecs.js
+var CountrySpecResource = class extends StripeResource {
+  /**
+   * Lists all Country Spec objects available in the API.
+   */
+  list(params, options) {
+    return this._makeRequest("GET", "/v1/country_specs", params, options, {
+      methodType: "list"
+    });
+  }
+  /**
+   * Returns a Country Spec for a given Country code.
+   */
+  retrieve(id, params, options) {
+    return this._makeRequest("GET", `/v1/country_specs/${encodeURIComponent(id)}`, params, options);
+  }
+};
+
+// node_modules/stripe/esm/resources/Coupons.js
+var CouponResource = class extends StripeResource {
+  /**
+   * You can delete coupons via the [coupon management](https://dashboard.stripe.com/coupons) page of the Stripe dashboard. However, deleting a coupon does not affect any customers who have already applied the coupon; it means that new customers can't redeem the coupon. You can also delete coupons via the API.
+   */
+  del(id, params, options) {
+    return this._makeRequest("DELETE", `/v1/coupons/${encodeURIComponent(id)}`, params, options);
+  }
+  /**
+   * Retrieves the coupon with the given ID.
+   */
+  retrieve(id, params, options) {
+    return this._makeRequest("GET", `/v1/coupons/${encodeURIComponent(id)}`, params, options);
+  }
+  /**
+   * Updates the metadata of a coupon. Other coupon details (currency, duration, amount_off) are, by design, not editable.
+   */
+  update(id, params, options) {
+    return this._makeRequest("POST", `/v1/coupons/${encodeURIComponent(id)}`, params, options);
+  }
+  /**
+   * Returns a list of your coupons.
+   */
+  list(params, options) {
+    return this._makeRequest("GET", "/v1/coupons", params, options, {
+      methodType: "list"
+    });
+  }
+  /**
+   * You can create coupons easily via the [coupon management](https://dashboard.stripe.com/coupons) page of the Stripe dashboard. Coupon creation is also accessible via the API if you need to create coupons on the fly.
+   *
+   * A coupon has either a percent_off or an amount_off and currency. If you set an amount_off, that amount will be subtracted from any invoice's subtotal. For example, an invoice with a subtotal of 100 will have a final total of 0 if a coupon with an amount_off of 200 is applied to it and an invoice with a subtotal of 300 will have a final total of 100 if a coupon with an amount_off of 200 is applied to it.
+   */
+  create(params, options) {
+    return this._makeRequest("POST", "/v1/coupons", params, options);
+  }
+};
+
+// node_modules/stripe/esm/resources/CreditNotes.js
+var CreditNoteResource = class extends StripeResource {
+  /**
+   * Returns a list of credit notes.
+   */
+  list(params, options) {
+    return this._makeRequest("GET", "/v1/credit_notes", params, options, {
+      methodType: "list",
+      responseSchema: {
+        kind: "object",
+        fields: {
+          data: {
+            kind: "array",
+            element: {
+              kind: "object",
+              fields: {
+                lines: {
+                  kind: "object",
+                  fields: {
+                    data: {
+                      kind: "array",
+                      element: {
+                        kind: "object",
+                        fields: {
+                          unit_amount_decimal: {
+                            kind: "nullable",
+                            inner: { kind: "decimal_string" }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+  /**
+   * Issue a credit note to adjust the amount of a finalized invoice. A credit note will first reduce the invoice's amount_remaining (and amount_due), but not below zero.
+   * This amount is indicated by the credit note's pre_payment_amount. The excess amount is indicated by post_payment_amount, and it can result in any combination of the following:
+   *
+   *
+   * Refunds: create a new refund (using refund_amount) or link existing refunds (using refunds).
+   * Customer balance credit: credit the customer's balance (using credit_amount) which will be automatically applied to their next invoice when it's finalized.
+   * Outside of Stripe credit: record the amount that is or will be credited outside of Stripe (using out_of_band_amount).
+   *
+   *
+   * The sum of refunds, customer balance credits, and outside of Stripe credits must equal the post_payment_amount.
+   *
+   * You may issue multiple credit notes for an invoice. Each credit note may increment the invoice's pre_payment_credit_notes_amount,
+   * post_payment_credit_notes_amount, or both, depending on the invoice's amount_remaining at the time of credit note creation.
+   *
+   * For invoices that also have refunds created through the [Refund API](https://docs.stripe.com/docs/api/refunds), the credit note API subtracts those refund amounts from the maximum creditable amount. This prevents the combined credit notes and refunds from exceeding the invoice amount. If you use both, ensure the combined total does not exceed the invoice's paid amount.
+   */
+  create(params, options) {
+    return this._makeRequest("POST", "/v1/credit_notes", params, options, {
+      requestSchema: {
+        kind: "object",
+        fields: {
+          lines: {
+            kind: "array",
+            element: {
+              kind: "object",
+              fields: { unit_amount_decimal: { kind: "decimal_string" } }
+            }
+          }
+        }
+      },
+      responseSchema: {
+        kind: "object",
+        fields: {
+          lines: {
+            kind: "object",
+            fields: {
+              data: {
+                kind: "array",
+                element: {
+                  kind: "object",
+                  fields: {
+                    unit_amount_decimal: {
+                      kind: "nullable",
+                      inner: { kind: "decimal_string" }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+  /**
+   * Retrieves the credit note object with the given identifier.
+   */
+  retrieve(id, params, options) {
+    return this._makeRequest("GET", `/v1/credit_notes/${encodeURIComponent(id)}`, params, options, {
+      responseSchema: {
+        kind: "object",
+        fields: {
+          lines: {
+            kind: "object",
+            fields: {
+              data: {
+                kind: "array",
+                element: {
+                  kind: "object",
+                  fields: {
+                    unit_amount_decimal: {
+                      kind: "nullable",
+                      inner: { kind: "decimal_string" }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+  /**
+   * Updates an existing credit note.
+   */
+  update(id, params, options) {
+    return this._makeRequest("POST", `/v1/credit_notes/${encodeURIComponent(id)}`, params, options, {
+      responseSchema: {
+        kind: "object",
+        fields: {
+          lines: {
+            kind: "object",
+            fields: {
+              data: {
+                kind: "array",
+                element: {
+                  kind: "object",
+                  fields: {
+                    unit_amount_decimal: {
+                      kind: "nullable",
+                      inner: { kind: "decimal_string" }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+  /**
+   * Get a preview of a credit note without creating it.
+   */
+  preview(params, options) {
+    return this._makeRequest("GET", "/v1/credit_notes/preview", params, options, {
+      requestSchema: {
+        kind: "object",
+        fields: {
+          lines: {
+            kind: "array",
+            element: {
+              kind: "object",
+              fields: { unit_amount_decimal: { kind: "decimal_string" } }
+            }
+          }
+        }
+      },
+      responseSchema: {
+        kind: "object",
+        fields: {
+          lines: {
+            kind: "object",
+            fields: {
+              data: {
+                kind: "array",
+                element: {
+                  kind: "object",
+                  fields: {
+                    unit_amount_decimal: {
+                      kind: "nullable",
+                      inner: { kind: "decimal_string" }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+  /**
+   * Marks a credit note as void. Learn more about [voiding credit notes](https://docs.stripe.com/docs/billing/invoices/credit-notes#voiding).
+   */
+  voidCreditNote(id, params, options) {
+    return this._makeRequest("POST", `/v1/credit_notes/${encodeURIComponent(id)}/void`, params, options, {
+      responseSchema: {
+        kind: "object",
+        fields: {
+          lines: {
+            kind: "object",
+            fields: {
+              data: {
+                kind: "array",
+                element: {
+                  kind: "object",
+                  fields: {
+                    unit_amount_decimal: {
+                      kind: "nullable",
+                      inner: { kind: "decimal_string" }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+  /**
+   * When retrieving a credit note preview, you'll get a lines property containing the first handful of those items. This URL you can retrieve the full (paginated) list of line items.
+   */
+  listPreviewLineItems(params, options) {
+    return this._makeRequest("GET", "/v1/credit_notes/preview/lines", params, options, {
+      methodType: "list",
+      requestSchema: {
+        kind: "object",
+        fields: {
+          lines: {
+            kind: "array",
+            element: {
+              kind: "object",
+              fields: { unit_amount_decimal: { kind: "decimal_string" } }
+            }
+          }
+        }
+      },
+      responseSchema: {
+        kind: "object",
+        fields: {
+          data: {
+            kind: "array",
+            element: {
+              kind: "object",
+              fields: {
+                unit_amount_decimal: {
+                  kind: "nullable",
+                  inner: { kind: "decimal_string" }
+                }
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+  /**
+   * When retrieving a credit note, you'll get a lines property containing the first handful of those items. There is also a URL where you can retrieve the full (paginated) list of line items.
+   */
+  listLineItems(id, params, options) {
+    return this._makeRequest("GET", `/v1/credit_notes/${encodeURIComponent(id)}/lines`, params, options, {
+      methodType: "list",
+      responseSchema: {
+        kind: "object",
+        fields: {
+          data: {
+            kind: "array",
+            element: {
+              kind: "object",
+              fields: {
+                unit_amount_decimal: {
+                  kind: "nullable",
+                  inner: { kind: "decimal_string" }
+                }
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+};
+
+// node_modules/stripe/esm/resources/Customers.js
+var CustomerResource2 = class extends StripeResource {
+  /**
+   * Permanently deletes a customer. It cannot be undone. Also immediately cancels any active subscriptions on the customer.
+   */
+  del(id, params, options) {
+    return this._makeRequest("DELETE", `/v1/customers/${encodeURIComponent(id)}`, params, options);
+  }
+  /**
+   * Retrieves a Customer object.
+   */
+  retrieve(id, params, options) {
+    return this._makeRequest("GET", `/v1/customers/${encodeURIComponent(id)}`, params, options);
+  }
+  /**
+   * Updates the specified customer by setting the values of the parameters passed. Any parameters not provided are left unchanged. For example, if you pass the source parameter, that becomes the customer's active source (such as a card) to be used for all charges in the future. When you update a customer to a new valid card source by passing the source parameter: for each of the customer's current subscriptions, if the subscription bills automatically and is in the past_due state, then the latest open invoice for the subscription with automatic collection enabled is retried. This retry doesn't count as an automatic retry, and doesn't affect the next regularly scheduled payment for the invoice. Changing the default_source for a customer doesn't trigger this behavior.
+   *
+   * This request accepts mostly the same arguments as the customer creation call.
+   */
+  update(id, params, options) {
+    return this._makeRequest("POST", `/v1/customers/${encodeURIComponent(id)}`, params, options, {
+      responseSchema: {
+        kind: "object",
+        fields: {
+          subscriptions: {
+            kind: "object",
+            fields: {
+              data: {
+                kind: "array",
+                element: {
+                  kind: "object",
+                  fields: {
+                    items: {
+                      kind: "object",
+                      fields: {
+                        data: {
+                          kind: "array",
+                          element: {
+                            kind: "object",
+                            fields: {
+                              plan: {
+                                kind: "object",
+                                fields: {
+                                  amount_decimal: {
+                                    kind: "nullable",
+                                    inner: { kind: "decimal_string" }
+                                  },
+                                  tiers: {
+                                    kind: "array",
+                                    element: {
+                                      kind: "object",
+                                      fields: {
+                                        flat_amount_decimal: {
+                                          kind: "nullable",
+                                          inner: { kind: "decimal_string" }
+                                        },
+                                        unit_amount_decimal: {
+                                          kind: "nullable",
+                                          inner: { kind: "decimal_string" }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              },
+                              price: {
+                                kind: "object",
+                                fields: {
+                                  currency_options: {
+                                    kind: "array",
+                                    element: {
+                                      kind: "object",
+                                      fields: {
+                                        tiers: {
+                                          kind: "array",
+                                          element: {
+                                            kind: "object",
+                                            fields: {
+                                              flat_amount_decimal: {
+                                                kind: "nullable",
+                                                inner: {
+                                                  kind: "decimal_string"
+                                                }
+                                              },
+                                              unit_amount_decimal: {
+                                                kind: "nullable",
+                                                inner: {
+                                                  kind: "decimal_string"
+                                                }
+                                              }
+                                            }
+                                          }
+                                        },
+                                        unit_amount_decimal: {
+                                          kind: "nullable",
+                                          inner: { kind: "decimal_string" }
+                                        }
+                                      }
+                                    }
+                                  },
+                                  tiers: {
+                                    kind: "array",
+                                    element: {
+                                      kind: "object",
+                                      fields: {
+                                        flat_amount_decimal: {
+                                          kind: "nullable",
+                                          inner: { kind: "decimal_string" }
+                                        },
+                                        unit_amount_decimal: {
+                                          kind: "nullable",
+                                          inner: { kind: "decimal_string" }
+                                        }
+                                      }
+                                    }
+                                  },
+                                  unit_amount_decimal: {
+                                    kind: "nullable",
+                                    inner: { kind: "decimal_string" }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+  /**
+   * Removes the currently applied discount on a customer.
+   */
+  deleteDiscount(id, params, options) {
+    return this._makeRequest("DELETE", `/v1/customers/${encodeURIComponent(id)}/discount`, params, options);
+  }
+  /**
+   * Returns a list of your customers. The customers are returned sorted by creation date, with the most recent customers appearing first.
+   */
+  list(params, options) {
+    return this._makeRequest("GET", "/v1/customers", params, options, {
+      methodType: "list",
+      responseSchema: {
+        kind: "object",
+        fields: {
+          data: {
+            kind: "array",
+            element: {
+              kind: "object",
+              fields: {
+                subscriptions: {
+                  kind: "object",
+                  fields: {
+                    data: {
+                      kind: "array",
+                      element: {
+                        kind: "object",
+                        fields: {
+                          items: {
+                            kind: "object",
+                            fields: {
+                              data: {
+                                kind: "array",
+                                element: {
+                                  kind: "object",
+                                  fields: {
+                                    plan: {
+                                      kind: "object",
+                                      fields: {
+                                        amount_decimal: {
+                                          kind: "nullable",
+                                          inner: { kind: "decimal_string" }
+                                        },
+                                        tiers: {
+                                          kind: "array",
+                                          element: {
+                                            kind: "object",
+                                            fields: {
+                                              flat_amount_decimal: {
+                                                kind: "nullable",
+                                                inner: { kind: "decimal_string" }
+                                              },
+                                              unit_amount_decimal: {
+                                                kind: "nullable",
+                                                inner: { kind: "decimal_string" }
+                                              }
+                                            }
+                                          }
+                                        }
+                                      }
+                                    },
+                                    price: {
+                                      kind: "object",
+                                      fields: {
+                                        currency_options: {
+                                          kind: "array",
+                                          element: {
+                                            kind: "object",
+                                            fields: {
+                                              tiers: {
+                                                kind: "array",
+                                                element: {
+                                                  kind: "object",
+                                                  fields: {
+                                                    flat_amount_decimal: {
+                                                      kind: "nullable",
+                                                      inner: {
+                                                        kind: "decimal_string"
+                                                      }
+                                                    },
+                                                    unit_amount_decimal: {
+                                                      kind: "nullable",
+                                                      inner: {
+                                                        kind: "decimal_string"
+                                                      }
+                                                    }
+                                                  }
+                                                }
+                                              },
+                                              unit_amount_decimal: {
+                                                kind: "nullable",
+                                                inner: { kind: "decimal_string" }
+                                              }
+                                            }
+                                          }
+                                        },
+                                        tiers: {
+                                          kind: "array",
+                                          element: {
+                                            kind: "object",
+                                            fields: {
+                                              flat_amount_decimal: {
+                                                kind: "nullable",
+                                                inner: { kind: "decimal_string" }
+                                              },
+                                              unit_amount_decimal: {
+                                                kind: "nullable",
+                                                inner: { kind: "decimal_string" }
+                                              }
+                                            }
+                                          }
+                                        },
+                                        unit_amount_decimal: {
+                                          kind: "nullable",
+                                          inner: { kind: "decimal_string" }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+  /**
+   * Creates a new customer object.
+   */
+  create(params, options) {
+    return this._makeRequest("POST", "/v1/customers", params, options, {
+      responseSchema: {
+        kind: "object",
+        fields: {
+          subscriptions: {
+            kind: "object",
+            fields: {
+              data: {
+                kind: "array",
+                element: {
+                  kind: "object",
+                  fields: {
+                    items: {
+                      kind: "object",
+                      fields: {
+                        data: {
+                          kind: "array",
+                          element: {
+                            kind: "object",
+                            fields: {
+                              plan: {
+                                kind: "object",
+                                fields: {
+                                  amount_decimal: {
+                                    kind: "nullable",
+                                    inner: { kind: "decimal_string" }
+                                  },
+                                  tiers: {
+                                    kind: "array",
+                                    element: {
+                                      kind: "object",
+                                      fields: {
+                                        flat_amount_decimal: {
+                                          kind: "nullable",
+                                          inner: { kind: "decimal_string" }
+                                        },
+                                        unit_amount_decimal: {
+                                          kind: "nullable",
+                                          inner: { kind: "decimal_string" }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              },
+                              price: {
+                                kind: "object",
+                                fields: {
+                                  currency_options: {
+                                    kind: "array",
+                                    element: {
+                                      kind: "object",
+                                      fields: {
+                                        tiers: {
+                                          kind: "array",
+                                          element: {
+                                            kind: "object",
+                                            fields: {
+                                              flat_amount_decimal: {
+                                                kind: "nullable",
+                                                inner: { kind: "decimal_string" }
+                                              },
+                                              unit_amount_decimal: {
+                                                kind: "nullable",
+                                                inner: { kind: "decimal_string" }
+                                              }
+                                            }
+                                          }
+                                        },
+                                        unit_amount_decimal: {
+                                          kind: "nullable",
+                                          inner: { kind: "decimal_string" }
+                                        }
+                                      }
+                                    }
+                                  },
+                                  tiers: {
+                                    kind: "array",
+                                    element: {
+                                      kind: "object",
+                                      fields: {
+                                        flat_amount_decimal: {
+                                          kind: "nullable",
+                                          inner: { kind: "decimal_string" }
+                                        },
+                                        unit_amount_decimal: {
+                                          kind: "nullable",
+                                          inner: { kind: "decimal_string" }
+                                        }
+                                      }
+                                    }
+                                  },
+                                  unit_amount_decimal: {
+                                    kind: "nullable",
+                                    inner: { kind: "decimal_string" }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+  /**
+   * Search for customers you've previously created using Stripe's [Search Query Language](https://docs.stripe.com/docs/search#search-query-language).
+   * Don't use search in read-after-write flows where strict consistency is necessary. Under normal operating
+   * conditions, data is searchable in less than a minute. Occasionally, propagation of new or updated data can be up
+   * to an hour behind during outages. Search functionality is not available to merchants in India.
+   */
+  search(params, options) {
+    return this._makeRequest("GET", "/v1/customers/search", params, options, {
+      methodType: "search",
+      responseSchema: {
+        kind: "object",
+        fields: {
+          data: {
+            kind: "array",
+            element: {
+              kind: "object",
+              fields: {
+                subscriptions: {
+                  kind: "object",
+                  fields: {
+                    data: {
+                      kind: "array",
+                      element: {
+                        kind: "object",
+                        fields: {
+                          items: {
+                            kind: "object",
+                            fields: {
+                              data: {
+                                kind: "array",
+                                element: {
+                                  kind: "object",
+                                  fields: {
+                                    plan: {
+                                      kind: "object",
+                                      fields: {
+                                        amount_decimal: {
+                                          kind: "nullable",
+                                          inner: { kind: "decimal_string" }
+                                        },
+                                        tiers: {
+                                          kind: "array",
+                                          element: {
+                                            kind: "object",
+                                            fields: {
+                                              flat_amount_decimal: {
+                                                kind: "nullable",
+                                                inner: { kind: "decimal_string" }
+                                              },
+                                              unit_amount_decimal: {
+                                                kind: "nullable",
+                                                inner: { kind: "decimal_string" }
+                                              }
+                                            }
+                                          }
+                                        }
+                                      }
+                                    },
+                                    price: {
+                                      kind: "object",
+                                      fields: {
+                                        currency_options: {
+                                          kind: "array",
+                                          element: {
+                                            kind: "object",
+                                            fields: {
+                                              tiers: {
+                                                kind: "array",
+                                                element: {
+                                                  kind: "object",
+                                                  fields: {
+                                                    flat_amount_decimal: {
+                                                      kind: "nullable",
+                                                      inner: {
+                                                        kind: "decimal_string"
+                                                      }
+                                                    },
+                                                    unit_amount_decimal: {
+                                                      kind: "nullable",
+                                                      inner: {
+                                                        kind: "decimal_string"
+                                                      }
+                                                    }
+                                                  }
+                                                }
+                                              },
+                                              unit_amount_decimal: {
+                                                kind: "nullable",
+                                                inner: { kind: "decimal_string" }
+                                              }
+                                            }
+                                          }
+                                        },
+                                        tiers: {
+                                          kind: "array",
+                                          element: {
+                                            kind: "object",
+                                            fields: {
+                                              flat_amount_decimal: {
+                                                kind: "nullable",
+                                                inner: { kind: "decimal_string" }
+                                              },
+                                              unit_amount_decimal: {
+                                                kind: "nullable",
+                                                inner: { kind: "decimal_string" }
+                                              }
+                                            }
+                                          }
+                                        },
+                                        unit_amount_decimal: {
+                                          kind: "nullable",
+                                          inner: { kind: "decimal_string" }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+  /**
+   * Returns a list of transactions that updated the customer's [balances](https://docs.stripe.com/docs/billing/customer/balance).
+   */
+  listBalanceTransactions(id, params, options) {
+    return this._makeRequest("GET", `/v1/customers/${encodeURIComponent(id)}/balance_transactions`, params, options, {
+      methodType: "list"
+    });
+  }
+  /**
+   * Creates an immutable transaction that updates the customer's credit [balance](https://docs.stripe.com/docs/billing/customer/balance).
+   */
+  createBalanceTransaction(id, params, options) {
+    return this._makeRequest("POST", `/v1/customers/${encodeURIComponent(id)}/balance_transactions`, params, options);
+  }
+  /**
+   * Retrieves a specific customer balance transaction that updated the customer's [balances](https://docs.stripe.com/docs/billing/customer/balance).
+   */
+  retrieveBalanceTransaction(customerId, id, params, options) {
+    return this._makeRequest("GET", `/v1/customers/${encodeURIComponent(customerId)}/balance_transactions/${encodeURIComponent(id)}`, params, options);
+  }
+  /**
+   * Most credit balance transaction fields are immutable, but you may update its description and metadata.
+   */
+  updateBalanceTransaction(customerId, id, params, options) {
+    return this._makeRequest("POST", `/v1/customers/${encodeURIComponent(customerId)}/balance_transactions/${encodeURIComponent(id)}`, params, options);
+  }
+  /**
+   * Retrieves a customer's cash balance.
+   */
+  retrieveCashBalance(id, params, options) {
+    return this._makeRequest("GET", `/v1/customers/${encodeURIComponent(id)}/cash_balance`, params, options);
+  }
+  /**
+   * Changes the settings on a customer's cash balance.
+   */
+  updateCashBalance(id, params, options) {
+    return this._makeRequest("POST", `/v1/customers/${encodeURIComponent(id)}/cash_balance`, params, options);
+  }
+  /**
+   * Returns a list of transactions that modified the customer's [cash balance](https://docs.stripe.com/docs/payments/customer-balance).
+   */
+  listCashBalanceTransactions(id, params, options) {
+    return this._makeRequest("GET", `/v1/customers/${encodeURIComponent(id)}/cash_balance_transactions`, params, options, {
+      methodType: "list"
+    });
+  }
+  /**
+   * Retrieves a specific cash balance transaction, which updated the customer's [cash balance](https://docs.stripe.com/docs/payments/customer-balance).
+   */
+  retrieveCashBalanceTransaction(customerId, id, params, options) {
+    return this._makeRequest("GET", `/v1/customers/${encodeURIComponent(customerId)}/cash_balance_transactions/${encodeURIComponent(id)}`, params, options);
+  }
+  /**
+   * Retrieve funding instructions for a customer cash balance. If funding instructions do not yet exist for the customer, new
+   * funding instructions will be created. If funding instructions have already been created for a given customer, the same
+   * funding instructions will be retrieved. In other words, we will return the same funding instructions each time.
+   */
+  createFundingInstructions(id, params, options) {
+    return this._makeRequest("POST", `/v1/customers/${encodeURIComponent(id)}/funding_instructions`, params, options);
+  }
+  /**
+   * Returns a list of PaymentMethods for a given Customer
+   */
+  listPaymentMethods(id, params, options) {
+    return this._makeRequest("GET", `/v1/customers/${encodeURIComponent(id)}/payment_methods`, params, options, {
+      methodType: "list"
+    });
+  }
+  /**
+   * Retrieves a PaymentMethod object for a given Customer.
+   */
+  retrievePaymentMethod(customerId, id, params, options) {
+    return this._makeRequest("GET", `/v1/customers/${encodeURIComponent(customerId)}/payment_methods/${encodeURIComponent(id)}`, params, options);
+  }
+  /**
+   * List sources for a specified customer.
+   */
+  listSources(id, params, options) {
+    return this._makeRequest("GET", `/v1/customers/${encodeURIComponent(id)}/sources`, params, options, {
+      methodType: "list"
+    });
+  }
+  /**
+   * When you create a new credit card, you must specify a customer or recipient on which to create it.
+   *
+   * If the card's owner has no default card, then the new card will become the default.
+   * However, if the owner already has a default, then it will not change.
+   * To change the default, you should [update the customer](https://docs.stripe.com/api/customers/update) to have a new default_source.
+   */
+  createSource(id, params, options) {
+    return this._makeRequest("POST", `/v1/customers/${encodeURIComponent(id)}/sources`, params, options);
+  }
+  /**
+   * Retrieve a specified source for a given customer.
+   */
+  retrieveSource(customerId, id, params, options) {
+    return this._makeRequest("GET", `/v1/customers/${encodeURIComponent(customerId)}/sources/${encodeURIComponent(id)}`, params, options);
+  }
+  /**
+   * Update a specified source for a given customer.
+   */
+  updateSource(customerId, id, params, options) {
+    return this._makeRequest("POST", `/v1/customers/${encodeURIComponent(customerId)}/sources/${encodeURIComponent(id)}`, params, options);
+  }
+  /**
+   * Delete a specified source for a given customer.
+   */
+  deleteSource(customerId, id, params, options) {
+    return this._makeRequest("DELETE", `/v1/customers/${encodeURIComponent(customerId)}/sources/${encodeURIComponent(id)}`, params, options);
+  }
+  /**
+   * Verify a specified bank account for a given customer.
+   */
+  verifySource(customerId, id, params, options) {
+    return this._makeRequest("POST", `/v1/customers/${encodeURIComponent(customerId)}/sources/${encodeURIComponent(id)}/verify`, params, options);
+  }
+  /**
+   * Deletes an existing tax_id object.
+   */
+  deleteTaxId(customerId, id, params, options) {
+    return this._makeRequest("DELETE", `/v1/customers/${encodeURIComponent(customerId)}/tax_ids/${encodeURIComponent(id)}`, params, options);
+  }
+  /**
+   * Retrieves the tax_id object with the given identifier.
+   */
+  retrieveTaxId(customerId, id, params, options) {
+    return this._makeRequest("GET", `/v1/customers/${encodeURIComponent(customerId)}/tax_ids/${encodeURIComponent(id)}`, params, options);
+  }
+  /**
+   * Returns a list of tax IDs for a customer.
+   */
+  listTaxIds(id, params, options) {
+    return this._makeRequest("GET", `/v1/customers/${encodeURIComponent(id)}/tax_ids`, params, options, {
+      methodType: "list"
+    });
+  }
+  /**
+   * Creates a new tax_id object for a customer.
+   */
+  createTaxId(id, params, options) {
+    return this._makeRequest("POST", `/v1/customers/${encodeURIComponent(id)}/tax_ids`, params, options);
+  }
+};
+
+// node_modules/stripe/esm/resources/CustomerSessions.js
+var CustomerSessionResource = class extends StripeResource {
+  /**
+   * Creates a Customer Session object that includes a single-use client secret that you can use on your front-end to grant client-side API access for certain customer resources.
+   */
+  create(params, options) {
+    return this._makeRequest("POST", "/v1/customer_sessions", params, options);
+  }
+};
+
+// node_modules/stripe/esm/resources/Disputes.js
+var DisputeResource2 = class extends StripeResource {
+  /**
+   * Returns a list of your disputes.
+   */
+  list(params, options) {
+    return this._makeRequest("GET", "/v1/disputes", params, options, {
+      methodType: "list"
+    });
+  }
+  /**
+   * Retrieves the dispute with the given ID.
+   */
+  retrieve(id, params, options) {
+    return this._makeRequest("GET", `/v1/disputes/${encodeURIComponent(id)}`, params, options);
+  }
+  /**
+   * When you get a dispute, contacting your customer is always the best first step. If that doesn't work, you can submit evidence to help us resolve the dispute in your favor. You can do this in your [dashboard](https://dashboard.stripe.com/disputes), but if you prefer, you can use the API to submit evidence programmatically.
+   *
+   * Depending on your dispute type, different evidence fields will give you a better chance of winning your dispute. To figure out which evidence fields to provide, see our [guide to dispute types](https://docs.stripe.com/docs/disputes/categories).
+   */
+  update(id, params, options) {
+    return this._makeRequest("POST", `/v1/disputes/${encodeURIComponent(id)}`, params, options);
+  }
+  /**
+   * Closing the dispute for a charge indicates that you do not have any evidence to submit and are essentially dismissing the dispute (accepting it), acknowledging it as lost.
+   *
+   * The status of the dispute will change from needs_response to lost. Closing a dispute is irreversible.
+   */
+  close(id, params, options) {
+    return this._makeRequest("POST", `/v1/disputes/${encodeURIComponent(id)}/close`, params, options);
+  }
+};
+
+// node_modules/stripe/esm/resources/EphemeralKeys.js
+var EphemeralKeyResource = class extends StripeResource {
+  /**
+   * Invalidates a short-lived API key for a given resource.
+   */
+  del(id, params, options) {
+    return this._makeRequest("DELETE", `/v1/ephemeral_keys/${encodeURIComponent(id)}`, params, options);
+  }
+  create(params, options) {
+    return this._makeRequest("POST", "/v1/ephemeral_keys", params, options, {
+      validator: (data, options2) => {
+        if (!options2.headers || !options2.headers["Stripe-Version"]) {
+          throw new Error("Passing apiVersion in a separate options hash is required to create an ephemeral key. See https://stripe.com/docs/api/versioning?lang=node");
+        }
+      }
+    });
+  }
+};
+
+// node_modules/stripe/esm/resources/Events.js
+var EventResource2 = class extends StripeResource {
+  /**
+   * List events, going back up to 30 days. Each event data is rendered according to Stripe API version at its creation time, specified in [event object](https://docs.stripe.com/api/events/object) api_version attribute (not according to your current Stripe API version or Stripe-Version header).
+   */
+  list(params, options) {
+    return this._makeRequest("GET", "/v1/events", params, options, {
+      methodType: "list"
+    });
+  }
+  /**
+   * Retrieves the details of an event if it was created in the last 30 days. Supply the unique identifier of the event, which you might have received in a webhook.
+   */
+  retrieve(id, params, options) {
+    return this._makeRequest("GET", `/v1/events/${encodeURIComponent(id)}`, params, options);
+  }
+};
+
+// node_modules/stripe/esm/resources/ExchangeRates.js
+var ExchangeRateResource = class extends StripeResource {
+  /**
+   * [Deprecated] The ExchangeRate APIs are deprecated. Please use the [FX Quotes API](https://docs.stripe.com/payments/currencies/localize-prices/fx-quotes-api) instead.
+   *
+   * Returns a list of objects that contain the rates at which foreign currencies are converted to one another. Only shows the currencies for which Stripe supports.
+   * @deprecated
+   */
+  list(params, options) {
+    return this._makeRequest("GET", "/v1/exchange_rates", params, options, {
+      methodType: "list"
+    });
+  }
+  /**
+   * [Deprecated] The ExchangeRate APIs are deprecated. Please use the [FX Quotes API](https://docs.stripe.com/payments/currencies/localize-prices/fx-quotes-api) instead.
+   *
+   * Retrieves the exchange rates from the given currency to every supported currency.
+   * @deprecated
+   */
+  retrieve(id, params, options) {
+    return this._makeRequest("GET", `/v1/exchange_rates/${encodeURIComponent(id)}`, params, options);
+  }
+};
+
+// node_modules/stripe/esm/multipart.js
+var multipartDataGenerator = (data, headers, segmentBoundary) => {
+  headers["Content-Type"] = `multipart/form-data; boundary=${segmentBoundary}`;
+  const textEncoder2 = new TextEncoder();
+  let buffer = new Uint8Array(0);
+  const endBuffer = textEncoder2.encode("\r\n");
+  function push(l) {
+    const prevBuffer = buffer;
+    const newBuffer = l instanceof Uint8Array ? l : new Uint8Array(textEncoder2.encode(l));
+    buffer = new Uint8Array(prevBuffer.length + newBuffer.length + 2);
+    buffer.set(prevBuffer);
+    buffer.set(newBuffer, prevBuffer.length);
+    buffer.set(endBuffer, buffer.length - 2);
+  }
+  function stripCrLf(s) {
+    return s.replace(/\r\n|\r|\n/g, " ");
+  }
+  function quote(s) {
+    return `"${stripCrLf(s.replace(/"/g, "%22"))}"`;
+  }
+  const flattenedData = flattenAndStringify(data);
+  for (const k in flattenedData) {
+    if (!Object.prototype.hasOwnProperty.call(flattenedData, k)) {
+      continue;
+    }
+    const v = flattenedData[k];
+    push(`--${segmentBoundary}`);
+    if (Object.prototype.hasOwnProperty.call(v, "data")) {
+      const typedEntry = v;
+      push(`Content-Disposition: form-data; name=${quote(k)}; filename=${quote(typedEntry.name || "blob")}`);
+      push(`Content-Type: ${stripCrLf(typedEntry.type || "application/octet-stream")}`);
+      push("");
+      push(typedEntry.data);
+    } else {
+      push(`Content-Disposition: form-data; name=${quote(k)}`);
+      push("");
+      push(v);
+    }
+  }
+  push(`--${segmentBoundary}--`);
+  return buffer;
+};
+function multipartRequestDataProcessor(method, data, headers, callback) {
+  data = data || {};
+  if (method !== "POST") {
+    return callback(null, queryStringifyRequestData(data));
+  }
+  this._stripe._platformFunctions.tryBufferData(data).then((bufferedData) => {
+    const buffer = multipartDataGenerator(
+      bufferedData,
+      headers,
+      // segment boundaries must be generated from a cryptographically secure method
+      // see: https://go/j/RUN_DEVSDK-2807
+      this._stripe._platformFunctions.uuid4()
+    );
+    return callback(null, buffer);
+  }).catch((err) => callback(err, null));
+}
+
+// node_modules/stripe/esm/resources/Files.js
+var FileResource = class extends StripeResource {
+  constructor() {
+    super(...arguments);
+    this.requestDataProcessor = multipartRequestDataProcessor;
+  }
+  /**
+   * Returns a list of the files that your account has access to. Stripe sorts and returns the files by their creation dates, placing the most recently created files at the top.
+   */
+  list(params, options) {
+    return this._makeRequest("GET", "/v1/files", params, options, {
+      methodType: "list"
+    });
+  }
+  /**
+   * To upload a file to Stripe, you need to send a request of type multipart/form-data. Include the file you want to upload in the request, and the parameters for creating a file.
+   *
+   * All of Stripe's officially supported Client libraries support sending multipart/form-data.
+   */
+  create(params, options) {
+    return this._makeRequest("POST", "/v1/files", params, options, {
+      headers: {
+        "Content-Type": "multipart/form-data"
+      },
+      apiBase: "files"
+    });
+  }
+  /**
+   * Retrieves the details of an existing file object. After you supply a unique file ID, Stripe returns the corresponding file object. Learn how to [access file contents](https://docs.stripe.com/docs/file-upload#download-file-contents).
+   */
+  retrieve(id, params, options) {
+    return this._makeRequest("GET", `/v1/files/${encodeURIComponent(id)}`, params, options);
+  }
+};
+
+// node_modules/stripe/esm/resources/FileLinks.js
+var FileLinkResource = class extends StripeResource {
+  /**
+   * Returns a list of file links.
+   */
+  list(params, options) {
+    return this._makeRequest("GET", "/v1/file_links", params, options, {
+      methodType: "list"
+    });
+  }
+  /**
+   * Creates a new file link object.
+   */
+  create(params, options) {
+    return this._makeRequest("POST", "/v1/file_links", params, options);
+  }
+  /**
+   * Retrieves the file link with the given ID.
+   */
+  retrieve(id, params, options) {
+    return this._makeRequest("GET", `/v1/file_links/${encodeURIComponent(id)}`, params, options);
+  }
+  /**
+   * Updates an existing file link object. Expired links can no longer be updated.
+   */
+  update(id, params, options) {
+    return this._makeRequest("POST", `/v1/file_links/${encodeURIComponent(id)}`, params, options);
+  }
+};
+
+// node_modules/stripe/esm/resources/Invoices.js
+var InvoiceResource = class extends StripeResource {
+  /**
+   * Permanently deletes a one-off invoice draft. This cannot be undone. Attempts to delete invoices that are no longer in a draft state will fail; once an invoice has been finalized or if an invoice is for a subscription, it must be [voided](https://docs.stripe.com/api/invoices/void).
+   */
+  del(id, params, options) {
+    return this._makeRequest("DELETE", `/v1/invoices/${encodeURIComponent(id)}`, params, options);
+  }
+  /**
+   * Retrieves the invoice with the given ID.
+   */
+  retrieve(id, params, options) {
+    return this._makeRequest("GET", `/v1/invoices/${encodeURIComponent(id)}`, params, options, {
+      responseSchema: {
+        kind: "object",
+        fields: {
+          lines: {
+            kind: "object",
+            fields: {
+              data: {
+                kind: "array",
+                element: {
+                  kind: "object",
+                  fields: {
+                    pricing: {
+                      kind: "nullable",
+                      inner: {
+                        kind: "object",
+                        fields: {
+                          unit_amount_decimal: {
+                            kind: "nullable",
+                            inner: { kind: "decimal_string" }
+                          }
+                        }
+                      }
+                    },
+                    quantity_decimal: {
+                      kind: "nullable",
+                      inner: { kind: "decimal_string" }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+  /**
+   * Draft invoices are fully editable. Once an invoice is [finalized](https://docs.stripe.com/docs/billing/invoices/workflow#finalized),
+   * you can no longer change most of its details, including monetary values and collection_method. For most invoices,
+   * this also includes description.
+   *
+   * If you would like to stop the Stripe Billing engine from automatically finalizing, reattempting payments on,
+   * sending reminders for, or [automatically reconciling](https://docs.stripe.com/docs/billing/invoices/reconciliation) invoices, pass
+   * auto_advance=false.
+   */
+  update(id, params, options) {
+    return this._makeRequest("POST", `/v1/invoices/${encodeURIComponent(id)}`, params, options, {
+      responseSchema: {
+        kind: "object",
+        fields: {
+          lines: {
+            kind: "object",
+            fields: {
+              data: {
+                kind: "array",
+                element: {
+                  kind: "object",
+                  fields: {
+                    pricing: {
+                      kind: "nullable",
+                      inner: {
+                        kind: "object",
+                        fields: {
+                          unit_amount_decimal: {
+                            kind: "nullable",
+                            inner: { kind: "decimal_string" }
+                          }
+                        }
+                      }
+                    },
+                    quantity_decimal: {
+                      kind: "nullable",
+                      inner: { kind: "decimal_string" }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+  /**
+   * You can list all invoices, or list the invoices for a specific customer. The invoices are returned sorted by creation date, with the most recently created invoices appearing first.
+   */
+  list(params, options) {
+    return this._makeRequest("GET", "/v1/invoices", params, options, {
+      methodType: "list",
+      responseSchema: {
+        kind: "object",
+        fields: {
+          data: {
+            kind: "array",
+            element: {
+              kind: "object",
+              fields: {
+                lines: {
+                  kind: "object",
+                  fields: {
+                    data: {
+                      kind: "array",
+                      element: {
+                        kind: "object",
+                        fields: {
+                          pricing: {
+                            kind: "nullable",
+                            inner: {
+                              kind: "object",
+                              fields: {
+                                unit_amount_decimal: {
+                                  kind: "nullable",
+                                  inner: { kind: "decimal_string" }
+                                }
+                              }
+                            }
+                          },
+                          quantity_decimal: {
+                            kind: "nullable",
+                            inner: { kind: "decimal_string" }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+  /**
+   * This endpoint creates a draft invoice for a given customer. The invoice remains a draft until you [finalize the invoice, which allows you to [pay](/api/invoices/pay) or <a href="/api/invoices/send">send](https://docs.stripe.com/api/invoices/finalize) the invoice to your customers.
+   */
+  create(params, options) {
+    return this._makeRequest("POST", "/v1/invoices", params, options, {
+      responseSchema: {
+        kind: "object",
+        fields: {
+          lines: {
+            kind: "object",
+            fields: {
+              data: {
+                kind: "array",
+                element: {
+                  kind: "object",
+                  fields: {
+                    pricing: {
+                      kind: "nullable",
+                      inner: {
+                        kind: "object",
+                        fields: {
+                          unit_amount_decimal: {
+                            kind: "nullable",
+                            inner: { kind: "decimal_string" }
+                          }
+                        }
+                      }
+                    },
+                    quantity_decimal: {
+                      kind: "nullable",
+                      inner: { kind: "decimal_string" }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+  /**
+   * Search for invoices you've previously created using Stripe's [Search Query Language](https://docs.stripe.com/docs/search#search-query-language).
+   * Don't use search in read-after-write flows where strict consistency is necessary. Under normal operating
+   * conditions, data is searchable in less than a minute. Occasionally, propagation of new or updated data can be up
+   * to an hour behind during outages. Search functionality is not available to merchants in India.
+   */
+  search(params, options) {
+    return this._makeRequest("GET", "/v1/invoices/search", params, options, {
+      methodType: "search",
+      responseSchema: {
+        kind: "object",
+        fields: {
+          data: {
+            kind: "array",
+            element: {
+              kind: "object",
+              fields: {
+                lines: {
+                  kind: "object",
+                  fields: {
+                    data: {
+                      kind: "array",
+                      element: {
+                        kind: "object",
+                        fields: {
+                          pricing: {
+                            kind: "nullable",
+                            inner: {
+                              kind: "object",
+                              fields: {
+                                unit_amount_decimal: {
+                                  kind: "nullable",
+                                  inner: { kind: "decimal_string" }
+                                }
+                              }
+                            }
+                          },
+                          quantity_decimal: {
+                            kind: "nullable",
+                            inner: { kind: "decimal_string" }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+  /**
+   * Adds multiple line items to an invoice. This is only possible when an invoice is still a draft.
+   */
+  addLines(id, params, options) {
+    return this._makeRequest("POST", `/v1/invoices/${encodeURIComponent(id)}/add_lines`, params, options, {
+      requestSchema: {
+        kind: "object",
+        fields: {
+          lines: {
+            kind: "array",
+            element: {
+              kind: "object",
+              fields: {
+                price_data: {
+                  kind: "object",
+                  fields: { unit_amount_decimal: { kind: "decimal_string" } }
+                },
+                quantity_decimal: { kind: "decimal_string" }
+              }
+            }
+          }
+        }
+      },
+      responseSchema: {
+        kind: "object",
+        fields: {
+          lines: {
+            kind: "object",
+            fields: {
+              data: {
+                kind: "array",
+                element: {
+                  kind: "object",
+                  fields: {
+                    pricing: {
+                      kind: "nullable",
+                      inner: {
+                        kind: "object",
+                        fields: {
+                          unit_amount_decimal: {
+                            kind: "nullable",
+                            inner: { kind: "decimal_string" }
+                          }
+                        }
+                      }
+                    },
+                    quantity_decimal: {
+                      kind: "nullable",
+                      inner: { kind: "decimal_string" }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+  /**
+   * Attaches a PaymentIntent or an Out of Band Payment to the invoice, adding it to the list of payments.
+   *
+   * For the PaymentIntent, when the PaymentIntent's status changes to succeeded, the payment is credited
+   * to the invoice, increasing its amount_paid. When the invoice is fully paid, the
+   * invoice's status becomes paid.
+   *
+   * If the PaymentIntent's status is already succeeded when it's attached, it's
+   * credited to the invoice immediately.
+   *
+   * See: [Partial payments](https://docs.stripe.com/docs/invoicing/partial-payments) to learn more.
+   */
+  attachPayment(id, params, options) {
+    return this._makeRequest("POST", `/v1/invoices/${encodeURIComponent(id)}/attach_payment`, params, options, {
+      responseSchema: {
+        kind: "object",
+        fields: {
+          lines: {
+            kind: "object",
+            fields: {
+              data: {
+                kind: "array",
+                element: {
+                  kind: "object",
+                  fields: {
+                    pricing: {
+                      kind: "nullable",
+                      inner: {
+                        kind: "object",
+                        fields: {
+                          unit_amount_decimal: {
+                            kind: "nullable",
+                            inner: { kind: "decimal_string" }
+                          }
+                        }
+                      }
+                    },
+                    quantity_decimal: {
+                      kind: "nullable",
+                      inner: { kind: "decimal_string" }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+  /**
+   * Stripe automatically finalizes drafts before sending and attempting payment on invoices. However, if you'd like to finalize a draft invoice manually, you can do so using this method.
+   */
+  finalizeInvoice(id, params, options) {
+    return this._makeRequest("POST", `/v1/invoices/${encodeURIComponent(id)}/finalize`, params, options, {
+      responseSchema: {
+        kind: "object",
+        fields: {
+          lines: {
+            kind: "object",
+            fields: {
+              data: {
+                kind: "array",
+                element: {
+                  kind: "object",
+                  fields: {
+                    pricing: {
+                      kind: "nullable",
+                      inner: {
+                        kind: "object",
+                        fields: {
+                          unit_amount_decimal: {
+                            kind: "nullable",
+                            inner: { kind: "decimal_string" }
+                          }
+                        }
+                      }
+                    },
+                    quantity_decimal: {
+                      kind: "nullable",
+                      inner: { kind: "decimal_string" }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+  /**
+   * Marking an invoice as uncollectible is useful for keeping track of bad debts that can be written off for accounting purposes.
+   */
+  markUncollectible(id, params, options) {
+    return this._makeRequest("POST", `/v1/invoices/${encodeURIComponent(id)}/mark_uncollectible`, params, options, {
+      responseSchema: {
+        kind: "object",
+        fields: {
+          lines: {
+            kind: "object",
+            fields: {
+              data: {
+                kind: "array",
+                element: {
+                  kind: "object",
+                  fields: {
+                    pricing: {
+                      kind: "nullable",
+                      inner: {
+                        kind: "object",
+                        fields: {
+                          unit_amount_decimal: {
+                            kind: "nullable",
+                            inner: { kind: "decimal_string" }
+                          }
+                        }
+                      }
+                    },
+                    quantity_decimal: {
+                      kind: "nullable",
+                      inner: { kind: "decimal_string" }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+  /**
+   * Stripe automatically creates and then attempts to collect payment on invoices for customers on subscriptions according to your [subscriptions settings](https://dashboard.stripe.com/account/billing/automatic). However, if you'd like to attempt payment on an invoice out of the normal collection schedule or for some other reason, you can do so.
+   */
+  pay(id, params, options) {
+    return this._makeRequest("POST", `/v1/invoices/${encodeURIComponent(id)}/pay`, params, options, {
+      responseSchema: {
+        kind: "object",
+        fields: {
+          lines: {
+            kind: "object",
+            fields: {
+              data: {
+                kind: "array",
+                element: {
+                  kind: "object",
+                  fields: {
+                    pricing: {
+                      kind: "nullable",
+                      inner: {
+                        kind: "object",
+                        fields: {
+                          unit_amount_decimal: {
+                            kind: "nullable",
+                            inner: { kind: "decimal_string" }
+                          }
+                        }
+                      }
+                    },
+                    quantity_decimal: {
+                      kind: "nullable",
+                      inner: { kind: "decimal_string" }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+  /**
+   * Removes multiple line items from an invoice. This is only possible when an invoice is still a draft.
+   */
+  removeLines(id, params, options) {
+    return this._makeRequest("POST", `/v1/invoices/${encodeURIComponent(id)}/remove_lines`, params, options, {
+      responseSchema: {
+        kind: "object",
+        fields: {
+          lines: {
+            kind: "object",
+            fields: {
+              data: {
+                kind: "array",
+                element: {
+                  kind: "object",
+                  fields: {
+                    pricing: {
+                      kind: "nullable",
+                      inner: {
+                        kind: "object",
+                        fields: {
+                          unit_amount_decimal: {
+                            kind: "nullable",
+                            inner: { kind: "decimal_string" }
+                          }
+                        }
+                      }
+                    },
+                    quantity_decimal: {
+                      kind: "nullable",
+                      inner: { kind: "decimal_string" }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+  /**
+   * Stripe will automatically send invoices to customers according to your [subscriptions settings](https://dashboard.stripe.com/account/billing/automatic). However, if you'd like to manually send an invoice to your customer out of the normal schedule, you can do so. When sending invoices that have already been paid, there will be no reference to the payment in the email.
+   *
+   * Requests made in test-mode result in no emails being sent, despite sending an invoice.sent event.
+   */
+  sendInvoice(id, params, options) {
+    return this._makeRequest("POST", `/v1/invoices/${encodeURIComponent(id)}/send`, params, options, {
+      responseSchema: {
+        kind: "object",
+        fields: {
+          lines: {
+            kind: "object",
+            fields: {
+              data: {
+                kind: "array",
+                element: {
+                  kind: "object",
+                  fields: {
+                    pricing: {
+                      kind: "nullable",
+                      inner: {
+                        kind: "object",
+                        fields: {
+                          unit_amount_decimal: {
+                            kind: "nullable",
+                            inner: { kind: "decimal_string" }
+                          }
+                        }
+                      }
+                    },
+                    quantity_decimal: {
+                      kind: "nullable",
+                      inner: { kind: "decimal_string" }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+  /**
+   * Updates multiple line items on an invoice. This is only possible when an invoice is still a draft.
+   */
+  updateLines(id, params, options) {
+    return this._makeRequest("POST", `/v1/invoices/${encodeURIComponent(id)}/update_lines`, params, options, {
+      requestSchema: {
+        kind: "object",
+        fields: {
+          lines: {
+            kind: "array",
+            element: {
+              kind: "object",
+              fields: {
+                price_data: {
+                  kind: "object",
+                  fields: { unit_amount_decimal: { kind: "decimal_string" } }
+                },
+                quantity_decimal: { kind: "decimal_string" }
+              }
+            }
+          }
+        }
+      },
+      responseSchema: {
+        kind: "object",
+        fields: {
+          lines: {
+            kind: "object",
+            fields: {
+              data: {
+                kind: "array",
+                element: {
+                  kind: "object",
+                  fields: {
+                    pricing: {
+                      kind: "nullable",
+                      inner: {
+                        kind: "object",
+                        fields: {
+                          unit_amount_decimal: {
+                            kind: "nullable",
+                            inner: { kind: "decimal_string" }
+                          }
+                        }
+                      }
+                    },
+                    quantity_decimal: {
+                      kind: "nullable",
+                      inner: { kind: "decimal_string" }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+  /**
+   * Mark a finalized invoice as void. This cannot be undone. Voiding an invoice is similar to [deletion](https://docs.stripe.com/api/invoices/delete), however it only applies to finalized invoices and maintains a papertrail where the invoice can still be found.
+   *
+   * Consult with local regulations to determine whether and how an invoice might be amended, canceled, or voided in the jurisdiction you're doing business in. You might need to [issue another invoice or <a href="/api/credit_notes/create">credit note](https://docs.stripe.com/api/invoices/create) instead. Stripe recommends that you consult with your legal counsel for advice specific to your business.
+   */
+  voidInvoice(id, params, options) {
+    return this._makeRequest("POST", `/v1/invoices/${encodeURIComponent(id)}/void`, params, options, {
+      responseSchema: {
+        kind: "object",
+        fields: {
+          lines: {
+            kind: "object",
+            fields: {
+              data: {
+                kind: "array",
+                element: {
+                  kind: "object",
+                  fields: {
+                    pricing: {
+                      kind: "nullable",
+                      inner: {
+                        kind: "object",
+                        fields: {
+                          unit_amount_decimal: {
+                            kind: "nullable",
+                            inner: { kind: "decimal_string" }
+                          }
+                        }
+                      }
+                    },
+                    quantity_decimal: {
+                      kind: "nullable",
+                      inner: { kind: "decimal_string" }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+  /**
+   * At any time, you can preview the upcoming invoice for a subscription or subscription schedule. This will show you all the charges that are pending, including subscription renewal charges, invoice item charges, etc. It will also show you any discounts that are applicable to the invoice.
+   *
+   * You can also preview the effects of creating or updating a subscription or subscription schedule, including a preview of any prorations that will take place. To ensure that the actual proration is calculated exactly the same as the previewed proration, you should pass the subscription_details.proration_date parameter when doing the actual subscription update.
+   *
+   * The recommended way to get only the prorations being previewed on the invoice is to consider line items where parent.subscription_item_details.proration is true.
+   *
+   * Note that when you are viewing an upcoming invoice, you are simply viewing a preview – the invoice has not yet been created. As such, the upcoming invoice will not show up in invoice listing calls, and you cannot use the API to pay or edit the invoice. If you want to change the amount that your customer will be billed, you can add, remove, or update pending invoice items, or update the customer's discount.
+   *
+   * Note: Currency conversion calculations use the latest exchange rates. Exchange rates may vary between the time of the preview and the time of the actual invoice creation. [Learn more](https://docs.stripe.com/currencies/conversions)
+   */
+  createPreview(params, options) {
+    return this._makeRequest("POST", "/v1/invoices/create_preview", params, options, {
+      requestSchema: {
+        kind: "object",
+        fields: {
+          invoice_items: {
+            kind: "array",
+            element: {
+              kind: "object",
+              fields: {
+                price_data: {
+                  kind: "object",
+                  fields: { unit_amount_decimal: { kind: "decimal_string" } }
+                },
+                quantity_decimal: { kind: "decimal_string" },
+                unit_amount_decimal: { kind: "decimal_string" }
+              }
+            }
+          },
+          schedule_details: {
+            kind: "object",
+            fields: {
+              phases: {
+                kind: "array",
+                element: {
+                  kind: "object",
+                  fields: {
+                    add_invoice_items: {
+                      kind: "array",
+                      element: {
+                        kind: "object",
+                        fields: {
+                          price_data: {
+                            kind: "object",
+                            fields: {
+                              unit_amount_decimal: { kind: "decimal_string" }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    items: {
+                      kind: "array",
+                      element: {
+                        kind: "object",
+                        fields: {
+                          price_data: {
+                            kind: "object",
+                            fields: {
+                              unit_amount_decimal: { kind: "decimal_string" }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          subscription_details: {
+            kind: "object",
+            fields: {
+              items: {
+                kind: "array",
+                element: {
+                  kind: "object",
+                  fields: {
+                    price_data: {
+                      kind: "object",
+                      fields: { unit_amount_decimal: { kind: "decimal_string" } }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      responseSchema: {
+        kind: "object",
+        fields: {
+          lines: {
+            kind: "object",
+            fields: {
+              data: {
+                kind: "array",
+                element: {
+                  kind: "object",
+                  fields: {
+                    pricing: {
+                      kind: "nullable",
+                      inner: {
+                        kind: "object",
+                        fields: {
+                          unit_amount_decimal: {
+                            kind: "nullable",
+                            inner: { kind: "decimal_string" }
+                          }
+                        }
+                      }
+                    },
+                    quantity_decimal: {
+                      kind: "nullable",
+                      inner: { kind: "decimal_string" }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+  /**
+   * When retrieving an invoice, you'll get a lines property containing the total count of line items and the first handful of those items. There is also a URL where you can retrieve the full (paginated) list of line items.
+   */
+  listLineItems(id, params, options) {
+    return this._makeRequest("GET", `/v1/invoices/${encodeURIComponent(id)}/lines`, params, options, {
+      methodType: "list",
+      responseSchema: {
+        kind: "object",
+        fields: {
+          data: {
+            kind: "array",
+            element: {
+              kind: "object",
+              fields: {
+                pricing: {
+                  kind: "nullable",
+                  inner: {
+                    kind: "object",
+                    fields: {
+                      unit_amount_decimal: {
+                        kind: "nullable",
+                        inner: { kind: "decimal_string" }
+                      }
+                    }
+                  }
+                },
+                quantity_decimal: {
+                  kind: "nullable",
+                  inner: { kind: "decimal_string" }
+                }
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+  /**
+   * Updates an invoice's line item. Some fields, such as tax_amounts, only live on the invoice line item,
+   * so they can only be updated through this endpoint. Other fields, such as amount, live on both the invoice
+   * item and the invoice line item, so updates on this endpoint will propagate to the invoice item as well.
+   * Updating an invoice's line item is only possible before the invoice is finalized.
+   */
+  updateLineItem(invoiceId, id, params, options) {
+    return this._makeRequest("POST", `/v1/invoices/${encodeURIComponent(invoiceId)}/lines/${encodeURIComponent(id)}`, params, options, {
+      requestSchema: {
+        kind: "object",
+        fields: {
+          price_data: {
+            kind: "object",
+            fields: { unit_amount_decimal: { kind: "decimal_string" } }
+          },
+          quantity_decimal: { kind: "decimal_string" }
+        }
+      },
+      responseSchema: {
+        kind: "object",
+        fields: {
+          pricing: {
+            kind: "nullable",
+            inner: {
+              kind: "object",
+              fields: {
+                unit_amount_decimal: {
+                  kind: "nullable",
+                  inner: { kind: "decimal_string" }
+                }
+              }
+            }
+          },
+          quantity_decimal: {
+            kind: "nullable",
+            inner: { kind: "decimal_string" }
+          }
+        }
+      }
+    });
+  }
+};
+
+// node_modules/stripe/esm/resources/InvoiceItems.js
+var InvoiceItemResource = class extends StripeResource {
+  /**
+   * Deletes an invoice item, removing it from an invoice. Deleting invoice items is only possible when they're not attached to invoices, or if it's attached to a draft invoice.
+   */
+  del(id, params, options) {
+    return this._makeRequest("DELETE", `/v1/invoiceitems/${encodeURIComponent(id)}`, params, options);
+  }
+  /**
+   * Retrieves the invoice item with the given ID.
+   */
+  retrieve(id, params, options) {
+    return this._makeRequest("GET", `/v1/invoiceitems/${encodeURIComponent(id)}`, params, options, {
+      responseSchema: {
+        kind: "object",
+        fields: {
+          pricing: {
+            kind: "nullable",
+            inner: {
+              kind: "object",
+              fields: {
+                unit_amount_decimal: {
+                  kind: "nullable",
+                  inner: { kind: "decimal_string" }
+                }
+              }
+            }
+          },
+          quantity_decimal: { kind: "decimal_string" }
+        }
+      }
+    });
+  }
+  /**
+   * Updates the amount or description of an invoice item on an upcoming invoice. Updating an invoice item is only possible before the invoice it's attached to is closed.
+   */
+  update(id, params, options) {
+    return this._makeRequest("POST", `/v1/invoiceitems/${encodeURIComponent(id)}`, params, options, {
+      requestSchema: {
+        kind: "object",
+        fields: {
+          price_data: {
+            kind: "object",
+            fields: { unit_amount_decimal: { kind: "decimal_string" } }
+          },
+          quantity_decimal: { kind: "decimal_string" },
+          unit_amount_decimal: { kind: "decimal_string" }
+        }
+      },
+      responseSchema: {
+        kind: "object",
+        fields: {
+          pricing: {
+            kind: "nullable",
+            inner: {
+              kind: "object",
+              fields: {
+                unit_amount_decimal: {
+                  kind: "nullable",
+                  inner: { kind: "decimal_string" }
+                }
+              }
+            }
+          },
+          quantity_decimal: { kind: "decimal_string" }
+        }
+      }
+    });
+  }
+  /**
+   * Returns a list of your invoice items. Invoice items are returned sorted by creation date, with the most recently created invoice items appearing first.
+   */
+  list(params, options) {
+    return this._makeRequest("GET", "/v1/invoiceitems", params, options, {
+      methodType: "list",
+      responseSchema: {
+        kind: "object",
+        fields: {
+          data: {
+            kind: "array",
+            element: {
+              kind: "object",
+              fields: {
+                pricing: {
+                  kind: "nullable",
+                  inner: {
+                    kind: "object",
+                    fields: {
+                      unit_amount_decimal: {
+                        kind: "nullable",
+                        inner: { kind: "decimal_string" }
+                      }
+                    }
+                  }
+                },
+                quantity_decimal: { kind: "decimal_string" }
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+  /**
+   * Creates an item to be added to a draft invoice (up to 250 items per invoice). If no invoice is specified, the item will be on the next invoice created for the customer specified.
+   */
+  create(params, options) {
+    return this._makeRequest("POST", "/v1/invoiceitems", params, options, {
+      requestSchema: {
+        kind: "object",
+        fields: {
+          price_data: {
+            kind: "object",
+            fields: { unit_amount_decimal: { kind: "decimal_string" } }
+          },
+          quantity_decimal: { kind: "decimal_string" },
+          unit_amount_decimal: { kind: "decimal_string" }
+        }
+      },
+      responseSchema: {
+        kind: "object",
+        fields: {
+          pricing: {
+            kind: "nullable",
+            inner: {
+              kind: "object",
+              fields: {
+                unit_amount_decimal: {
+                  kind: "nullable",
+                  inner: { kind: "decimal_string" }
+                }
+              }
+            }
+          },
+          quantity_decimal: { kind: "decimal_string" }
+        }
+      }
+    });
+  }
+};
+
+// node_modules/stripe/esm/resources/InvoicePayments.js
+var InvoicePaymentResource = class extends StripeResource {
+  /**
+   * When retrieving an invoice, there is an includable payments property containing the first handful of those items. There is also a URL where you can retrieve the full (paginated) list of payments.
+   */
+  list(params, options) {
+    return this._makeRequest("GET", "/v1/invoice_payments", params, options, {
+      methodType: "list"
+    });
+  }
+  /**
+   * Retrieves the invoice payment with the given ID.
+   */
+  retrieve(id, params, options) {
+    return this._makeRequest("GET", `/v1/invoice_payments/${encodeURIComponent(id)}`, params, options);
+  }
+};
+
+// node_modules/stripe/esm/resources/InvoiceRenderingTemplates.js
+var InvoiceRenderingTemplateResource = class extends StripeResource {
+  /**
+   * List all templates, ordered by creation date, with the most recently created template appearing first.
+   */
+  list(params, options) {
+    return this._makeRequest("GET", "/v1/invoice_rendering_templates", params, options, {
+      methodType: "list"
+    });
+  }
+  /**
+   * Retrieves an invoice rendering template with the given ID. It by default returns the latest version of the template. Optionally, specify a version to see previous versions.
+   */
+  retrieve(id, params, options) {
+    return this._makeRequest("GET", `/v1/invoice_rendering_templates/${encodeURIComponent(id)}`, params, options);
+  }
+  /**
+   * Updates the status of an invoice rendering template to ‘archived' so no new Stripe objects (customers, invoices, etc.) can reference it. The template can also no longer be updated. However, if the template is already set on a Stripe object, it will continue to be applied on invoices generated by it.
+   */
+  archive(id, params, options) {
+    return this._makeRequest("POST", `/v1/invoice_rendering_templates/${encodeURIComponent(id)}/archive`, params, options);
+  }
+  /**
+   * Unarchive an invoice rendering template so it can be used on new Stripe objects again.
+   */
+  unarchive(id, params, options) {
+    return this._makeRequest("POST", `/v1/invoice_rendering_templates/${encodeURIComponent(id)}/unarchive`, params, options);
+  }
+};
+
+// node_modules/stripe/esm/resources/Mandates.js
+var MandateResource = class extends StripeResource {
+  /**
+   * Retrieves a Mandate object.
+   */
+  retrieve(id, params, options) {
+    return this._makeRequest("GET", `/v1/mandates/${encodeURIComponent(id)}`, params, options);
+  }
+};
+
+// node_modules/stripe/esm/resources/OAuth.js
+var OAuthResource = class extends StripeResource {
+  constructor() {
+    super(...arguments);
+    this.basePath = makeURLInterpolator("/");
+  }
+  authorizeUrl(params, options) {
+    params = params || {};
+    options = options || {};
+    let path3 = "oauth/authorize";
+    if (options.express) {
+      path3 = `express/${path3}`;
+    }
+    if (!params.response_type) {
+      params.response_type = "code";
+    }
+    if (!params.client_id) {
+      params.client_id = this._stripe.getClientId();
+    }
+    if (!params.scope) {
+      params.scope = "read_write";
+    }
+    const connectHost = this._stripe.resolveBaseAddress("connect");
+    return `https://${connectHost}/${path3}?${queryStringifyRequestData(params)}`;
+  }
+  token(params, options) {
+    return this._makeRequest("POST", "/oauth/token", params, options, {
+      apiBase: "connect"
+    });
+  }
+  deauthorize(params, options) {
+    if (!params.client_id) {
+      params.client_id = this._stripe.getClientId();
+    }
+    return this._makeRequest("POST", "/oauth/deauthorize", params, options, {
+      apiBase: "connect"
+    });
+  }
+};
+
+// node_modules/stripe/esm/resources/PaymentAttemptRecords.js
+var PaymentAttemptRecordResource = class extends StripeResource {
+  /**
+   * List all the Payment Attempt Records attached to the specified Payment Record.
+   */
+  list(params, options) {
+    return this._makeRequest("GET", "/v1/payment_attempt_records", params, options, {
+      methodType: "list"
+    });
+  }
+  /**
+   * Retrieves a Payment Attempt Record with the given ID
+   */
+  retrieve(id, params, options) {
+    return this._makeRequest("GET", `/v1/payment_attempt_records/${encodeURIComponent(id)}`, params, options);
+  }
+};
+
+// node_modules/stripe/esm/resources/PaymentIntents.js
+var PaymentIntentResource = class extends StripeResource {
+  /**
+   * Returns a list of PaymentIntents.
+   */
+  list(params, options) {
+    return this._makeRequest("GET", "/v1/payment_intents", params, options, {
+      methodType: "list"
+    });
+  }
+  /**
+   * Creates a PaymentIntent object.
+   *
+   * After the PaymentIntent is created, attach a payment method and [confirm](https://docs.stripe.com/docs/api/payment_intents/confirm)
+   * to continue the payment. Learn more about <a href="/docs/payments/payment-intents">the available payment flows
+   * with the Payment Intents API.
+   *
+   * When you use confirm=true during creation, it's equivalent to creating
+   * and confirming the PaymentIntent in the same call. You can use any parameters
+   * available in the [confirm API](https://docs.stripe.com/docs/api/payment_intents/confirm) when you supply
+   * confirm=true.
+   */
+  create(params, options) {
+    return this._makeRequest("POST", "/v1/payment_intents", params, options);
+  }
+  /**
+   * Retrieves the details of a PaymentIntent that has previously been created.
+   *
+   * You can retrieve a PaymentIntent client-side using a publishable key when the client_secret is in the query string.
+   *
+   * If you retrieve a PaymentIntent with a publishable key, it only returns a subset of properties. Refer to the [payment intent](https://docs.stripe.com/api/payment_intents/object) object reference for more details.
+   */
+  retrieve(id, params, options) {
+    return this._makeRequest("GET", `/v1/payment_intents/${encodeURIComponent(id)}`, params, options);
+  }
+  /**
+   * Updates properties on a PaymentIntent object without confirming.
+   *
+   * Depending on which properties you update, you might need to confirm the
+   * PaymentIntent again. For example, updating the payment_method
+   * always requires you to confirm the PaymentIntent again. If you prefer to
+   * update and confirm at the same time, we recommend updating properties through
+   * the [confirm API](https://docs.stripe.com/docs/api/payment_intents/confirm) instead.
+   */
+  update(id, params, options) {
+    return this._makeRequest("POST", `/v1/payment_intents/${encodeURIComponent(id)}`, params, options);
+  }
+  /**
+   * Search for PaymentIntents you've previously created using Stripe's [Search Query Language](https://docs.stripe.com/docs/search#search-query-language).
+   * Don't use search in read-after-write flows where strict consistency is necessary. Under normal operating
+   * conditions, data is searchable in less than a minute. Occasionally, propagation of new or updated data can be up
+   * to an hour behind during outages. Search functionality is not available to merchants in India.
+   */
+  search(params, options) {
+    return this._makeRequest("GET", "/v1/payment_intents/search", params, options, {
+      methodType: "search"
+    });
+  }
+  /**
+   * Manually reconcile the remaining amount for a customer_balance PaymentIntent.
+   */
+  applyCustomerBalance(id, params, options) {
+    return this._makeRequest("POST", `/v1/payment_intents/${encodeURIComponent(id)}/apply_customer_balance`, params, options);
+  }
+  /**
+   * You can cancel a PaymentIntent object when it's in one of these statuses: requires_payment_method, requires_capture, requires_confirmation, requires_action or, [in rare cases](https://docs.stripe.com/docs/payments/intents), processing.
+   *
+   * After it's canceled, no additional charges are made by the PaymentIntent and any operations on the PaymentIntent fail with an error. For PaymentIntents with a status of requires_capture, the remaining amount_capturable is automatically refunded.
+   *
+   * You can directly cancel the PaymentIntent for a Checkout Session only when the PaymentIntent has a status of requires_capture. Otherwise, you must [expire the Checkout Session](https://docs.stripe.com/docs/api/checkout/sessions/expire).
+   */
+  cancel(id, params, options) {
+    return this._makeRequest("POST", `/v1/payment_intents/${encodeURIComponent(id)}/cancel`, params, options);
+  }
+  /**
+   * Capture the funds of an existing uncaptured PaymentIntent when its status is requires_capture.
+   *
+   * Uncaptured PaymentIntents are cancelled a set number of days (7 by default) after their creation.
+   *
+   * Learn more about [separate authorization and capture](https://docs.stripe.com/docs/payments/capture-later).
+   */
+  capture(id, params, options) {
+    return this._makeRequest("POST", `/v1/payment_intents/${encodeURIComponent(id)}/capture`, params, options);
+  }
+  /**
+   * Confirm that your customer intends to pay with current or provided
+   * payment method. Upon confirmation, the PaymentIntent will attempt to initiate
+   * a payment.
+   *
+   * If the selected payment method requires additional authentication steps, the
+   * PaymentIntent will transition to the requires_action status and
+   * suggest additional actions via next_action. If payment fails,
+   * the PaymentIntent transitions to the requires_payment_method status or the
+   * canceled status if the confirmation limit is reached. If
+   * payment succeeds, the PaymentIntent will transition to the succeeded
+   * status (or requires_capture, if capture_method is set to manual).
+   *
+   * If the confirmation_method is automatic, payment may be attempted
+   * using our [client SDKs](https://docs.stripe.com/docs/stripe-js/reference#stripe-handle-card-payment)
+   * and the PaymentIntent's [client_secret](https://docs.stripe.com/api#payment_intent_object-client_secret).
+   * After next_actions are handled by the client, no additional
+   * confirmation is required to complete the payment.
+   *
+   * If the confirmation_method is manual, all payment attempts must be
+   * initiated using a secret key.
+   *
+   * If any actions are required for the payment, the PaymentIntent will
+   * return to the requires_confirmation state
+   * after those actions are completed. Your server needs to then
+   * explicitly re-confirm the PaymentIntent to initiate the next payment
+   * attempt.
+   *
+   * There is a variable upper limit on how many times a PaymentIntent can be confirmed.
+   * After this limit is reached, any further calls to this endpoint will
+   * transition the PaymentIntent to the canceled state.
+   */
+  confirm(id, params, options) {
+    return this._makeRequest("POST", `/v1/payment_intents/${encodeURIComponent(id)}/confirm`, params, options);
+  }
+  /**
+   * Perform an incremental authorization on an eligible
+   * [PaymentIntent](https://docs.stripe.com/docs/api/payment_intents/object). To be eligible, the
+   * PaymentIntent's status must be requires_capture and
+   * [incremental_authorization_supported](https://docs.stripe.com/docs/api/charges/object#charge_object-payment_method_details-card_present-incremental_authorization_supported)
+   * must be true.
+   *
+   * Incremental authorizations attempt to increase the authorized amount on
+   * your customer's card to the new, higher amount provided. Similar to the
+   * initial authorization, incremental authorizations can be declined. A
+   * single PaymentIntent can call this endpoint multiple times to further
+   * increase the authorized amount.
+   *
+   * If the incremental authorization succeeds, the PaymentIntent object
+   * returns with the updated
+   * [amount](https://docs.stripe.com/docs/api/payment_intents/object#payment_intent_object-amount).
+   * If the incremental authorization fails, a
+   * [card_declined](https://docs.stripe.com/docs/error-codes#card-declined) error returns, and no other
+   * fields on the PaymentIntent or Charge update. The PaymentIntent
+   * object remains capturable for the previously authorized amount.
+   *
+   * Each PaymentIntent can have a maximum of 10 incremental authorization attempts, including declines.
+   * After it's captured, a PaymentIntent can no longer be incremented.
+   *
+   * Learn more about incremental authorizations with
+   * [in-person payments](https://docs.stripe.com/docs/terminal/features/incremental-authorizations) and
+   * [online payments](https://docs.stripe.com/docs/payments/incremental-authorization?platform=web&ui=elements).
+   */
+  incrementAuthorization(id, params, options) {
+    return this._makeRequest("POST", `/v1/payment_intents/${encodeURIComponent(id)}/increment_authorization`, params, options);
+  }
+  /**
+   * Verifies microdeposits on a PaymentIntent object.
+   */
+  verifyMicrodeposits(id, params, options) {
+    return this._makeRequest("POST", `/v1/payment_intents/${encodeURIComponent(id)}/verify_microdeposits`, params, options);
+  }
+  /**
+   * Lists all LineItems of a given PaymentIntent.
+   */
+  listAmountDetailsLineItems(id, params, options) {
+    return this._makeRequest("GET", `/v1/payment_intents/${encodeURIComponent(id)}/amount_details_line_items`, params, options, {
+      methodType: "list"
+    });
+  }
+};
+
+// node_modules/stripe/esm/resources/PaymentLinks.js
+var PaymentLinkResource = class extends StripeResource {
+  /**
+   * Returns a list of your payment links.
+   */
+  list(params, options) {
+    return this._makeRequest("GET", "/v1/payment_links", params, options, {
+      methodType: "list",
+      responseSchema: {
+        kind: "object",
+        fields: {
+          data: {
+            kind: "array",
+            element: {
+              kind: "object",
+              fields: {
+                line_items: {
+                  kind: "object",
+                  fields: {
+                    data: {
+                      kind: "array",
+                      element: {
+                        kind: "object",
+                        fields: {
+                          price: {
+                            kind: "nullable",
+                            inner: {
+                              kind: "object",
+                              fields: {
+                                currency_options: {
+                                  kind: "array",
+                                  element: {
+                                    kind: "object",
+                                    fields: {
+                                      tiers: {
+                                        kind: "array",
+                                        element: {
+                                          kind: "object",
+                                          fields: {
+                                            flat_amount_decimal: {
+                                              kind: "nullable",
+                                              inner: { kind: "decimal_string" }
+                                            },
+                                            unit_amount_decimal: {
+                                              kind: "nullable",
+                                              inner: { kind: "decimal_string" }
+                                            }
+                                          }
+                                        }
+                                      },
+                                      unit_amount_decimal: {
+                                        kind: "nullable",
+                                        inner: { kind: "decimal_string" }
+                                      }
+                                    }
+                                  }
+                                },
+                                tiers: {
+                                  kind: "array",
+                                  element: {
+                                    kind: "object",
+                                    fields: {
+                                      flat_amount_decimal: {
+                                        kind: "nullable",
+                                        inner: { kind: "decimal_string" }
+                                      },
+                                      unit_amount_decimal: {
+                                        kind: "nullable",
+                                        inner: { kind: "decimal_string" }
+                                      }
+                                    }
+                                  }
+                                },
+                                unit_amount_decimal: {
+                                  kind: "nullable",
+                                  inner: { kind: "decimal_string" }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+  /**
+   * Creates a payment link.
+   */
+  create(params, options) {
+    return this._makeRequest("POST", "/v1/payment_links", params, options, {
+      requestSchema: {
+        kind: "object",
+        fields: {
+          line_items: {
+            kind: "array",
+            element: {
+              kind: "object",
+              fields: {
+                price_data: {
+                  kind: "object",
+                  fields: { unit_amount_decimal: { kind: "decimal_string" } }
+                }
+              }
+            }
+          }
+        }
+      },
+      responseSchema: {
+        kind: "object",
+        fields: {
+          line_items: {
+            kind: "object",
+            fields: {
+              data: {
+                kind: "array",
+                element: {
+                  kind: "object",
+                  fields: {
+                    price: {
+                      kind: "nullable",
+                      inner: {
+                        kind: "object",
+                        fields: {
+                          currency_options: {
+                            kind: "array",
+                            element: {
+                              kind: "object",
+                              fields: {
+                                tiers: {
+                                  kind: "array",
+                                  element: {
+                                    kind: "object",
+                                    fields: {
+                                      flat_amount_decimal: {
+                                        kind: "nullable",
+                                        inner: { kind: "decimal_string" }
+                                      },
+                                      unit_amount_decimal: {
+                                        kind: "nullable",
+                                        inner: { kind: "decimal_string" }
+                                      }
+                                    }
+                                  }
+                                },
+                                unit_amount_decimal: {
+                                  kind: "nullable",
+                                  inner: { kind: "decimal_string" }
+                                }
+                              }
+                            }
+                          },
+                          tiers: {
+                            kind: "array",
+                            element: {
+                              kind: "object",
+                              fields: {
+                                flat_amount_decimal: {
+                                  kind: "nullable",
+                                  inner: { kind: "decimal_string" }
+                                },
+                                unit_amount_decimal: {
+                                  kind: "nullable",
+                                  inner: { kind: "decimal_string" }
+                                }
+                              }
+                            }
+                          },
+                          unit_amount_decimal: {
+                            kind: "nullable",
+                            inner: { kind: "decimal_string" }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+  /**
+   * Retrieve a payment link.
+   */
+  retrieve(id, params, options) {
+    return this._makeRequest("GET", `/v1/payment_links/${encodeURIComponent(id)}`, params, options, {
+      responseSchema: {
+        kind: "object",
+        fields: {
+          line_items: {
+            kind: "object",
+            fields: {
+              data: {
+                kind: "array",
+                element: {
+                  kind: "object",
+                  fields: {
+                    price: {
+                      kind: "nullable",
+                      inner: {
+                        kind: "object",
+                        fields: {
+                          currency_options: {
+                            kind: "array",
+                            element: {
+                              kind: "object",
+                              fields: {
+                                tiers: {
+                                  kind: "array",
+                                  element: {
+                                    kind: "object",
+                                    fields: {
+                                      flat_amount_decimal: {
+                                        kind: "nullable",
+                                        inner: { kind: "decimal_string" }
+                                      },
+                                      unit_amount_decimal: {
+                                        kind: "nullable",
+                                        inner: { kind: "decimal_string" }
+                                      }
+                                    }
+                                  }
+                                },
+                                unit_amount_decimal: {
+                                  kind: "nullable",
+                                  inner: { kind: "decimal_string" }
+                                }
+                              }
+                            }
+                          },
+                          tiers: {
+                            kind: "array",
+                            element: {
+                              kind: "object",
+                              fields: {
+                                flat_amount_decimal: {
+                                  kind: "nullable",
+                                  inner: { kind: "decimal_string" }
+                                },
+                                unit_amount_decimal: {
+                                  kind: "nullable",
+                                  inner: { kind: "decimal_string" }
+                                }
+                              }
+                            }
+                          },
+                          unit_amount_decimal: {
+                            kind: "nullable",
+                            inner: { kind: "decimal_string" }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+  /**
+   * Updates a payment link.
+   */
+  update(id, params, options) {
+    return this._makeRequest("POST", `/v1/payment_links/${encodeURIComponent(id)}`, params, options, {
+      responseSchema: {
+        kind: "object",
+        fields: {
+          line_items: {
+            kind: "object",
+            fields: {
+              data: {
+                kind: "array",
+                element: {
+                  kind: "object",
+                  fields: {
+                    price: {
+                      kind: "nullable",
+                      inner: {
+                        kind: "object",
+                        fields: {
+                          currency_options: {
+                            kind: "array",
+                            element: {
+                              kind: "object",
+                              fields: {
+                                tiers: {
+                                  kind: "array",
+                                  element: {
+                                    kind: "object",
+                                    fields: {
+                                      flat_amount_decimal: {
+                                        kind: "nullable",
+                                        inner: { kind: "decimal_string" }
+                                      },
+                                      unit_amount_decimal: {
+                                        kind: "nullable",
+                                        inner: { kind: "decimal_string" }
+                                      }
+                                    }
+                                  }
+                                },
+                                unit_amount_decimal: {
+                                  kind: "nullable",
+                                  inner: { kind: "decimal_string" }
+                                }
+                              }
+                            }
+                          },
+                          tiers: {
+                            kind: "array",
+                            element: {
+                              kind: "object",
+                              fields: {
+                                flat_amount_decimal: {
+                                  kind: "nullable",
+                                  inner: { kind: "decimal_string" }
+                                },
+                                unit_amount_decimal: {
+                                  kind: "nullable",
+                                  inner: { kind: "decimal_string" }
+                                }
+                              }
+                            }
+                          },
+                          unit_amount_decimal: {
+                            kind: "nullable",
+                            inner: { kind: "decimal_string" }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+  /**
+   * When retrieving a payment link, there is an includable line_items property containing the first handful of those items. There is also a URL where you can retrieve the full (paginated) list of line items.
+   */
+  listLineItems(id, params, options) {
+    return this._makeRequest("GET", `/v1/payment_links/${encodeURIComponent(id)}/line_items`, params, options, {
+      methodType: "list",
+      responseSchema: {
+        kind: "object",
+        fields: {
+          data: {
+            kind: "array",
+            element: {
+              kind: "object",
+              fields: {
+                price: {
+                  kind: "nullable",
+                  inner: {
+                    kind: "object",
+                    fields: {
+                      currency_options: {
+                        kind: "array",
+                        element: {
+                          kind: "object",
+                          fields: {
+                            tiers: {
+                              kind: "array",
+                              element: {
+                                kind: "object",
+                                fields: {
+                                  flat_amount_decimal: {
+                                    kind: "nullable",
+                                    inner: { kind: "decimal_string" }
+                                  },
+                                  unit_amount_decimal: {
+                                    kind: "nullable",
+                                    inner: { kind: "decimal_string" }
+                                  }
+                                }
+                              }
+                            },
+                            unit_amount_decimal: {
+                              kind: "nullable",
+                              inner: { kind: "decimal_string" }
+                            }
+                          }
+                        }
+                      },
+                      tiers: {
+                        kind: "array",
+                        element: {
+                          kind: "object",
+                          fields: {
+                            flat_amount_decimal: {
+                              kind: "nullable",
+                              inner: { kind: "decimal_string" }
+                            },
+                            unit_amount_decimal: {
+                              kind: "nullable",
+                              inner: { kind: "decimal_string" }
+                            }
+                          }
+                        }
+                      },
+                      unit_amount_decimal: {
+                        kind: "nullable",
+                        inner: { kind: "decimal_string" }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+};
+
+// node_modules/stripe/esm/resources/PaymentMethods.js
+var PaymentMethodResource = class extends StripeResource {
+  /**
+   * Returns a list of all PaymentMethods.
+   */
+  list(params, options) {
+    return this._makeRequest("GET", "/v1/payment_methods", params, options, {
+      methodType: "list"
+    });
+  }
+  /**
+   * Creates a PaymentMethod object. Read the [Stripe.js reference](https://docs.stripe.com/docs/stripe-js/reference#stripe-create-payment-method) to learn how to create PaymentMethods via Stripe.js.
+   *
+   * Instead of creating a PaymentMethod directly, we recommend using the [PaymentIntents API to accept a payment immediately or the <a href="/docs/payments/save-and-reuse">SetupIntent](https://docs.stripe.com/docs/payments/accept-a-payment) API to collect payment method details ahead of a future payment.
+   */
+  create(params, options) {
+    return this._makeRequest("POST", "/v1/payment_methods", params, options);
+  }
+  /**
+   * Retrieves a PaymentMethod object attached to the StripeAccount. To retrieve a payment method attached to a Customer, you should use [Retrieve a Customer's PaymentMethods](https://docs.stripe.com/docs/api/payment_methods/customer)
+   */
+  retrieve(id, params, options) {
+    return this._makeRequest("GET", `/v1/payment_methods/${encodeURIComponent(id)}`, params, options);
+  }
+  /**
+   * Updates a PaymentMethod object. A PaymentMethod must be attached to a customer to be updated.
+   */
+  update(id, params, options) {
+    return this._makeRequest("POST", `/v1/payment_methods/${encodeURIComponent(id)}`, params, options);
+  }
+  /**
+   * Attaches a PaymentMethod object to a Customer.
+   *
+   * To attach a new PaymentMethod to a customer for future payments, we recommend you use a [SetupIntent](https://docs.stripe.com/docs/api/setup_intents)
+   * or a PaymentIntent with [setup_future_usage](https://docs.stripe.com/docs/api/payment_intents/create#create_payment_intent-setup_future_usage).
+   * These approaches will perform any necessary steps to set up the PaymentMethod for future payments. Using the /v1/payment_methods/:id/attach
+   * endpoint without first using a SetupIntent or PaymentIntent with setup_future_usage does not optimize the PaymentMethod for
+   * future use, which makes later declines and payment friction more likely.
+   * See [Optimizing cards for future payments](https://docs.stripe.com/docs/payments/payment-intents#future-usage) for more information about setting up
+   * future payments.
+   *
+   * To use this PaymentMethod as the default for invoice or subscription payments,
+   * set [invoice_settings.default_payment_method](https://docs.stripe.com/docs/api/customers/update#update_customer-invoice_settings-default_payment_method),
+   * on the Customer to the PaymentMethod's ID.
+   */
+  attach(id, params, options) {
+    return this._makeRequest("POST", `/v1/payment_methods/${encodeURIComponent(id)}/attach`, params, options);
+  }
+  /**
+   * Detaches a PaymentMethod object from a Customer. Detachment is permanent and irreversible — once detached, a PaymentMethod can no longer be used for payments or re-attached to a Customer.
+   */
+  detach(id, params, options) {
+    return this._makeRequest("POST", `/v1/payment_methods/${encodeURIComponent(id)}/detach`, params, options);
+  }
+};
+
+// node_modules/stripe/esm/resources/PaymentMethodConfigurations.js
+var PaymentMethodConfigurationResource = class extends StripeResource {
+  /**
+   * List payment method configurations
+   */
+  list(params, options) {
+    return this._makeRequest("GET", "/v1/payment_method_configurations", params, options, {
+      methodType: "list"
+    });
+  }
+  /**
+   * Creates a payment method configuration
+   */
+  create(params, options) {
+    return this._makeRequest("POST", "/v1/payment_method_configurations", params, options);
+  }
+  /**
+   * Retrieve payment method configuration
+   */
+  retrieve(id, params, options) {
+    return this._makeRequest("GET", `/v1/payment_method_configurations/${encodeURIComponent(id)}`, params, options);
+  }
+  /**
+   * Update payment method configuration
+   */
+  update(id, params, options) {
+    return this._makeRequest("POST", `/v1/payment_method_configurations/${encodeURIComponent(id)}`, params, options);
+  }
+};
+
+// node_modules/stripe/esm/resources/PaymentMethodDomains.js
+var PaymentMethodDomainResource = class extends StripeResource {
+  /**
+   * Lists the details of existing payment method domains.
+   */
+  list(params, options) {
+    return this._makeRequest("GET", "/v1/payment_method_domains", params, options, {
+      methodType: "list"
+    });
+  }
+  /**
+   * Creates a payment method domain.
+   */
+  create(params, options) {
+    return this._makeRequest("POST", "/v1/payment_method_domains", params, options);
+  }
+  /**
+   * Retrieves the details of an existing payment method domain.
+   */
+  retrieve(id, params, options) {
+    return this._makeRequest("GET", `/v1/payment_method_domains/${encodeURIComponent(id)}`, params, options);
+  }
+  /**
+   * Updates an existing payment method domain.
+   */
+  update(id, params, options) {
+    return this._makeRequest("POST", `/v1/payment_method_domains/${encodeURIComponent(id)}`, params, options);
+  }
+  /**
+   * Some payment methods might require additional steps to register a domain. If the requirements weren't satisfied when the domain was created, the payment method will be inactive on the domain.
+   * The payment method doesn't appear in Elements or Embedded Checkout for this domain until it is active.
+   *
+   * To activate a payment method on an existing payment method domain, complete the required registration steps specific to the payment method, and then validate the payment method domain with this endpoint.
+   *
+   * Related guides: [Payment method domains](https://docs.stripe.com/docs/payments/payment-methods/pmd-registration).
+   */
+  validate(id, params, options) {
+    return this._makeRequest("POST", `/v1/payment_method_domains/${encodeURIComponent(id)}/validate`, params, options);
+  }
+};
+
+// node_modules/stripe/esm/resources/PaymentRecords.js
+var PaymentRecordResource = class extends StripeResource {
+  /**
+   * List all the Payment Records for a given merchant.
+   */
+  list(params, options) {
+    return this._makeRequest("GET", "/v1/payment_records", params, options, {
+      methodType: "list"
+    });
+  }
+  /**
+   * Retrieves a Payment Record with the given ID
+   */
+  retrieve(id, params, options) {
+    return this._makeRequest("GET", `/v1/payment_records/${encodeURIComponent(id)}`, params, options);
+  }
+  /**
+   * Report a new payment attempt on the specified Payment Record. A new payment
+   *  attempt can only be specified if all other payment attempts are canceled or failed.
+   */
+  reportPaymentAttempt(id, params, options) {
+    return this._makeRequest("POST", `/v1/payment_records/${encodeURIComponent(id)}/report_payment_attempt`, params, options);
+  }
+  /**
+   * Report that the most recent payment attempt on the specified Payment Record
+   *  was canceled.
+   */
+  reportPaymentAttemptCanceled(id, params, options) {
+    return this._makeRequest("POST", `/v1/payment_records/${encodeURIComponent(id)}/report_payment_attempt_canceled`, params, options);
+  }
+  /**
+   * Report that the most recent payment attempt on the specified Payment Record
+   *  failed or errored.
+   */
+  reportPaymentAttemptFailed(id, params, options) {
+    return this._makeRequest("POST", `/v1/payment_records/${encodeURIComponent(id)}/report_payment_attempt_failed`, params, options);
+  }
+  /**
+   * Report that the most recent payment attempt on the specified Payment Record
+   *  was guaranteed.
+   */
+  reportPaymentAttemptGuaranteed(id, params, options) {
+    return this._makeRequest("POST", `/v1/payment_records/${encodeURIComponent(id)}/report_payment_attempt_guaranteed`, params, options);
+  }
+  /**
+   * Report informational updates on the specified Payment Record.
+   */
+  reportPaymentAttemptInformational(id, params, options) {
+    return this._makeRequest("POST", `/v1/payment_records/${encodeURIComponent(id)}/report_payment_attempt_informational`, params, options);
+  }
+  /**
+   * Report that the most recent payment attempt on the specified Payment Record
+   *  was refunded.
+   */
+  reportRefund(id, params, options) {
+    return this._makeRequest("POST", `/v1/payment_records/${encodeURIComponent(id)}/report_refund`, params, options);
+  }
+  /**
+   * Report a new Payment Record. You may report a Payment Record as it is
+   *  initialized and later report updates through the other report_* methods, or report Payment
+   *  Records in a terminal state directly, through this method.
+   */
+  reportPayment(params, options) {
+    return this._makeRequest("POST", "/v1/payment_records/report_payment", params, options);
+  }
+};
+
+// node_modules/stripe/esm/resources/Payouts.js
+var PayoutResource = class extends StripeResource {
+  /**
+   * Returns a list of existing payouts sent to third-party bank accounts or payouts that Stripe sent to you. The payouts return in sorted order, with the most recently created payouts appearing first.
+   */
+  list(params, options) {
+    return this._makeRequest("GET", "/v1/payouts", params, options, {
+      methodType: "list"
+    });
+  }
+  /**
+   * To send funds to your own bank account, create a new payout object. Your [Stripe balance](https://docs.stripe.com/api#balance) must cover the payout amount. If it doesn't, you receive an “Insufficient Funds” error.
+   *
+   * If your API key is in test mode, money won't actually be sent, though every other action occurs as if you're in live mode.
+   *
+   * If you create a manual payout on a Stripe account that uses multiple payment source types, you need to specify the source type balance that the payout draws from. The [balance object](https://docs.stripe.com/api/balances/object) details available and pending amounts by source type.
+   */
+  create(params, options) {
+    return this._makeRequest("POST", "/v1/payouts", params, options);
+  }
+  /**
+   * Retrieves the details of an existing payout. Supply the unique payout ID from either a payout creation request or the payout list. Stripe returns the corresponding payout information.
+   */
+  retrieve(id, params, options) {
+    return this._makeRequest("GET", `/v1/payouts/${encodeURIComponent(id)}`, params, options);
+  }
+  /**
+   * Updates the specified payout by setting the values of the parameters you pass. We don't change parameters that you don't provide. This request only accepts the metadata as arguments.
+   */
+  update(id, params, options) {
+    return this._makeRequest("POST", `/v1/payouts/${encodeURIComponent(id)}`, params, options);
+  }
+  /**
+   * You can cancel a previously created payout if its status is pending. Stripe refunds the funds to your available balance. You can't cancel automatic Stripe payouts.
+   */
+  cancel(id, params, options) {
+    return this._makeRequest("POST", `/v1/payouts/${encodeURIComponent(id)}/cancel`, params, options);
+  }
+  /**
+   * Reverses a payout by debiting the destination bank account. At this time, you can only reverse payouts for connected accounts to US and Canadian bank accounts. If the payout is manual and in the pending status, use /v1/payouts/:id/cancel instead.
+   *
+   * By requesting a reversal through /v1/payouts/:id/reverse, you confirm that the authorized signatory of the selected bank account authorizes the debit on the bank account and that no other authorization is required.
+   */
+  reverse(id, params, options) {
+    return this._makeRequest("POST", `/v1/payouts/${encodeURIComponent(id)}/reverse`, params, options);
+  }
+};
+
+// node_modules/stripe/esm/resources/Plans.js
+var PlanResource = class extends StripeResource {
+  /**
+   * Deleting plans means new subscribers can't be added. Existing subscribers aren't affected.
+   */
+  del(id, params, options) {
+    return this._makeRequest("DELETE", `/v1/plans/${encodeURIComponent(id)}`, params, options);
+  }
+  /**
+   * Retrieves the plan with the given ID.
+   */
+  retrieve(id, params, options) {
+    return this._makeRequest("GET", `/v1/plans/${encodeURIComponent(id)}`, params, options, {
+      responseSchema: {
+        kind: "object",
+        fields: {
+          amount_decimal: { kind: "nullable", inner: { kind: "decimal_string" } },
+          tiers: {
+            kind: "array",
+            element: {
+              kind: "object",
+              fields: {
+                flat_amount_decimal: {
+                  kind: "nullable",
+                  inner: { kind: "decimal_string" }
+                },
+                unit_amount_decimal: {
+                  kind: "nullable",
+                  inner: { kind: "decimal_string" }
+                }
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+  /**
+   * Updates the specified plan by setting the values of the parameters passed. Any parameters not provided are left unchanged. By design, you cannot change a plan's ID, amount, currency, or billing cycle.
+   */
+  update(id, params, options) {
+    return this._makeRequest("POST", `/v1/plans/${encodeURIComponent(id)}`, params, options, {
+      responseSchema: {
+        kind: "object",
+        fields: {
+          amount_decimal: { kind: "nullable", inner: { kind: "decimal_string" } },
+          tiers: {
+            kind: "array",
+            element: {
+              kind: "object",
+              fields: {
+                flat_amount_decimal: {
+                  kind: "nullable",
+                  inner: { kind: "decimal_string" }
+                },
+                unit_amount_decimal: {
+                  kind: "nullable",
+                  inner: { kind: "decimal_string" }
+                }
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+  /**
+   * Returns a list of your plans.
+   */
+  list(params, options) {
+    return this._makeRequest("GET", "/v1/plans", params, options, {
+      methodType: "list",
+      responseSchema: {
+        kind: "object",
+        fields: {
+          data: {
+            kind: "array",
+            element: {
+              kind: "object",
+              fields: {
+                amount_decimal: {
+                  kind: "nullable",
+                  inner: { kind: "decimal_string" }
+                },
+                tiers: {
+                  kind: "array",
+                  element: {
+                    kind: "object",
+                    fields: {
+                      flat_amount_decimal: {
+                        kind: "nullable",
+                        inner: { kind: "decimal_string" }
+                      },
+                      unit_amount_decimal: {
+                        kind: "nullable",
+                        inner: { kind: "decimal_string" }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+  /**
+   * You can now model subscriptions more flexibly using the [Prices API](https://docs.stripe.com/api#prices). It replaces the Plans API and is backwards compatible to simplify your migration.
+   */
+  create(params, options) {
+    return this._makeRequest("POST", "/v1/plans", params, options, {
+      requestSchema: {
+        kind: "object",
+        fields: {
+          amount_decimal: { kind: "decimal_string" },
+          tiers: {
+            kind: "array",
+            element: {
+              kind: "object",
+              fields: {
+                flat_amount_decimal: { kind: "decimal_string" },
+                unit_amount_decimal: { kind: "decimal_string" }
+              }
+            }
+          }
+        }
+      },
+      responseSchema: {
+        kind: "object",
+        fields: {
+          amount_decimal: { kind: "nullable", inner: { kind: "decimal_string" } },
+          tiers: {
+            kind: "array",
+            element: {
+              kind: "object",
+              fields: {
+                flat_amount_decimal: {
+                  kind: "nullable",
+                  inner: { kind: "decimal_string" }
+                },
+                unit_amount_decimal: {
+                  kind: "nullable",
+                  inner: { kind: "decimal_string" }
+                }
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+};
+
+// node_modules/stripe/esm/resources/Prices.js
+var PriceResource = class extends StripeResource {
+  /**
+   * Returns a list of your active prices, excluding [inline prices](https://docs.stripe.com/docs/products-prices/pricing-models#inline-pricing). For the list of inactive prices, set active to false.
+   */
+  list(params, options) {
+    return this._makeRequest("GET", "/v1/prices", params, options, {
+      methodType: "list",
+      responseSchema: {
+        kind: "object",
+        fields: {
+          data: {
+            kind: "array",
+            element: {
+              kind: "object",
+              fields: {
+                currency_options: {
+                  kind: "array",
+                  element: {
+                    kind: "object",
+                    fields: {
+                      tiers: {
+                        kind: "array",
+                        element: {
+                          kind: "object",
+                          fields: {
+                            flat_amount_decimal: {
+                              kind: "nullable",
+                              inner: { kind: "decimal_string" }
+                            },
+                            unit_amount_decimal: {
+                              kind: "nullable",
+                              inner: { kind: "decimal_string" }
+                            }
+                          }
+                        }
+                      },
+                      unit_amount_decimal: {
+                        kind: "nullable",
+                        inner: { kind: "decimal_string" }
+                      }
+                    }
+                  }
+                },
+                tiers: {
+                  kind: "array",
+                  element: {
+                    kind: "object",
+                    fields: {
+                      flat_amount_decimal: {
+                        kind: "nullable",
+                        inner: { kind: "decimal_string" }
+                      },
+                      unit_amount_decimal: {
+                        kind: "nullable",
+                        inner: { kind: "decimal_string" }
+                      }
+                    }
+                  }
+                },
+                unit_amount_decimal: {
+                  kind: "nullable",
+                  inner: { kind: "decimal_string" }
+                }
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+  /**
+   * Creates a new [Price for an existing <a href="https://docs.stripe.com/api/products">Product](https://docs.stripe.com/api/prices). The Price can be recurring or one-time.
+   */
+  create(params, options) {
+    return this._makeRequest("POST", "/v1/prices", params, options, {
+      requestSchema: {
+        kind: "object",
+        fields: {
+          currency_options: {
+            kind: "array",
+            element: {
+              kind: "object",
+              fields: {
+                tiers: {
+                  kind: "array",
+                  element: {
+                    kind: "object",
+                    fields: {
+                      flat_amount_decimal: { kind: "decimal_string" },
+                      unit_amount_decimal: { kind: "decimal_string" }
+                    }
+                  }
+                },
+                unit_amount_decimal: { kind: "decimal_string" }
+              }
+            }
+          },
+          tiers: {
+            kind: "array",
+            element: {
+              kind: "object",
+              fields: {
+                flat_amount_decimal: { kind: "decimal_string" },
+                unit_amount_decimal: { kind: "decimal_string" }
+              }
+            }
+          },
+          unit_amount_decimal: { kind: "decimal_string" }
+        }
+      },
+      responseSchema: {
+        kind: "object",
+        fields: {
+          currency_options: {
+            kind: "array",
+            element: {
+              kind: "object",
+              fields: {
+                tiers: {
+                  kind: "array",
+                  element: {
+                    kind: "object",
+                    fields: {
+                      flat_amount_decimal: {
+                        kind: "nullable",
+                        inner: { kind: "decimal_string" }
+                      },
+                      unit_amount_decimal: {
+                        kind: "nullable",
+                        inner: { kind: "decimal_string" }
+                      }
+                    }
+                  }
+                },
+                unit_amount_decimal: {
+                  kind: "nullable",
+                  inner: { kind: "decimal_string" }
+                }
+              }
+            }
+          },
+          tiers: {
+            kind: "array",
+            element: {
+              kind: "object",
+              fields: {
+                flat_amount_decimal: {
+                  kind: "nullable",
+                  inner: { kind: "decimal_string" }
+                },
+                unit_amount_decimal: {
+                  kind: "nullable",
+                  inner: { kind: "decimal_string" }
+                }
+              }
+            }
+          },
+          unit_amount_decimal: {
+            kind: "nullable",
+            inner: { kind: "decimal_string" }
+          }
+        }
+      }
+    });
+  }
+  /**
+   * Retrieves the price with the given ID.
+   */
+  retrieve(id, params, options) {
+    return this._makeRequest("GET", `/v1/prices/${encodeURIComponent(id)}`, params, options, {
+      responseSchema: {
+        kind: "object",
+        fields: {
+          currency_options: {
+            kind: "array",
+            element: {
+              kind: "object",
+              fields: {
+                tiers: {
+                  kind: "array",
+                  element: {
+                    kind: "object",
+                    fields: {
+                      flat_amount_decimal: {
+                        kind: "nullable",
+                        inner: { kind: "decimal_string" }
+                      },
+                      unit_amount_decimal: {
+                        kind: "nullable",
+                        inner: { kind: "decimal_string" }
+                      }
+                    }
+                  }
+                },
+                unit_amount_decimal: {
+                  kind: "nullable",
+                  inner: { kind: "decimal_string" }
+                }
+              }
+            }
+          },
+          tiers: {
+            kind: "array",
+            element: {
+              kind: "object",
+              fields: {
+                flat_amount_decimal: {
+                  kind: "nullable",
+                  inner: { kind: "decimal_string" }
+                },
+                unit_amount_decimal: {
+                  kind: "nullable",
+                  inner: { kind: "decimal_string" }
+                }
+              }
+            }
+          },
+          unit_amount_decimal: {
+            kind: "nullable",
+            inner: { kind: "decimal_string" }
+          }
+        }
+      }
+    });
+  }
+  /**
+   * Updates the specified price by setting the values of the parameters passed. Any parameters not provided are left unchanged.
+   */
+  update(id, params, options) {
+    return this._makeRequest("POST", `/v1/prices/${encodeURIComponent(id)}`, params, options, {
+      responseSchema: {
+        kind: "object",
+        fields: {
+          currency_options: {
+            kind: "array",
+            element: {
+              kind: "object",
+              fields: {
+                tiers: {
+                  kind: "array",
+                  element: {
+                    kind: "object",
+                    fields: {
+                      flat_amount_decimal: {
+                        kind: "nullable",
+                        inner: { kind: "decimal_string" }
+                      },
+                      unit_amount_decimal: {
+                        kind: "nullable",
+                        inner: { kind: "decimal_string" }
+                      }
+                    }
+                  }
+                },
+                unit_amount_decimal: {
+                  kind: "nullable",
+                  inner: { kind: "decimal_string" }
+                }
+              }
+            }
+          },
+          tiers: {
+            kind: "array",
+            element: {
+              kind: "object",
+              fields: {
+                flat_amount_decimal: {
+                  kind: "nullable",
+                  inner: { kind: "decimal_string" }
+                },
+                unit_amount_decimal: {
+                  kind: "nullable",
+                  inner: { kind: "decimal_string" }
+                }
+              }
+            }
+          },
+          unit_amount_decimal: {
+            kind: "nullable",
+            inner: { kind: "decimal_string" }
+          }
+        }
+      }
+    });
+  }
+  /**
+   * Search for prices you've previously created using Stripe's [Search Query Language](https://docs.stripe.com/docs/search#search-query-language).
+   * Don't use search in read-after-write flows where strict consistency is necessary. Under normal operating
+   * conditions, data is searchable in less than a minute. Occasionally, propagation of new or updated data can be up
+   * to an hour behind during outages. Search functionality is not available to merchants in India.
+   */
+  search(params, options) {
+    return this._makeRequest("GET", "/v1/prices/search", params, options, {
+      methodType: "search",
+      responseSchema: {
+        kind: "object",
+        fields: {
+          data: {
+            kind: "array",
+            element: {
+              kind: "object",
+              fields: {
+                currency_options: {
+                  kind: "array",
+                  element: {
+                    kind: "object",
+                    fields: {
+                      tiers: {
+                        kind: "array",
+                        element: {
+                          kind: "object",
+                          fields: {
+                            flat_amount_decimal: {
+                              kind: "nullable",
+                              inner: { kind: "decimal_string" }
+                            },
+                            unit_amount_decimal: {
+                              kind: "nullable",
+                              inner: { kind: "decimal_string" }
+                            }
+                          }
+                        }
+                      },
+                      unit_amount_decimal: {
+                        kind: "nullable",
+                        inner: { kind: "decimal_string" }
+                      }
+                    }
+                  }
+                },
+                tiers: {
+                  kind: "array",
+                  element: {
+                    kind: "object",
+                    fields: {
+                      flat_amount_decimal: {
+                        kind: "nullable",
+                        inner: { kind: "decimal_string" }
+                      },
+                      unit_amount_decimal: {
+                        kind: "nullable",
+                        inner: { kind: "decimal_string" }
+                      }
+                    }
+                  }
+                },
+                unit_amount_decimal: {
+                  kind: "nullable",
+                  inner: { kind: "decimal_string" }
+                }
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+};
+
+// node_modules/stripe/esm/resources/Products.js
+var ProductResource2 = class extends StripeResource {
+  /**
+   * Delete a product. Deleting a product is only possible if it has no prices associated with it. Additionally, deleting a product with type=good is only possible if it has no SKUs associated with it.
+   */
+  del(id, params, options) {
+    return this._makeRequest("DELETE", `/v1/products/${encodeURIComponent(id)}`, params, options);
+  }
+  /**
+   * Retrieves the details of an existing product. Supply the unique product ID from either a product creation request or the product list, and Stripe will return the corresponding product information.
+   */
+  retrieve(id, params, options) {
+    return this._makeRequest("GET", `/v1/products/${encodeURIComponent(id)}`, params, options);
+  }
+  /**
+   * Updates the specific product by setting the values of the parameters passed. Any parameters not provided will be left unchanged.
+   */
+  update(id, params, options) {
+    return this._makeRequest("POST", `/v1/products/${encodeURIComponent(id)}`, params, options);
+  }
+  /**
+   * Returns a list of your products. The products are returned sorted by creation date, with the most recently created products appearing first.
+   */
+  list(params, options) {
+    return this._makeRequest("GET", "/v1/products", params, options, {
+      methodType: "list"
+    });
+  }
+  /**
+   * Creates a new product object.
+   */
+  create(params, options) {
+    return this._makeRequest("POST", "/v1/products", params, options, {
+      requestSchema: {
+        kind: "object",
+        fields: {
+          default_price_data: {
+            kind: "object",
+            fields: {
+              currency_options: {
+                kind: "array",
+                element: {
+                  kind: "object",
+                  fields: {
+                    tiers: {
+                      kind: "array",
+                      element: {
+                        kind: "object",
+                        fields: {
+                          flat_amount_decimal: { kind: "decimal_string" },
+                          unit_amount_decimal: { kind: "decimal_string" }
+                        }
+                      }
+                    },
+                    unit_amount_decimal: { kind: "decimal_string" }
+                  }
+                }
+              },
+              unit_amount_decimal: { kind: "decimal_string" }
+            }
+          }
+        }
+      }
+    });
+  }
+  /**
+   * Search for products you've previously created using Stripe's [Search Query Language](https://docs.stripe.com/docs/search#search-query-language).
+   * Don't use search in read-after-write flows where strict consistency is necessary. Under normal operating
+   * conditions, data is searchable in less than a minute. Occasionally, propagation of new or updated data can be up
+   * to an hour behind during outages. Search functionality is not available to merchants in India.
+   */
+  search(params, options) {
+    return this._makeRequest("GET", "/v1/products/search", params, options, {
+      methodType: "search"
+    });
+  }
+  /**
+   * Deletes the feature attachment to a product
+   */
+  deleteFeature(productId, id, params, options) {
+    return this._makeRequest("DELETE", `/v1/products/${encodeURIComponent(productId)}/features/${encodeURIComponent(id)}`, params, options);
+  }
+  /**
+   * Retrieves a product_feature, which represents a feature attachment to a product
+   */
+  retrieveFeature(productId, id, params, options) {
+    return this._makeRequest("GET", `/v1/products/${encodeURIComponent(productId)}/features/${encodeURIComponent(id)}`, params, options);
+  }
+  /**
+   * Retrieve a list of features for a product
+   */
+  listFeatures(id, params, options) {
+    return this._makeRequest("GET", `/v1/products/${encodeURIComponent(id)}/features`, params, options, {
+      methodType: "list"
+    });
+  }
+  /**
+   * Creates a product_feature, which represents a feature attachment to a product
+   */
+  createFeature(id, params, options) {
+    return this._makeRequest("POST", `/v1/products/${encodeURIComponent(id)}/features`, params, options);
+  }
+};
+
+// node_modules/stripe/esm/resources/PromotionCodes.js
+var PromotionCodeResource = class extends StripeResource {
+  /**
+   * Returns a list of your promotion codes.
+   */
+  list(params, options) {
+    return this._makeRequest("GET", "/v1/promotion_codes", params, options, {
+      methodType: "list"
+    });
+  }
+  /**
+   * A promotion code points to an underlying promotion. You can optionally restrict the code to a specific customer, redemption limit, and expiration date.
+   */
+  create(params, options) {
+    return this._makeRequest("POST", "/v1/promotion_codes", params, options);
+  }
+  /**
+   * Retrieves the promotion code with the given ID. In order to retrieve a promotion code by the customer-facing code use [list](https://docs.stripe.com/docs/api/promotion_codes/list) with the desired code.
+   */
+  retrieve(id, params, options) {
+    return this._makeRequest("GET", `/v1/promotion_codes/${encodeURIComponent(id)}`, params, options);
+  }
+  /**
+   * Updates the specified promotion code by setting the values of the parameters passed. Most fields are, by design, not editable.
+   */
+  update(id, params, options) {
+    return this._makeRequest("POST", `/v1/promotion_codes/${encodeURIComponent(id)}`, params, options);
+  }
+};
+
+// node_modules/stripe/esm/resources/Quotes.js
+var QuoteResource = class extends StripeResource {
+  /**
+   * Returns a list of your quotes.
+   */
+  list(params, options) {
+    return this._makeRequest("GET", "/v1/quotes", params, options, {
+      methodType: "list",
+      responseSchema: {
+        kind: "object",
+        fields: {
+          data: {
+            kind: "array",
+            element: {
+              kind: "object",
+              fields: {
+                computed: {
+                  kind: "object",
+                  fields: {
+                    upfront: {
+                      kind: "object",
+                      fields: {
+                        line_items: {
+                          kind: "object",
+                          fields: {
+                            data: {
+                              kind: "array",
+                              element: {
+                                kind: "object",
+                                fields: {
+                                  price: {
+                                    kind: "nullable",
+                                    inner: {
+                                      kind: "object",
+                                      fields: {
+                                        currency_options: {
+                                          kind: "array",
+                                          element: {
+                                            kind: "object",
+                                            fields: {
+                                              tiers: {
+                                                kind: "array",
+                                                element: {
+                                                  kind: "object",
+                                                  fields: {
+                                                    flat_amount_decimal: {
+                                                      kind: "nullable",
+                                                      inner: {
+                                                        kind: "decimal_string"
+                                                      }
+                                                    },
+                                                    unit_amount_decimal: {
+                                                      kind: "nullable",
+                                                      inner: {
+                                                        kind: "decimal_string"
+                                                      }
+                                                    }
+                                                  }
+                                                }
+                                              },
+                                              unit_amount_decimal: {
+                                                kind: "nullable",
+                                                inner: { kind: "decimal_string" }
+                                              }
+                                            }
+                                          }
+                                        },
+                                        tiers: {
+                                          kind: "array",
+                                          element: {
+                                            kind: "object",
+                                            fields: {
+                                              flat_amount_decimal: {
+                                                kind: "nullable",
+                                                inner: { kind: "decimal_string" }
+                                              },
+                                              unit_amount_decimal: {
+                                                kind: "nullable",
+                                                inner: { kind: "decimal_string" }
+                                              }
+                                            }
+                                          }
+                                        },
+                                        unit_amount_decimal: {
+                                          kind: "nullable",
+                                          inner: { kind: "decimal_string" }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+  /**
+   * A quote models prices and services for a customer. Default options for header, description, footer, and expires_at can be set in the dashboard via the [quote template](https://dashboard.stripe.com/settings/billing/quote).
+   */
+  create(params, options) {
+    return this._makeRequest("POST", "/v1/quotes", params, options, {
+      requestSchema: {
+        kind: "object",
+        fields: {
+          line_items: {
+            kind: "array",
+            element: {
+              kind: "object",
+              fields: {
+                price_data: {
+                  kind: "object",
+                  fields: { unit_amount_decimal: { kind: "decimal_string" } }
+                }
+              }
+            }
+          }
+        }
+      },
+      responseSchema: {
+        kind: "object",
+        fields: {
+          computed: {
+            kind: "object",
+            fields: {
+              upfront: {
+                kind: "object",
+                fields: {
+                  line_items: {
+                    kind: "object",
+                    fields: {
+                      data: {
+                        kind: "array",
+                        element: {
+                          kind: "object",
+                          fields: {
+                            price: {
+                              kind: "nullable",
+                              inner: {
+                                kind: "object",
+                                fields: {
+                                  currency_options: {
+                                    kind: "array",
+                                    element: {
+                                      kind: "object",
+                                      fields: {
+                                        tiers: {
+                                          kind: "array",
+                                          element: {
+                                            kind: "object",
+                                            fields: {
+                                              flat_amount_decimal: {
+                                                kind: "nullable",
+                                                inner: { kind: "decimal_string" }
+                                              },
+                                              unit_amount_decimal: {
+                                                kind: "nullable",
+                                                inner: { kind: "decimal_string" }
+                                              }
+                                            }
+                                          }
+                                        },
+                                        unit_amount_decimal: {
+                                          kind: "nullable",
+                                          inner: { kind: "decimal_string" }
+                                        }
+                                      }
+                                    }
+                                  },
+                                  tiers: {
+                                    kind: "array",
+                                    element: {
+                                      kind: "object",
+                                      fields: {
+                                        flat_amount_decimal: {
+                                          kind: "nullable",
+                                          inner: { kind: "decimal_string" }
+                                        },
+                                        unit_amount_decimal: {
+                                          kind: "nullable",
+                                          inner: { kind: "decimal_string" }
+                                        }
+                                      }
+                                    }
+                                  },
+                                  unit_amount_decimal: {
+                                    kind: "nullable",
+                                    inner: { kind: "decimal_string" }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+  /**
+   * Retrieves the quote with the given ID.
+   */
+  retrieve(id, params, options) {
+    return this._makeRequest("GET", `/v1/quotes/${encodeURIComponent(id)}`, params, options, {
+      responseSchema: {
+        kind: "object",
+        fields: {
+          computed: {
+            kind: "object",
+            fields: {
+              upfront: {
+                kind: "object",
+                fields: {
+                  line_items: {
+                    kind: "object",
+                    fields: {
+                      data: {
+                        kind: "array",
+                        element: {
+                          kind: "object",
+                          fields: {
+                            price: {
+                              kind: "nullable",
+                              inner: {
+                                kind: "object",
+                                fields: {
+                                  currency_options: {
+                                    kind: "array",
+                                    element: {
+                                      kind: "object",
+                                      fields: {
+                                        tiers: {
+                                          kind: "array",
+                                          element: {
+                                            kind: "object",
+                                            fields: {
+                                              flat_amount_decimal: {
+                                                kind: "nullable",
+                                                inner: {
+                                                  kind: "decimal_string"
+                                                }
+                                              },
+                                              unit_amount_decimal: {
+                                                kind: "nullable",
+                                                inner: {
+                                                  kind: "decimal_string"
+                                                }
+                                              }
+                                            }
+                                          }
+                                        },
+                                        unit_amount_decimal: {
+                                          kind: "nullable",
+                                          inner: { kind: "decimal_string" }
+                                        }
+                                      }
+                                    }
+                                  },
+                                  tiers: {
+                                    kind: "array",
+                                    element: {
+                                      kind: "object",
+                                      fields: {
+                                        flat_amount_decimal: {
+                                          kind: "nullable",
+                                          inner: { kind: "decimal_string" }
+                                        },
+                                        unit_amount_decimal: {
+                                          kind: "nullable",
+                                          inner: { kind: "decimal_string" }
+                                        }
+                                      }
+                                    }
+                                  },
+                                  unit_amount_decimal: {
+                                    kind: "nullable",
+                                    inner: { kind: "decimal_string" }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+  /**
+   * A quote models prices and services for a customer.
+   */
+  update(id, params, options) {
+    return this._makeRequest("POST", `/v1/quotes/${encodeURIComponent(id)}`, params, options, {
+      requestSchema: {
+        kind: "object",
+        fields: {
+          line_items: {
+            kind: "array",
+            element: {
+              kind: "object",
+              fields: {
+                price_data: {
+                  kind: "object",
+                  fields: { unit_amount_decimal: { kind: "decimal_string" } }
+                }
+              }
+            }
+          }
+        }
+      },
+      responseSchema: {
+        kind: "object",
+        fields: {
+          computed: {
+            kind: "object",
+            fields: {
+              upfront: {
+                kind: "object",
+                fields: {
+                  line_items: {
+                    kind: "object",
+                    fields: {
+                      data: {
+                        kind: "array",
+                        element: {
+                          kind: "object",
+                          fields: {
+                            price: {
+                              kind: "nullable",
+                              inner: {
+                                kind: "object",
+                                fields: {
+                                  currency_options: {
+                                    kind: "array",
+                                    element: {
+                                      kind: "object",
+                                      fields: {
+                                        tiers: {
+                                          kind: "array",
+                                          element: {
+                                            kind: "object",
+                                            fields: {
+                                              flat_amount_decimal: {
+                                                kind: "nullable",
+                                                inner: {
+                                                  kind: "decimal_string"
+                                                }
+                                              },
+                                              unit_amount_decimal: {
+                                                kind: "nullable",
+                                                inner: {
+                                                  kind: "decimal_string"
+                                                }
+                                              }
+                                            }
+                                          }
+                                        },
+                                        unit_amount_decimal: {
+                                          kind: "nullable",
+                                          inner: { kind: "decimal_string" }
+                                        }
+                                      }
+                                    }
+                                  },
+                                  tiers: {
+                                    kind: "array",
+                                    element: {
+                                      kind: "object",
+                                      fields: {
+                                        flat_amount_decimal: {
+                                          kind: "nullable",
+                                          inner: { kind: "decimal_string" }
+                                        },
+                                        unit_amount_decimal: {
+                                          kind: "nullable",
+                                          inner: { kind: "decimal_string" }
+                                        }
+                                      }
+                                    }
+                                  },
+                                  unit_amount_decimal: {
+                                    kind: "nullable",
+                                    inner: { kind: "decimal_string" }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+  /**
+   * Accepts the specified quote.
+   */
+  accept(id, params, options) {
+    return this._makeRequest("POST", `/v1/quotes/${encodeURIComponent(id)}/accept`, params, options, {
+      responseSchema: {
+        kind: "object",
+        fields: {
+          computed: {
+            kind: "object",
+            fields: {
+              upfront: {
+                kind: "object",
+                fields: {
+                  line_items: {
+                    kind: "object",
+                    fields: {
+                      data: {
+                        kind: "array",
+                        element: {
+                          kind: "object",
+                          fields: {
+                            price: {
+                              kind: "nullable",
+                              inner: {
+                                kind: "object",
+                                fields: {
+                                  currency_options: {
+                                    kind: "array",
+                                    element: {
+                                      kind: "object",
+                                      fields: {
+                                        tiers: {
+                                          kind: "array",
+                                          element: {
+                                            kind: "object",
+                                            fields: {
+                                              flat_amount_decimal: {
+                                                kind: "nullable",
+                                                inner: {
+                                                  kind: "decimal_string"
+                                                }
+                                              },
+                                              unit_amount_decimal: {
+                                                kind: "nullable",
+                                                inner: {
+                                                  kind: "decimal_string"
+                                                }
+                                              }
+                                            }
+                                          }
+                                        },
+                                        unit_amount_decimal: {
+                                          kind: "nullable",
+                                          inner: { kind: "decimal_string" }
+                                        }
+                                      }
+                                    }
+                                  },
+                                  tiers: {
+                                    kind: "array",
+                                    element: {
+                                      kind: "object",
+                                      fields: {
+                                        flat_amount_decimal: {
+                                          kind: "nullable",
+                                          inner: { kind: "decimal_string" }
+                                        },
+                                        unit_amount_decimal: {
+                                          kind: "nullable",
+                                          inner: { kind: "decimal_string" }
+                                        }
+                                      }
+                                    }
+                                  },
+                                  unit_amount_decimal: {
+                                    kind: "nullable",
+                                    inner: { kind: "decimal_string" }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+  /**
+   * Cancels the quote.
+   */
+  cancel(id, params, options) {
+    return this._makeRequest("POST", `/v1/quotes/${encodeURIComponent(id)}/cancel`, params, options, {
+      responseSchema: {
+        kind: "object",
+        fields: {
+          computed: {
+            kind: "object",
+            fields: {
+              upfront: {
+                kind: "object",
+                fields: {
+                  line_items: {
+                    kind: "object",
+                    fields: {
+                      data: {
+                        kind: "array",
+                        element: {
+                          kind: "object",
+                          fields: {
+                            price: {
+                              kind: "nullable",
+                              inner: {
+                                kind: "object",
+                                fields: {
+                                  currency_options: {
+                                    kind: "array",
+                                    element: {
+                                      kind: "object",
+                                      fields: {
+                                        tiers: {
+                                          kind: "array",
+                                          element: {
+                                            kind: "object",
+                                            fields: {
+                                              flat_amount_decimal: {
+                                                kind: "nullable",
+                                                inner: {
+                                                  kind: "decimal_string"
+                                                }
+                                              },
+                                              unit_amount_decimal: {
+                                                kind: "nullable",
+                                                inner: {
+                                                  kind: "decimal_string"
+                                                }
+                                              }
+                                            }
+                                          }
+                                        },
+                                        unit_amount_decimal: {
+                                          kind: "nullable",
+                                          inner: { kind: "decimal_string" }
+                                        }
+                                      }
+                                    }
+                                  },
+                                  tiers: {
+                                    kind: "array",
+                                    element: {
+                                      kind: "object",
+                                      fields: {
+                                        flat_amount_decimal: {
+                                          kind: "nullable",
+                                          inner: { kind: "decimal_string" }
+                                        },
+                                        unit_amount_decimal: {
+                                          kind: "nullable",
+                                          inner: { kind: "decimal_string" }
+                                        }
+                                      }
+                                    }
+                                  },
+                                  unit_amount_decimal: {
+                                    kind: "nullable",
+                                    inner: { kind: "decimal_string" }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+  /**
+   * Finalizes the quote.
+   */
+  finalizeQuote(id, params, options) {
+    return this._makeRequest("POST", `/v1/quotes/${encodeURIComponent(id)}/finalize`, params, options, {
+      responseSchema: {
+        kind: "object",
+        fields: {
+          computed: {
+            kind: "object",
+            fields: {
+              upfront: {
+                kind: "object",
+                fields: {
+                  line_items: {
+                    kind: "object",
+                    fields: {
+                      data: {
+                        kind: "array",
+                        element: {
+                          kind: "object",
+                          fields: {
+                            price: {
+                              kind: "nullable",
+                              inner: {
+                                kind: "object",
+                                fields: {
+                                  currency_options: {
+                                    kind: "array",
+                                    element: {
+                                      kind: "object",
+                                      fields: {
+                                        tiers: {
+                                          kind: "array",
+                                          element: {
+                                            kind: "object",
+                                            fields: {
+                                              flat_amount_decimal: {
+                                                kind: "nullable",
+                                                inner: {
+                                                  kind: "decimal_string"
+                                                }
+                                              },
+                                              unit_amount_decimal: {
+                                                kind: "nullable",
+                                                inner: {
+                                                  kind: "decimal_string"
+                                                }
+                                              }
+                                            }
+                                          }
+                                        },
+                                        unit_amount_decimal: {
+                                          kind: "nullable",
+                                          inner: { kind: "decimal_string" }
+                                        }
+                                      }
+                                    }
+                                  },
+                                  tiers: {
+                                    kind: "array",
+                                    element: {
+                                      kind: "object",
+                                      fields: {
+                                        flat_amount_decimal: {
+                                          kind: "nullable",
+                                          inner: { kind: "decimal_string" }
+                                        },
+                                        unit_amount_decimal: {
+                                          kind: "nullable",
+                                          inner: { kind: "decimal_string" }
+                                        }
+                                      }
+                                    }
+                                  },
+                                  unit_amount_decimal: {
+                                    kind: "nullable",
+                                    inner: { kind: "decimal_string" }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+  /**
+   * Download the PDF for a finalized quote. Explanation for special handling can be found [here](https://docs.stripe.com/quotes/overview#quote_pdf)
+   */
+  pdf(id, params, options) {
+    return this._makeRequest("GET", `/v1/quotes/${encodeURIComponent(id)}/pdf`, params, options, {
+      apiBase: "files",
+      streaming: true
+    });
+  }
+  /**
+   * When retrieving a quote, there is an includable [computed.upfront.line_items](https://stripe.com/docs/api/quotes/object#quote_object-computed-upfront-line_items) property containing the first handful of those items. There is also a URL where you can retrieve the full (paginated) list of upfront line items.
+   */
+  listComputedUpfrontLineItems(id, params, options) {
+    return this._makeRequest("GET", `/v1/quotes/${encodeURIComponent(id)}/computed_upfront_line_items`, params, options, {
+      methodType: "list",
+      responseSchema: {
+        kind: "object",
+        fields: {
+          data: {
+            kind: "array",
+            element: {
+              kind: "object",
+              fields: {
+                price: {
+                  kind: "nullable",
+                  inner: {
+                    kind: "object",
+                    fields: {
+                      currency_options: {
+                        kind: "array",
+                        element: {
+                          kind: "object",
+                          fields: {
+                            tiers: {
+                              kind: "array",
+                              element: {
+                                kind: "object",
+                                fields: {
+                                  flat_amount_decimal: {
+                                    kind: "nullable",
+                                    inner: { kind: "decimal_string" }
+                                  },
+                                  unit_amount_decimal: {
+                                    kind: "nullable",
+                                    inner: { kind: "decimal_string" }
+                                  }
+                                }
+                              }
+                            },
+                            unit_amount_decimal: {
+                              kind: "nullable",
+                              inner: { kind: "decimal_string" }
+                            }
+                          }
+                        }
+                      },
+                      tiers: {
+                        kind: "array",
+                        element: {
+                          kind: "object",
+                          fields: {
+                            flat_amount_decimal: {
+                              kind: "nullable",
+                              inner: { kind: "decimal_string" }
+                            },
+                            unit_amount_decimal: {
+                              kind: "nullable",
+                              inner: { kind: "decimal_string" }
+                            }
+                          }
+                        }
+                      },
+                      unit_amount_decimal: {
+                        kind: "nullable",
+                        inner: { kind: "decimal_string" }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+  /**
+   * When retrieving a quote, there is an includable line_items property containing the first handful of those items. There is also a URL where you can retrieve the full (paginated) list of line items.
+   */
+  listLineItems(id, params, options) {
+    return this._makeRequest("GET", `/v1/quotes/${encodeURIComponent(id)}/line_items`, params, options, {
+      methodType: "list",
+      responseSchema: {
+        kind: "object",
+        fields: {
+          data: {
+            kind: "array",
+            element: {
+              kind: "object",
+              fields: {
+                price: {
+                  kind: "nullable",
+                  inner: {
+                    kind: "object",
+                    fields: {
+                      currency_options: {
+                        kind: "array",
+                        element: {
+                          kind: "object",
+                          fields: {
+                            tiers: {
+                              kind: "array",
+                              element: {
+                                kind: "object",
+                                fields: {
+                                  flat_amount_decimal: {
+                                    kind: "nullable",
+                                    inner: { kind: "decimal_string" }
+                                  },
+                                  unit_amount_decimal: {
+                                    kind: "nullable",
+                                    inner: { kind: "decimal_string" }
+                                  }
+                                }
+                              }
+                            },
+                            unit_amount_decimal: {
+                              kind: "nullable",
+                              inner: { kind: "decimal_string" }
+                            }
+                          }
+                        }
+                      },
+                      tiers: {
+                        kind: "array",
+                        element: {
+                          kind: "object",
+                          fields: {
+                            flat_amount_decimal: {
+                              kind: "nullable",
+                              inner: { kind: "decimal_string" }
+                            },
+                            unit_amount_decimal: {
+                              kind: "nullable",
+                              inner: { kind: "decimal_string" }
+                            }
+                          }
+                        }
+                      },
+                      unit_amount_decimal: {
+                        kind: "nullable",
+                        inner: { kind: "decimal_string" }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+};
+
+// node_modules/stripe/esm/resources/Refunds.js
+var RefundResource2 = class extends StripeResource {
+  /**
+   * Returns a list of all refunds you created. We return the refunds in sorted order, with the most recent refunds appearing first. The 10 most recent refunds are always available by default on the Charge object.
+   */
+  list(params, options) {
+    return this._makeRequest("GET", "/v1/refunds", params, options, {
+      methodType: "list"
+    });
+  }
+  /**
+   * When you create a new refund, you must specify a Charge or a PaymentIntent object on which to create it.
+   *
+   * Creating a new refund will refund a charge that has previously been created but not yet refunded.
+   * Funds will be refunded to the credit or debit card that was originally charged.
+   *
+   * You can optionally refund only part of a charge.
+   * You can do so multiple times, until the entire charge has been refunded.
+   *
+   * Once entirely refunded, a charge can't be refunded again.
+   * This method will raise an error when called on an already-refunded charge,
+   * or when trying to refund more money than is left on a charge.
+   */
+  create(params, options) {
+    return this._makeRequest("POST", "/v1/refunds", params, options);
+  }
+  /**
+   * Retrieves the details of an existing refund.
+   */
+  retrieve(id, params, options) {
+    return this._makeRequest("GET", `/v1/refunds/${encodeURIComponent(id)}`, params, options);
+  }
+  /**
+   * Updates the refund that you specify by setting the values of the passed parameters. Any parameters that you don't provide remain unchanged.
+   *
+   * This request only accepts metadata as an argument.
+   */
+  update(id, params, options) {
+    return this._makeRequest("POST", `/v1/refunds/${encodeURIComponent(id)}`, params, options);
+  }
+  /**
+   * Cancels a refund with a status of requires_action.
+   *
+   * You can't cancel refunds in other states. Only refunds for payment methods that require customer action can enter the requires_action state.
+   */
+  cancel(id, params, options) {
+    return this._makeRequest("POST", `/v1/refunds/${encodeURIComponent(id)}/cancel`, params, options);
+  }
+};
+
+// node_modules/stripe/esm/resources/Reviews.js
+var ReviewResource = class extends StripeResource {
+  /**
+   * Returns a list of Review objects that have open set to true. The objects are sorted in descending order by creation date, with the most recently created object appearing first.
+   */
+  list(params, options) {
+    return this._makeRequest("GET", "/v1/reviews", params, options, {
+      methodType: "list"
+    });
+  }
+  /**
+   * Retrieves a Review object.
+   */
+  retrieve(id, params, options) {
+    return this._makeRequest("GET", `/v1/reviews/${encodeURIComponent(id)}`, params, options);
+  }
+  /**
+   * Approves a Review object, closing it and removing it from the list of reviews.
+   */
+  approve(id, params, options) {
+    return this._makeRequest("POST", `/v1/reviews/${encodeURIComponent(id)}/approve`, params, options);
+  }
+};
+
+// node_modules/stripe/esm/resources/SetupAttempts.js
+var SetupAttemptResource = class extends StripeResource {
+  /**
+   * Returns a list of SetupAttempts that associate with a provided SetupIntent.
+   */
+  list(params, options) {
+    return this._makeRequest("GET", "/v1/setup_attempts", params, options, {
+      methodType: "list"
+    });
+  }
+};
+
+// node_modules/stripe/esm/resources/SetupIntents.js
+var SetupIntentResource = class extends StripeResource {
+  /**
+   * Returns a list of SetupIntents.
+   */
+  list(params, options) {
+    return this._makeRequest("GET", "/v1/setup_intents", params, options, {
+      methodType: "list"
+    });
+  }
+  /**
+   * Creates a SetupIntent object.
+   *
+   * After you create the SetupIntent, attach a payment method and [confirm](https://docs.stripe.com/docs/api/setup_intents/confirm)
+   * it to collect any required permissions to charge the payment method later.
+   */
+  create(params, options) {
+    return this._makeRequest("POST", "/v1/setup_intents", params, options);
+  }
+  /**
+   * Retrieves the details of a SetupIntent that has previously been created.
+   *
+   * Client-side retrieval using a publishable key is allowed when the client_secret is provided in the query string.
+   *
+   * When retrieved with a publishable key, only a subset of properties will be returned. Please refer to the [SetupIntent](https://docs.stripe.com/api#setup_intent_object) object reference for more details.
+   */
+  retrieve(id, params, options) {
+    return this._makeRequest("GET", `/v1/setup_intents/${encodeURIComponent(id)}`, params, options);
+  }
+  /**
+   * Updates a SetupIntent object.
+   */
+  update(id, params, options) {
+    return this._makeRequest("POST", `/v1/setup_intents/${encodeURIComponent(id)}`, params, options);
+  }
+  /**
+   * You can cancel a SetupIntent object when it's in one of these statuses: requires_payment_method, requires_confirmation, or requires_action.
+   *
+   * After you cancel it, setup is abandoned and any operations on the SetupIntent fail with an error. You can't cancel the SetupIntent for a Checkout Session. [Expire the Checkout Session](https://docs.stripe.com/docs/api/checkout/sessions/expire) instead.
+   */
+  cancel(id, params, options) {
+    return this._makeRequest("POST", `/v1/setup_intents/${encodeURIComponent(id)}/cancel`, params, options);
+  }
+  /**
+   * Confirm that your customer intends to set up the current or
+   * provided payment method. For example, you would confirm a SetupIntent
+   * when a customer hits the “Save” button on a payment method management
+   * page on your website.
+   *
+   * If the selected payment method does not require any additional
+   * steps from the customer, the SetupIntent will transition to the
+   * succeeded status.
+   *
+   * Otherwise, it will transition to the requires_action status and
+   * suggest additional actions via next_action. If setup fails,
+   * the SetupIntent will transition to the
+   * requires_payment_method status or the canceled status if the
+   * confirmation limit is reached.
+   */
+  confirm(id, params, options) {
+    return this._makeRequest("POST", `/v1/setup_intents/${encodeURIComponent(id)}/confirm`, params, options);
+  }
+  /**
+   * Verifies microdeposits on a SetupIntent object.
+   */
+  verifyMicrodeposits(id, params, options) {
+    return this._makeRequest("POST", `/v1/setup_intents/${encodeURIComponent(id)}/verify_microdeposits`, params, options);
+  }
+};
+
+// node_modules/stripe/esm/resources/ShippingRates.js
+var ShippingRateResource = class extends StripeResource {
+  /**
+   * Returns a list of your shipping rates.
+   */
+  list(params, options) {
+    return this._makeRequest("GET", "/v1/shipping_rates", params, options, {
+      methodType: "list"
+    });
+  }
+  /**
+   * Creates a new shipping rate object.
+   */
+  create(params, options) {
+    return this._makeRequest("POST", "/v1/shipping_rates", params, options);
+  }
+  /**
+   * Returns the shipping rate object with the given ID.
+   */
+  retrieve(id, params, options) {
+    return this._makeRequest("GET", `/v1/shipping_rates/${encodeURIComponent(id)}`, params, options);
+  }
+  /**
+   * Updates an existing shipping rate object.
+   */
+  update(id, params, options) {
+    return this._makeRequest("POST", `/v1/shipping_rates/${encodeURIComponent(id)}`, params, options);
+  }
+};
+
+// node_modules/stripe/esm/resources/Sources.js
+var SourceResource = class extends StripeResource {
+  /**
+   * Retrieves an existing source object. Supply the unique source ID from a source creation request and Stripe will return the corresponding up-to-date source object information.
+   */
+  retrieve(id, params, options) {
+    return this._makeRequest("GET", `/v1/sources/${encodeURIComponent(id)}`, params, options);
+  }
+  /**
+   * Updates the specified source by setting the values of the parameters passed. Any parameters not provided will be left unchanged.
+   *
+   * This request accepts the metadata and owner as arguments. It is also possible to update type specific information for selected payment methods. Please refer to our [payment method guides](https://docs.stripe.com/docs/sources) for more detail.
+   */
+  update(id, params, options) {
+    return this._makeRequest("POST", `/v1/sources/${encodeURIComponent(id)}`, params, options);
+  }
+  /**
+   * Creates a new source object.
+   */
+  create(params, options) {
+    return this._makeRequest("POST", "/v1/sources", params, options);
+  }
+  /**
+   * Verify a given source.
+   */
+  verify(id, params, options) {
+    return this._makeRequest("POST", `/v1/sources/${encodeURIComponent(id)}/verify`, params, options);
+  }
+  /**
+   * List source transactions for a given source.
+   */
+  listSourceTransactions(id, params, options) {
+    return this._makeRequest("GET", `/v1/sources/${encodeURIComponent(id)}/source_transactions`, params, options, {
+      methodType: "list"
+    });
+  }
+};
+
+// node_modules/stripe/esm/resources/Subscriptions.js
+var SubscriptionResource = class extends StripeResource {
+  /**
+   * Cancels a customer's subscription immediately. The customer won't be charged again for the subscription. After it's canceled, the subscription is largely immutable. You can still update its [metadata](https://docs.stripe.com/metadata) and cancellation_details.
+   *
+   * Any pending invoice items that you've created are still charged at the end of the period, unless manually [deleted](https://docs.stripe.com/api/invoiceitems/delete). If you've set the subscription to cancel at the end of the period, any pending prorations are also left in place and collected at the end of the period. But if the subscription is set to cancel immediately, pending prorations are removed if invoice_now and prorate are both set to false.
+   *
+   * By default, upon subscription cancellation, Stripe stops automatic collection of all finalized invoices for the customer. This is intended to prevent unexpected payment attempts after the customer has canceled a subscription. However, you can resume automatic collection of the invoices manually after subscription cancellation to have us proceed. Or, you could check for unpaid invoices before allowing the customer to cancel the subscription at all.
+   */
+  cancel(id, params, options) {
+    return this._makeRequest("DELETE", `/v1/subscriptions/${encodeURIComponent(id)}`, params, options, {
+      responseSchema: {
+        kind: "object",
+        fields: {
+          items: {
+            kind: "object",
+            fields: {
+              data: {
+                kind: "array",
+                element: {
+                  kind: "object",
+                  fields: {
+                    plan: {
+                      kind: "object",
+                      fields: {
+                        amount_decimal: {
+                          kind: "nullable",
+                          inner: { kind: "decimal_string" }
+                        },
+                        tiers: {
+                          kind: "array",
+                          element: {
+                            kind: "object",
+                            fields: {
+                              flat_amount_decimal: {
+                                kind: "nullable",
+                                inner: { kind: "decimal_string" }
+                              },
+                              unit_amount_decimal: {
+                                kind: "nullable",
+                                inner: { kind: "decimal_string" }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    price: {
+                      kind: "object",
+                      fields: {
+                        currency_options: {
+                          kind: "array",
+                          element: {
+                            kind: "object",
+                            fields: {
+                              tiers: {
+                                kind: "array",
+                                element: {
+                                  kind: "object",
+                                  fields: {
+                                    flat_amount_decimal: {
+                                      kind: "nullable",
+                                      inner: { kind: "decimal_string" }
+                                    },
+                                    unit_amount_decimal: {
+                                      kind: "nullable",
+                                      inner: { kind: "decimal_string" }
+                                    }
+                                  }
+                                }
+                              },
+                              unit_amount_decimal: {
+                                kind: "nullable",
+                                inner: { kind: "decimal_string" }
+                              }
+                            }
+                          }
+                        },
+                        tiers: {
+                          kind: "array",
+                          element: {
+                            kind: "object",
+                            fields: {
+                              flat_amount_decimal: {
+                                kind: "nullable",
+                                inner: { kind: "decimal_string" }
+                              },
+                              unit_amount_decimal: {
+                                kind: "nullable",
+                                inner: { kind: "decimal_string" }
+                              }
+                            }
+                          }
+                        },
+                        unit_amount_decimal: {
+                          kind: "nullable",
+                          inner: { kind: "decimal_string" }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+  /**
+   * Retrieves the subscription with the given ID.
+   */
+  retrieve(id, params, options) {
+    return this._makeRequest("GET", `/v1/subscriptions/${encodeURIComponent(id)}`, params, options, {
+      responseSchema: {
+        kind: "object",
+        fields: {
+          items: {
+            kind: "object",
+            fields: {
+              data: {
+                kind: "array",
+                element: {
+                  kind: "object",
+                  fields: {
+                    plan: {
+                      kind: "object",
+                      fields: {
+                        amount_decimal: {
+                          kind: "nullable",
+                          inner: { kind: "decimal_string" }
+                        },
+                        tiers: {
+                          kind: "array",
+                          element: {
+                            kind: "object",
+                            fields: {
+                              flat_amount_decimal: {
+                                kind: "nullable",
+                                inner: { kind: "decimal_string" }
+                              },
+                              unit_amount_decimal: {
+                                kind: "nullable",
+                                inner: { kind: "decimal_string" }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    price: {
+                      kind: "object",
+                      fields: {
+                        currency_options: {
+                          kind: "array",
+                          element: {
+                            kind: "object",
+                            fields: {
+                              tiers: {
+                                kind: "array",
+                                element: {
+                                  kind: "object",
+                                  fields: {
+                                    flat_amount_decimal: {
+                                      kind: "nullable",
+                                      inner: { kind: "decimal_string" }
+                                    },
+                                    unit_amount_decimal: {
+                                      kind: "nullable",
+                                      inner: { kind: "decimal_string" }
+                                    }
+                                  }
+                                }
+                              },
+                              unit_amount_decimal: {
+                                kind: "nullable",
+                                inner: { kind: "decimal_string" }
+                              }
+                            }
+                          }
+                        },
+                        tiers: {
+                          kind: "array",
+                          element: {
+                            kind: "object",
+                            fields: {
+                              flat_amount_decimal: {
+                                kind: "nullable",
+                                inner: { kind: "decimal_string" }
+                              },
+                              unit_amount_decimal: {
+                                kind: "nullable",
+                                inner: { kind: "decimal_string" }
+                              }
+                            }
+                          }
+                        },
+                        unit_amount_decimal: {
+                          kind: "nullable",
+                          inner: { kind: "decimal_string" }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+  /**
+   * Updates an existing subscription to match the specified parameters.
+   * When changing prices or quantities, we optionally prorate the price we charge next month to make up for any price changes.
+   * To preview how the proration is calculated, use the [create preview](https://docs.stripe.com/docs/api/invoices/create_preview) endpoint.
+   *
+   * By default, we prorate subscription changes. For example, if a customer signs up on May 1 for a 100 price, they'll be billed 100 immediately. If on May 15 they switch to a 200 price, then on June 1 they'll be billed 250 (200 for a renewal of her subscription, plus a 50 prorating adjustment for half of the previous month's 100 difference). Similarly, a downgrade generates a credit that is applied to the next invoice. We also prorate when you make quantity changes. You can also [use scripts to prorate your billing. To learn more, see <a href="/billing/subscriptions/prorations">Prorations](https://docs.stripe.com/billing/scripts/stripe-authored/proration).
+   *
+   * Switching prices does not normally change the billing date or generate an immediate charge unless:
+   *
+   *
+   * The billing interval is changed (for example, from monthly to yearly).
+   * The subscription moves from free to paid.
+   * A trial starts or ends.
+   *
+   *
+   * In these cases, we apply a credit for the unused time on the previous price, immediately charge the customer using the new price, and reset the billing date. Learn about how [Stripe immediately attempts payment for subscription changes](https://docs.stripe.com/docs/billing/subscriptions/upgrade-downgrade#immediate-payment).
+   *
+   * If you want to charge for an upgrade immediately, pass proration_behavior as always_invoice to create prorations, automatically invoice the customer for those proration adjustments, and attempt to collect payment. If you pass create_prorations, the prorations are created but not automatically invoiced. If you want to bill the customer for the prorations before the subscription's renewal date, you need to manually [invoice the customer](https://docs.stripe.com/docs/api/invoices/create).
+   *
+   * If you don't want to prorate, set the proration_behavior option to none. With this option, the customer is billed 100 on May 1 and 200 on June 1. Similarly, if you set proration_behavior to none when switching between different billing intervals (for example, from monthly to yearly), we don't generate any credits for the old subscription's unused time. We still reset the billing date and bill immediately for the new subscription.
+   *
+   * Updating the quantity on a subscription many times in an hour may result in [rate limiting. If you need to bill for a frequently changing quantity, consider integrating <a href="/docs/billing/subscriptions/usage-based">usage-based billing](https://docs.stripe.com/docs/rate-limits) instead.
+   */
+  update(id, params, options) {
+    return this._makeRequest("POST", `/v1/subscriptions/${encodeURIComponent(id)}`, params, options, {
+      requestSchema: {
+        kind: "object",
+        fields: {
+          add_invoice_items: {
+            kind: "array",
+            element: {
+              kind: "object",
+              fields: {
+                price_data: {
+                  kind: "object",
+                  fields: { unit_amount_decimal: { kind: "decimal_string" } }
+                }
+              }
+            }
+          },
+          items: {
+            kind: "array",
+            element: {
+              kind: "object",
+              fields: {
+                price_data: {
+                  kind: "object",
+                  fields: { unit_amount_decimal: { kind: "decimal_string" } }
+                }
+              }
+            }
+          }
+        }
+      },
+      responseSchema: {
+        kind: "object",
+        fields: {
+          items: {
+            kind: "object",
+            fields: {
+              data: {
+                kind: "array",
+                element: {
+                  kind: "object",
+                  fields: {
+                    plan: {
+                      kind: "object",
+                      fields: {
+                        amount_decimal: {
+                          kind: "nullable",
+                          inner: { kind: "decimal_string" }
+                        },
+                        tiers: {
+                          kind: "array",
+                          element: {
+                            kind: "object",
+                            fields: {
+                              flat_amount_decimal: {
+                                kind: "nullable",
+                                inner: { kind: "decimal_string" }
+                              },
+                              unit_amount_decimal: {
+                                kind: "nullable",
+                                inner: { kind: "decimal_string" }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    price: {
+                      kind: "object",
+                      fields: {
+                        currency_options: {
+                          kind: "array",
+                          element: {
+                            kind: "object",
+                            fields: {
+                              tiers: {
+                                kind: "array",
+                                element: {
+                                  kind: "object",
+                                  fields: {
+                                    flat_amount_decimal: {
+                                      kind: "nullable",
+                                      inner: { kind: "decimal_string" }
+                                    },
+                                    unit_amount_decimal: {
+                                      kind: "nullable",
+                                      inner: { kind: "decimal_string" }
+                                    }
+                                  }
+                                }
+                              },
+                              unit_amount_decimal: {
+                                kind: "nullable",
+                                inner: { kind: "decimal_string" }
+                              }
+                            }
+                          }
+                        },
+                        tiers: {
+                          kind: "array",
+                          element: {
+                            kind: "object",
+                            fields: {
+                              flat_amount_decimal: {
+                                kind: "nullable",
+                                inner: { kind: "decimal_string" }
+                              },
+                              unit_amount_decimal: {
+                                kind: "nullable",
+                                inner: { kind: "decimal_string" }
+                              }
+                            }
+                          }
+                        },
+                        unit_amount_decimal: {
+                          kind: "nullable",
+                          inner: { kind: "decimal_string" }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+  /**
+   * Removes the currently applied discount on a subscription.
+   */
+  deleteDiscount(id, params, options) {
+    return this._makeRequest("DELETE", `/v1/subscriptions/${encodeURIComponent(id)}/discount`, params, options);
+  }
+  /**
+   * By default, returns a list of subscriptions that have not been canceled. In order to list canceled subscriptions, specify status=canceled.
+   */
+  list(params, options) {
+    return this._makeRequest("GET", "/v1/subscriptions", params, options, {
+      methodType: "list",
+      responseSchema: {
+        kind: "object",
+        fields: {
+          data: {
+            kind: "array",
+            element: {
+              kind: "object",
+              fields: {
+                items: {
+                  kind: "object",
+                  fields: {
+                    data: {
+                      kind: "array",
+                      element: {
+                        kind: "object",
+                        fields: {
+                          plan: {
+                            kind: "object",
+                            fields: {
+                              amount_decimal: {
+                                kind: "nullable",
+                                inner: { kind: "decimal_string" }
+                              },
+                              tiers: {
+                                kind: "array",
+                                element: {
+                                  kind: "object",
+                                  fields: {
+                                    flat_amount_decimal: {
+                                      kind: "nullable",
+                                      inner: { kind: "decimal_string" }
+                                    },
+                                    unit_amount_decimal: {
+                                      kind: "nullable",
+                                      inner: { kind: "decimal_string" }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          price: {
+                            kind: "object",
+                            fields: {
+                              currency_options: {
+                                kind: "array",
+                                element: {
+                                  kind: "object",
+                                  fields: {
+                                    tiers: {
+                                      kind: "array",
+                                      element: {
+                                        kind: "object",
+                                        fields: {
+                                          flat_amount_decimal: {
+                                            kind: "nullable",
+                                            inner: { kind: "decimal_string" }
+                                          },
+                                          unit_amount_decimal: {
+                                            kind: "nullable",
+                                            inner: { kind: "decimal_string" }
+                                          }
+                                        }
+                                      }
+                                    },
+                                    unit_amount_decimal: {
+                                      kind: "nullable",
+                                      inner: { kind: "decimal_string" }
+                                    }
+                                  }
+                                }
+                              },
+                              tiers: {
+                                kind: "array",
+                                element: {
+                                  kind: "object",
+                                  fields: {
+                                    flat_amount_decimal: {
+                                      kind: "nullable",
+                                      inner: { kind: "decimal_string" }
+                                    },
+                                    unit_amount_decimal: {
+                                      kind: "nullable",
+                                      inner: { kind: "decimal_string" }
+                                    }
+                                  }
+                                }
+                              },
+                              unit_amount_decimal: {
+                                kind: "nullable",
+                                inner: { kind: "decimal_string" }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+  /**
+   * Creates a new subscription on an existing customer. Each customer can have up to 500 active or scheduled subscriptions.
+   *
+   * When you create a subscription with collection_method=charge_automatically, the first invoice is finalized as part of the request.
+   * The payment_behavior parameter determines the exact behavior of the initial payment.
+   *
+   * To start subscriptions where the first invoice always begins in a draft status, use [subscription schedules](https://docs.stripe.com/docs/billing/subscriptions/subscription-schedules#managing) instead.
+   * Schedules provide the flexibility to model more complex billing configurations that change over time.
+   */
+  create(params, options) {
+    return this._makeRequest("POST", "/v1/subscriptions", params, options, {
+      requestSchema: {
+        kind: "object",
+        fields: {
+          add_invoice_items: {
+            kind: "array",
+            element: {
+              kind: "object",
+              fields: {
+                price_data: {
+                  kind: "object",
+                  fields: { unit_amount_decimal: { kind: "decimal_string" } }
+                }
+              }
+            }
+          },
+          items: {
+            kind: "array",
+            element: {
+              kind: "object",
+              fields: {
+                price_data: {
+                  kind: "object",
+                  fields: { unit_amount_decimal: { kind: "decimal_string" } }
+                }
+              }
+            }
+          }
+        }
+      },
+      responseSchema: {
+        kind: "object",
+        fields: {
+          items: {
+            kind: "object",
+            fields: {
+              data: {
+                kind: "array",
+                element: {
+                  kind: "object",
+                  fields: {
+                    plan: {
+                      kind: "object",
+                      fields: {
+                        amount_decimal: {
+                          kind: "nullable",
+                          inner: { kind: "decimal_string" }
+                        },
+                        tiers: {
+                          kind: "array",
+                          element: {
+                            kind: "object",
+                            fields: {
+                              flat_amount_decimal: {
+                                kind: "nullable",
+                                inner: { kind: "decimal_string" }
+                              },
+                              unit_amount_decimal: {
+                                kind: "nullable",
+                                inner: { kind: "decimal_string" }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    price: {
+                      kind: "object",
+                      fields: {
+                        currency_options: {
+                          kind: "array",
+                          element: {
+                            kind: "object",
+                            fields: {
+                              tiers: {
+                                kind: "array",
+                                element: {
+                                  kind: "object",
+                                  fields: {
+                                    flat_amount_decimal: {
+                                      kind: "nullable",
+                                      inner: { kind: "decimal_string" }
+                                    },
+                                    unit_amount_decimal: {
+                                      kind: "nullable",
+                                      inner: { kind: "decimal_string" }
+                                    }
+                                  }
+                                }
+                              },
+                              unit_amount_decimal: {
+                                kind: "nullable",
+                                inner: { kind: "decimal_string" }
+                              }
+                            }
+                          }
+                        },
+                        tiers: {
+                          kind: "array",
+                          element: {
+                            kind: "object",
+                            fields: {
+                              flat_amount_decimal: {
+                                kind: "nullable",
+                                inner: { kind: "decimal_string" }
+                              },
+                              unit_amount_decimal: {
+                                kind: "nullable",
+                                inner: { kind: "decimal_string" }
+                              }
+                            }
+                          }
+                        },
+                        unit_amount_decimal: {
+                          kind: "nullable",
+                          inner: { kind: "decimal_string" }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+  /**
+   * Search for subscriptions you've previously created using Stripe's [Search Query Language](https://docs.stripe.com/docs/search#search-query-language).
+   * Don't use search in read-after-write flows where strict consistency is necessary. Under normal operating
+   * conditions, data is searchable in less than a minute. Occasionally, propagation of new or updated data can be up
+   * to an hour behind during outages. Search functionality is not available to merchants in India.
+   */
+  search(params, options) {
+    return this._makeRequest("GET", "/v1/subscriptions/search", params, options, {
+      methodType: "search",
+      responseSchema: {
+        kind: "object",
+        fields: {
+          data: {
+            kind: "array",
+            element: {
+              kind: "object",
+              fields: {
+                items: {
+                  kind: "object",
+                  fields: {
+                    data: {
+                      kind: "array",
+                      element: {
+                        kind: "object",
+                        fields: {
+                          plan: {
+                            kind: "object",
+                            fields: {
+                              amount_decimal: {
+                                kind: "nullable",
+                                inner: { kind: "decimal_string" }
+                              },
+                              tiers: {
+                                kind: "array",
+                                element: {
+                                  kind: "object",
+                                  fields: {
+                                    flat_amount_decimal: {
+                                      kind: "nullable",
+                                      inner: { kind: "decimal_string" }
+                                    },
+                                    unit_amount_decimal: {
+                                      kind: "nullable",
+                                      inner: { kind: "decimal_string" }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          price: {
+                            kind: "object",
+                            fields: {
+                              currency_options: {
+                                kind: "array",
+                                element: {
+                                  kind: "object",
+                                  fields: {
+                                    tiers: {
+                                      kind: "array",
+                                      element: {
+                                        kind: "object",
+                                        fields: {
+                                          flat_amount_decimal: {
+                                            kind: "nullable",
+                                            inner: { kind: "decimal_string" }
+                                          },
+                                          unit_amount_decimal: {
+                                            kind: "nullable",
+                                            inner: { kind: "decimal_string" }
+                                          }
+                                        }
+                                      }
+                                    },
+                                    unit_amount_decimal: {
+                                      kind: "nullable",
+                                      inner: { kind: "decimal_string" }
+                                    }
+                                  }
+                                }
+                              },
+                              tiers: {
+                                kind: "array",
+                                element: {
+                                  kind: "object",
+                                  fields: {
+                                    flat_amount_decimal: {
+                                      kind: "nullable",
+                                      inner: { kind: "decimal_string" }
+                                    },
+                                    unit_amount_decimal: {
+                                      kind: "nullable",
+                                      inner: { kind: "decimal_string" }
+                                    }
+                                  }
+                                }
+                              },
+                              unit_amount_decimal: {
+                                kind: "nullable",
+                                inner: { kind: "decimal_string" }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+  /**
+   * Upgrade the billing_mode of an existing subscription.
+   */
+  migrate(id, params, options) {
+    return this._makeRequest("POST", `/v1/subscriptions/${encodeURIComponent(id)}/migrate`, params, options, {
+      responseSchema: {
+        kind: "object",
+        fields: {
+          items: {
+            kind: "object",
+            fields: {
+              data: {
+                kind: "array",
+                element: {
+                  kind: "object",
+                  fields: {
+                    plan: {
+                      kind: "object",
+                      fields: {
+                        amount_decimal: {
+                          kind: "nullable",
+                          inner: { kind: "decimal_string" }
+                        },
+                        tiers: {
+                          kind: "array",
+                          element: {
+                            kind: "object",
+                            fields: {
+                              flat_amount_decimal: {
+                                kind: "nullable",
+                                inner: { kind: "decimal_string" }
+                              },
+                              unit_amount_decimal: {
+                                kind: "nullable",
+                                inner: { kind: "decimal_string" }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    price: {
+                      kind: "object",
+                      fields: {
+                        currency_options: {
+                          kind: "array",
+                          element: {
+                            kind: "object",
+                            fields: {
+                              tiers: {
+                                kind: "array",
+                                element: {
+                                  kind: "object",
+                                  fields: {
+                                    flat_amount_decimal: {
+                                      kind: "nullable",
+                                      inner: { kind: "decimal_string" }
+                                    },
+                                    unit_amount_decimal: {
+                                      kind: "nullable",
+                                      inner: { kind: "decimal_string" }
+                                    }
+                                  }
+                                }
+                              },
+                              unit_amount_decimal: {
+                                kind: "nullable",
+                                inner: { kind: "decimal_string" }
+                              }
+                            }
+                          }
+                        },
+                        tiers: {
+                          kind: "array",
+                          element: {
+                            kind: "object",
+                            fields: {
+                              flat_amount_decimal: {
+                                kind: "nullable",
+                                inner: { kind: "decimal_string" }
+                              },
+                              unit_amount_decimal: {
+                                kind: "nullable",
+                                inner: { kind: "decimal_string" }
+                              }
+                            }
+                          }
+                        },
+                        unit_amount_decimal: {
+                          kind: "nullable",
+                          inner: { kind: "decimal_string" }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+  /**
+   * Pauses a subscription by transitioning it to the paused status. A paused subscription does not generate invoices and will not advance to new billing periods. The subscription can be resumed later using the resume endpoint. Cannot pause subscriptions with attached schedules.
+   */
+  pause(id, params, options) {
+    return this._makeRequest("POST", `/v1/subscriptions/${encodeURIComponent(id)}/pause`, params, options, {
+      responseSchema: {
+        kind: "object",
+        fields: {
+          items: {
+            kind: "object",
+            fields: {
+              data: {
+                kind: "array",
+                element: {
+                  kind: "object",
+                  fields: {
+                    plan: {
+                      kind: "object",
+                      fields: {
+                        amount_decimal: {
+                          kind: "nullable",
+                          inner: { kind: "decimal_string" }
+                        },
+                        tiers: {
+                          kind: "array",
+                          element: {
+                            kind: "object",
+                            fields: {
+                              flat_amount_decimal: {
+                                kind: "nullable",
+                                inner: { kind: "decimal_string" }
+                              },
+                              unit_amount_decimal: {
+                                kind: "nullable",
+                                inner: { kind: "decimal_string" }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    price: {
+                      kind: "object",
+                      fields: {
+                        currency_options: {
+                          kind: "array",
+                          element: {
+                            kind: "object",
+                            fields: {
+                              tiers: {
+                                kind: "array",
+                                element: {
+                                  kind: "object",
+                                  fields: {
+                                    flat_amount_decimal: {
+                                      kind: "nullable",
+                                      inner: { kind: "decimal_string" }
+                                    },
+                                    unit_amount_decimal: {
+                                      kind: "nullable",
+                                      inner: { kind: "decimal_string" }
+                                    }
+                                  }
+                                }
+                              },
+                              unit_amount_decimal: {
+                                kind: "nullable",
+                                inner: { kind: "decimal_string" }
+                              }
+                            }
+                          }
+                        },
+                        tiers: {
+                          kind: "array",
+                          element: {
+                            kind: "object",
+                            fields: {
+                              flat_amount_decimal: {
+                                kind: "nullable",
+                                inner: { kind: "decimal_string" }
+                              },
+                              unit_amount_decimal: {
+                                kind: "nullable",
+                                inner: { kind: "decimal_string" }
+                              }
+                            }
+                          }
+                        },
+                        unit_amount_decimal: {
+                          kind: "nullable",
+                          inner: { kind: "decimal_string" }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+  /**
+   * Initiates resumption of a paused subscription, optionally resetting the billing cycle anchor and creating prorations. Resume is only available for subscriptions that use charge_automatically collection. If Stripe doesn't generate a resumption invoice, the subscription becomes active immediately. When a resumption invoice is generated, Stripe finalizes it immediately. If the invoice is paid or marked uncollectible, the subscription becomes active. If the invoice is manually voided, the subscription stays paused. If there is no payment attempt within 23 hours, Stripe voids the invoice and the subscription stays paused. Learn more about [resuming subscriptions](https://docs.stripe.com/docs/billing/subscriptions/pause#resume-subscriptions).
+   */
+  resume(id, params, options) {
+    return this._makeRequest("POST", `/v1/subscriptions/${encodeURIComponent(id)}/resume`, params, options, {
+      responseSchema: {
+        kind: "object",
+        fields: {
+          items: {
+            kind: "object",
+            fields: {
+              data: {
+                kind: "array",
+                element: {
+                  kind: "object",
+                  fields: {
+                    plan: {
+                      kind: "object",
+                      fields: {
+                        amount_decimal: {
+                          kind: "nullable",
+                          inner: { kind: "decimal_string" }
+                        },
+                        tiers: {
+                          kind: "array",
+                          element: {
+                            kind: "object",
+                            fields: {
+                              flat_amount_decimal: {
+                                kind: "nullable",
+                                inner: { kind: "decimal_string" }
+                              },
+                              unit_amount_decimal: {
+                                kind: "nullable",
+                                inner: { kind: "decimal_string" }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    price: {
+                      kind: "object",
+                      fields: {
+                        currency_options: {
+                          kind: "array",
+                          element: {
+                            kind: "object",
+                            fields: {
+                              tiers: {
+                                kind: "array",
+                                element: {
+                                  kind: "object",
+                                  fields: {
+                                    flat_amount_decimal: {
+                                      kind: "nullable",
+                                      inner: { kind: "decimal_string" }
+                                    },
+                                    unit_amount_decimal: {
+                                      kind: "nullable",
+                                      inner: { kind: "decimal_string" }
+                                    }
+                                  }
+                                }
+                              },
+                              unit_amount_decimal: {
+                                kind: "nullable",
+                                inner: { kind: "decimal_string" }
+                              }
+                            }
+                          }
+                        },
+                        tiers: {
+                          kind: "array",
+                          element: {
+                            kind: "object",
+                            fields: {
+                              flat_amount_decimal: {
+                                kind: "nullable",
+                                inner: { kind: "decimal_string" }
+                              },
+                              unit_amount_decimal: {
+                                kind: "nullable",
+                                inner: { kind: "decimal_string" }
+                              }
+                            }
+                          }
+                        },
+                        unit_amount_decimal: {
+                          kind: "nullable",
+                          inner: { kind: "decimal_string" }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+};
+
+// node_modules/stripe/esm/resources/SubscriptionItems.js
+var SubscriptionItemResource = class extends StripeResource {
+  /**
+   * Deletes an item from the subscription. Removing a subscription item from a subscription will not cancel the subscription.
+   */
+  del(id, params, options) {
+    return this._makeRequest("DELETE", `/v1/subscription_items/${encodeURIComponent(id)}`, params, options);
+  }
+  /**
+   * Retrieves the subscription item with the given ID.
+   */
+  retrieve(id, params, options) {
+    return this._makeRequest("GET", `/v1/subscription_items/${encodeURIComponent(id)}`, params, options, {
+      responseSchema: {
+        kind: "object",
+        fields: {
+          plan: {
+            kind: "object",
+            fields: {
+              amount_decimal: {
+                kind: "nullable",
+                inner: { kind: "decimal_string" }
+              },
+              tiers: {
+                kind: "array",
+                element: {
+                  kind: "object",
+                  fields: {
+                    flat_amount_decimal: {
+                      kind: "nullable",
+                      inner: { kind: "decimal_string" }
+                    },
+                    unit_amount_decimal: {
+                      kind: "nullable",
+                      inner: { kind: "decimal_string" }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          price: {
+            kind: "object",
+            fields: {
+              currency_options: {
+                kind: "array",
+                element: {
+                  kind: "object",
+                  fields: {
+                    tiers: {
+                      kind: "array",
+                      element: {
+                        kind: "object",
+                        fields: {
+                          flat_amount_decimal: {
+                            kind: "nullable",
+                            inner: { kind: "decimal_string" }
+                          },
+                          unit_amount_decimal: {
+                            kind: "nullable",
+                            inner: { kind: "decimal_string" }
+                          }
+                        }
+                      }
+                    },
+                    unit_amount_decimal: {
+                      kind: "nullable",
+                      inner: { kind: "decimal_string" }
+                    }
+                  }
+                }
+              },
+              tiers: {
+                kind: "array",
+                element: {
+                  kind: "object",
+                  fields: {
+                    flat_amount_decimal: {
+                      kind: "nullable",
+                      inner: { kind: "decimal_string" }
+                    },
+                    unit_amount_decimal: {
+                      kind: "nullable",
+                      inner: { kind: "decimal_string" }
+                    }
+                  }
+                }
+              },
+              unit_amount_decimal: {
+                kind: "nullable",
+                inner: { kind: "decimal_string" }
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+  /**
+   * Updates the plan or quantity of an item on a current subscription.
+   */
+  update(id, params, options) {
+    return this._makeRequest("POST", `/v1/subscription_items/${encodeURIComponent(id)}`, params, options, {
+      requestSchema: {
+        kind: "object",
+        fields: {
+          price_data: {
+            kind: "object",
+            fields: { unit_amount_decimal: { kind: "decimal_string" } }
+          }
+        }
+      },
+      responseSchema: {
+        kind: "object",
+        fields: {
+          plan: {
+            kind: "object",
+            fields: {
+              amount_decimal: {
+                kind: "nullable",
+                inner: { kind: "decimal_string" }
+              },
+              tiers: {
+                kind: "array",
+                element: {
+                  kind: "object",
+                  fields: {
+                    flat_amount_decimal: {
+                      kind: "nullable",
+                      inner: { kind: "decimal_string" }
+                    },
+                    unit_amount_decimal: {
+                      kind: "nullable",
+                      inner: { kind: "decimal_string" }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          price: {
+            kind: "object",
+            fields: {
+              currency_options: {
+                kind: "array",
+                element: {
+                  kind: "object",
+                  fields: {
+                    tiers: {
+                      kind: "array",
+                      element: {
+                        kind: "object",
+                        fields: {
+                          flat_amount_decimal: {
+                            kind: "nullable",
+                            inner: { kind: "decimal_string" }
+                          },
+                          unit_amount_decimal: {
+                            kind: "nullable",
+                            inner: { kind: "decimal_string" }
+                          }
+                        }
+                      }
+                    },
+                    unit_amount_decimal: {
+                      kind: "nullable",
+                      inner: { kind: "decimal_string" }
+                    }
+                  }
+                }
+              },
+              tiers: {
+                kind: "array",
+                element: {
+                  kind: "object",
+                  fields: {
+                    flat_amount_decimal: {
+                      kind: "nullable",
+                      inner: { kind: "decimal_string" }
+                    },
+                    unit_amount_decimal: {
+                      kind: "nullable",
+                      inner: { kind: "decimal_string" }
+                    }
+                  }
+                }
+              },
+              unit_amount_decimal: {
+                kind: "nullable",
+                inner: { kind: "decimal_string" }
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+  /**
+   * Returns a list of your subscription items for a given subscription.
+   */
+  list(params, options) {
+    return this._makeRequest("GET", "/v1/subscription_items", params, options, {
+      methodType: "list",
+      responseSchema: {
+        kind: "object",
+        fields: {
+          data: {
+            kind: "array",
+            element: {
+              kind: "object",
+              fields: {
+                plan: {
+                  kind: "object",
+                  fields: {
+                    amount_decimal: {
+                      kind: "nullable",
+                      inner: { kind: "decimal_string" }
+                    },
+                    tiers: {
+                      kind: "array",
+                      element: {
+                        kind: "object",
+                        fields: {
+                          flat_amount_decimal: {
+                            kind: "nullable",
+                            inner: { kind: "decimal_string" }
+                          },
+                          unit_amount_decimal: {
+                            kind: "nullable",
+                            inner: { kind: "decimal_string" }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                price: {
+                  kind: "object",
+                  fields: {
+                    currency_options: {
+                      kind: "array",
+                      element: {
+                        kind: "object",
+                        fields: {
+                          tiers: {
+                            kind: "array",
+                            element: {
+                              kind: "object",
+                              fields: {
+                                flat_amount_decimal: {
+                                  kind: "nullable",
+                                  inner: { kind: "decimal_string" }
+                                },
+                                unit_amount_decimal: {
+                                  kind: "nullable",
+                                  inner: { kind: "decimal_string" }
+                                }
+                              }
+                            }
+                          },
+                          unit_amount_decimal: {
+                            kind: "nullable",
+                            inner: { kind: "decimal_string" }
+                          }
+                        }
+                      }
+                    },
+                    tiers: {
+                      kind: "array",
+                      element: {
+                        kind: "object",
+                        fields: {
+                          flat_amount_decimal: {
+                            kind: "nullable",
+                            inner: { kind: "decimal_string" }
+                          },
+                          unit_amount_decimal: {
+                            kind: "nullable",
+                            inner: { kind: "decimal_string" }
+                          }
+                        }
+                      }
+                    },
+                    unit_amount_decimal: {
+                      kind: "nullable",
+                      inner: { kind: "decimal_string" }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+  /**
+   * Adds a new item to an existing subscription. No existing items will be changed or replaced.
+   */
+  create(params, options) {
+    return this._makeRequest("POST", "/v1/subscription_items", params, options, {
+      requestSchema: {
+        kind: "object",
+        fields: {
+          price_data: {
+            kind: "object",
+            fields: { unit_amount_decimal: { kind: "decimal_string" } }
+          }
+        }
+      },
+      responseSchema: {
+        kind: "object",
+        fields: {
+          plan: {
+            kind: "object",
+            fields: {
+              amount_decimal: {
+                kind: "nullable",
+                inner: { kind: "decimal_string" }
+              },
+              tiers: {
+                kind: "array",
+                element: {
+                  kind: "object",
+                  fields: {
+                    flat_amount_decimal: {
+                      kind: "nullable",
+                      inner: { kind: "decimal_string" }
+                    },
+                    unit_amount_decimal: {
+                      kind: "nullable",
+                      inner: { kind: "decimal_string" }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          price: {
+            kind: "object",
+            fields: {
+              currency_options: {
+                kind: "array",
+                element: {
+                  kind: "object",
+                  fields: {
+                    tiers: {
+                      kind: "array",
+                      element: {
+                        kind: "object",
+                        fields: {
+                          flat_amount_decimal: {
+                            kind: "nullable",
+                            inner: { kind: "decimal_string" }
+                          },
+                          unit_amount_decimal: {
+                            kind: "nullable",
+                            inner: { kind: "decimal_string" }
+                          }
+                        }
+                      }
+                    },
+                    unit_amount_decimal: {
+                      kind: "nullable",
+                      inner: { kind: "decimal_string" }
+                    }
+                  }
+                }
+              },
+              tiers: {
+                kind: "array",
+                element: {
+                  kind: "object",
+                  fields: {
+                    flat_amount_decimal: {
+                      kind: "nullable",
+                      inner: { kind: "decimal_string" }
+                    },
+                    unit_amount_decimal: {
+                      kind: "nullable",
+                      inner: { kind: "decimal_string" }
+                    }
+                  }
+                }
+              },
+              unit_amount_decimal: {
+                kind: "nullable",
+                inner: { kind: "decimal_string" }
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+};
+
+// node_modules/stripe/esm/resources/SubscriptionSchedules.js
+var SubscriptionScheduleResource = class extends StripeResource {
+  /**
+   * Retrieves the list of your subscription schedules.
+   */
+  list(params, options) {
+    return this._makeRequest("GET", "/v1/subscription_schedules", params, options, {
+      methodType: "list"
+    });
+  }
+  /**
+   * Creates a new subscription schedule object. Each customer can have up to 500 active or scheduled subscriptions.
+   */
+  create(params, options) {
+    return this._makeRequest("POST", "/v1/subscription_schedules", params, options, {
+      requestSchema: {
+        kind: "object",
+        fields: {
+          phases: {
+            kind: "array",
+            element: {
+              kind: "object",
+              fields: {
+                add_invoice_items: {
+                  kind: "array",
+                  element: {
+                    kind: "object",
+                    fields: {
+                      price_data: {
+                        kind: "object",
+                        fields: {
+                          unit_amount_decimal: { kind: "decimal_string" }
+                        }
+                      }
+                    }
+                  }
+                },
+                items: {
+                  kind: "array",
+                  element: {
+                    kind: "object",
+                    fields: {
+                      price_data: {
+                        kind: "object",
+                        fields: {
+                          unit_amount_decimal: { kind: "decimal_string" }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+  /**
+   * Retrieves the details of an existing subscription schedule. You only need to supply the unique subscription schedule identifier that was returned upon subscription schedule creation.
+   */
+  retrieve(id, params, options) {
+    return this._makeRequest("GET", `/v1/subscription_schedules/${encodeURIComponent(id)}`, params, options);
+  }
+  /**
+   * Updates an existing subscription schedule.
+   */
+  update(id, params, options) {
+    return this._makeRequest("POST", `/v1/subscription_schedules/${encodeURIComponent(id)}`, params, options, {
+      requestSchema: {
+        kind: "object",
+        fields: {
+          phases: {
+            kind: "array",
+            element: {
+              kind: "object",
+              fields: {
+                add_invoice_items: {
+                  kind: "array",
+                  element: {
+                    kind: "object",
+                    fields: {
+                      price_data: {
+                        kind: "object",
+                        fields: {
+                          unit_amount_decimal: { kind: "decimal_string" }
+                        }
+                      }
+                    }
+                  }
+                },
+                items: {
+                  kind: "array",
+                  element: {
+                    kind: "object",
+                    fields: {
+                      price_data: {
+                        kind: "object",
+                        fields: {
+                          unit_amount_decimal: { kind: "decimal_string" }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+  /**
+   * Cancels a subscription schedule and its associated subscription immediately (if the subscription schedule has an active subscription). A subscription schedule can only be canceled if its status is not_started or active.
+   */
+  cancel(id, params, options) {
+    return this._makeRequest("POST", `/v1/subscription_schedules/${encodeURIComponent(id)}/cancel`, params, options);
+  }
+  /**
+   * Releases the subscription schedule immediately, which will stop scheduling of its phases, but leave any existing subscription in place. A schedule can only be released if its status is not_started or active. If the subscription schedule is currently associated with a subscription, releasing it will remove its subscription property and set the subscription's ID to the released_subscription property.
+   */
+  release(id, params, options) {
+    return this._makeRequest("POST", `/v1/subscription_schedules/${encodeURIComponent(id)}/release`, params, options);
+  }
+};
+
+// node_modules/stripe/esm/resources/TaxCodes.js
+var TaxCodeResource = class extends StripeResource {
+  /**
+   * A list of [all tax codes available](https://stripe.com/docs/tax/tax-categories) to add to Products in order to allow specific tax calculations.
+   */
+  list(params, options) {
+    return this._makeRequest("GET", "/v1/tax_codes", params, options, {
+      methodType: "list"
+    });
+  }
+  /**
+   * Retrieves the details of an existing tax code. Supply the unique tax code ID and Stripe will return the corresponding tax code information.
+   */
+  retrieve(id, params, options) {
+    return this._makeRequest("GET", `/v1/tax_codes/${encodeURIComponent(id)}`, params, options);
+  }
+};
+
+// node_modules/stripe/esm/resources/TaxIds.js
+var TaxIdResource = class extends StripeResource {
+  /**
+   * Deletes an existing account or customer tax_id object.
+   */
+  del(id, params, options) {
+    return this._makeRequest("DELETE", `/v1/tax_ids/${encodeURIComponent(id)}`, params, options);
+  }
+  /**
+   * Retrieves an account or customer tax_id object.
+   */
+  retrieve(id, params, options) {
+    return this._makeRequest("GET", `/v1/tax_ids/${encodeURIComponent(id)}`, params, options);
+  }
+  /**
+   * Returns a list of tax IDs.
+   */
+  list(params, options) {
+    return this._makeRequest("GET", "/v1/tax_ids", params, options, {
+      methodType: "list"
+    });
+  }
+  /**
+   * Creates a new account or customer tax_id object.
+   */
+  create(params, options) {
+    return this._makeRequest("POST", "/v1/tax_ids", params, options);
+  }
+};
+
+// node_modules/stripe/esm/resources/TaxRates.js
+var TaxRateResource = class extends StripeResource {
+  /**
+   * Returns a list of your tax rates. Tax rates are returned sorted by creation date, with the most recently created tax rates appearing first.
+   */
+  list(params, options) {
+    return this._makeRequest("GET", "/v1/tax_rates", params, options, {
+      methodType: "list"
+    });
+  }
+  /**
+   * Creates a new tax rate.
+   */
+  create(params, options) {
+    return this._makeRequest("POST", "/v1/tax_rates", params, options);
+  }
+  /**
+   * Retrieves a tax rate with the given ID
+   */
+  retrieve(id, params, options) {
+    return this._makeRequest("GET", `/v1/tax_rates/${encodeURIComponent(id)}`, params, options);
+  }
+  /**
+   * Updates an existing tax rate.
+   */
+  update(id, params, options) {
+    return this._makeRequest("POST", `/v1/tax_rates/${encodeURIComponent(id)}`, params, options);
+  }
+};
+
+// node_modules/stripe/esm/resources/Tokens.js
+var TokenResource2 = class extends StripeResource {
+  /**
+   * Retrieves the token with the given ID.
+   */
+  retrieve(id, params, options) {
+    return this._makeRequest("GET", `/v1/tokens/${encodeURIComponent(id)}`, params, options);
+  }
+  /**
+   * Creates a single-use token that represents a bank account's details.
+   * You can use this token with any v1 API method in place of a bank account dictionary. You can only use this token once. To do so, attach it to a [connected account](https://docs.stripe.com/api#accounts) where [controller.requirement_collection](https://docs.stripe.com/api/accounts/object#account_object-controller-requirement_collection) is application, which includes Custom accounts.
+   */
+  create(params, options) {
+    return this._makeRequest("POST", "/v1/tokens", params, options);
+  }
+};
+
+// node_modules/stripe/esm/resources/Topups.js
+var TopupResource = class extends StripeResource {
+  /**
+   * Returns a list of top-ups.
+   */
+  list(params, options) {
+    return this._makeRequest("GET", "/v1/topups", params, options, {
+      methodType: "list"
+    });
+  }
+  /**
+   * Top up the balance of an account
+   */
+  create(params, options) {
+    return this._makeRequest("POST", "/v1/topups", params, options);
+  }
+  /**
+   * Retrieves the details of a top-up that has previously been created. Supply the unique top-up ID that was returned from your previous request, and Stripe will return the corresponding top-up information.
+   */
+  retrieve(id, params, options) {
+    return this._makeRequest("GET", `/v1/topups/${encodeURIComponent(id)}`, params, options);
+  }
+  /**
+   * Updates the metadata of a top-up. Other top-up details are not editable by design.
+   */
+  update(id, params, options) {
+    return this._makeRequest("POST", `/v1/topups/${encodeURIComponent(id)}`, params, options);
+  }
+  /**
+   * Cancels a top-up. Only pending top-ups can be canceled.
+   */
+  cancel(id, params, options) {
+    return this._makeRequest("POST", `/v1/topups/${encodeURIComponent(id)}/cancel`, params, options);
+  }
+};
+
+// node_modules/stripe/esm/resources/Transfers.js
+var TransferResource = class extends StripeResource {
+  /**
+   * Returns a list of existing transfers sent to connected accounts. The transfers are returned in sorted order, with the most recently created transfers appearing first.
+   */
+  list(params, options) {
+    return this._makeRequest("GET", "/v1/transfers", params, options, {
+      methodType: "list"
+    });
+  }
+  /**
+   * To send funds from your Stripe account to a connected account, you create a new transfer object. Your [Stripe balance](https://docs.stripe.com/api#balance) must be able to cover the transfer amount, or you'll receive an “Insufficient Funds” error.
+   */
+  create(params, options) {
+    return this._makeRequest("POST", "/v1/transfers", params, options);
+  }
+  /**
+   * Retrieves the details of an existing transfer. Supply the unique transfer ID from either a transfer creation request or the transfer list, and Stripe will return the corresponding transfer information.
+   */
+  retrieve(id, params, options) {
+    return this._makeRequest("GET", `/v1/transfers/${encodeURIComponent(id)}`, params, options);
+  }
+  /**
+   * Updates the specified transfer by setting the values of the parameters passed. Any parameters not provided will be left unchanged.
+   *
+   * This request accepts only metadata as an argument.
+   */
+  update(id, params, options) {
+    return this._makeRequest("POST", `/v1/transfers/${encodeURIComponent(id)}`, params, options);
+  }
+  /**
+   * You can see a list of the reversals belonging to a specific transfer. Note that the 10 most recent reversals are always available by default on the transfer object. If you need more than those 10, you can use this API method and the limit and starting_after parameters to page through additional reversals.
+   */
+  listReversals(id, params, options) {
+    return this._makeRequest("GET", `/v1/transfers/${encodeURIComponent(id)}/reversals`, params, options, {
+      methodType: "list"
+    });
+  }
+  /**
+   * When you create a new reversal, you must specify a transfer to create it on.
+   *
+   * When reversing transfers, you can optionally reverse part of the transfer. You can do so as many times as you wish until the entire transfer has been reversed.
+   *
+   * Once entirely reversed, a transfer can't be reversed again. This method will return an error when called on an already-reversed transfer, or when trying to reverse more money than is left on a transfer.
+   */
+  createReversal(id, params, options) {
+    return this._makeRequest("POST", `/v1/transfers/${encodeURIComponent(id)}/reversals`, params, options);
+  }
+  /**
+   * By default, you can see the 10 most recent reversals stored directly on the transfer object, but you can also retrieve details about a specific reversal stored on the transfer.
+   */
+  retrieveReversal(transferId, id, params, options) {
+    return this._makeRequest("GET", `/v1/transfers/${encodeURIComponent(transferId)}/reversals/${encodeURIComponent(id)}`, params, options);
+  }
+  /**
+   * Updates the specified reversal by setting the values of the parameters passed. Any parameters not provided will be left unchanged.
+   *
+   * This request only accepts metadata and description as arguments.
+   */
+  updateReversal(transferId, id, params, options) {
+    return this._makeRequest("POST", `/v1/transfers/${encodeURIComponent(transferId)}/reversals/${encodeURIComponent(id)}`, params, options);
+  }
+};
+
+// node_modules/stripe/esm/resources/WebhookEndpoints.js
+var WebhookEndpointResource = class extends StripeResource {
+  /**
+   * You can also delete webhook endpoints via the [webhook endpoint management](https://dashboard.stripe.com/account/webhooks) page of the Stripe dashboard.
+   */
+  del(id, params, options) {
+    return this._makeRequest("DELETE", `/v1/webhook_endpoints/${encodeURIComponent(id)}`, params, options);
+  }
+  /**
+   * Retrieves the webhook endpoint with the given ID.
+   */
+  retrieve(id, params, options) {
+    return this._makeRequest("GET", `/v1/webhook_endpoints/${encodeURIComponent(id)}`, params, options);
+  }
+  /**
+   * Updates the webhook endpoint. You may edit the url, the list of enabled_events, and the status of your endpoint.
+   */
+  update(id, params, options) {
+    return this._makeRequest("POST", `/v1/webhook_endpoints/${encodeURIComponent(id)}`, params, options);
+  }
+  /**
+   * Returns a list of your webhook endpoints.
+   */
+  list(params, options) {
+    return this._makeRequest("GET", "/v1/webhook_endpoints", params, options, {
+      methodType: "list"
+    });
+  }
+  /**
+   * A webhook endpoint must have a url and a list of enabled_events. You may optionally specify the Boolean connect parameter. If set to true, then a Connect webhook endpoint that notifies the specified url about events from all connected accounts is created; otherwise an account webhook endpoint that notifies the specified url only about events from your account is created. You can also create webhook endpoints in the [webhooks settings](https://dashboard.stripe.com/account/webhooks) section of the Dashboard.
+   */
+  create(params, options) {
+    return this._makeRequest("POST", "/v1/webhook_endpoints", params, options);
+  }
+};
+
+// node_modules/stripe/esm/resources.js
+var Apps = resourceNamespace("apps", {
+  Installs: InstallResource,
+  Secrets: SecretResource
+});
+var Billing = resourceNamespace("billing", {
+  Alerts: AlertResource,
+  CreditBalanceSummary: CreditBalanceSummaryResource,
+  CreditBalanceTransactions: CreditBalanceTransactionResource,
+  CreditGrants: CreditGrantResource,
+  FeedbackOptions: FeedbackOptionResource,
+  MeterEventAdjustments: MeterEventAdjustmentResource,
+  MeterEvents: MeterEventResource,
+  Meters: MeterResource
+});
+var BillingPortal = resourceNamespace("billingPortal", {
+  Configurations: ConfigurationResource,
+  Sessions: SessionResource
+});
+var Checkout = resourceNamespace("checkout", {
+  Sessions: SessionResource2
+});
+var Climate = resourceNamespace("climate", {
+  Orders: OrderResource,
+  Products: ProductResource,
+  Suppliers: SupplierResource
+});
+var Entitlements = resourceNamespace("entitlements", {
+  ActiveEntitlements: ActiveEntitlementResource,
+  Features: FeatureResource
+});
+var FinancialConnections = resourceNamespace("financialConnections", {
+  Accounts: AccountResource,
+  Sessions: SessionResource3,
+  Transactions: TransactionResource
+});
+var Forwarding = resourceNamespace("forwarding", {
+  Requests: RequestResource
+});
+var Identity = resourceNamespace("identity", {
+  VerificationReports: VerificationReportResource,
+  VerificationSessions: VerificationSessionResource
+});
+var Issuing = resourceNamespace("issuing", {
+  Authorizations: AuthorizationResource,
+  Cardholders: CardholderResource,
+  Cards: CardResource,
+  Disputes: DisputeResource,
+  PersonalizationDesigns: PersonalizationDesignResource,
+  PhysicalBundles: PhysicalBundleResource,
+  Tokens: TokenResource,
+  Transactions: TransactionResource2
+});
+var ProductCatalog = resourceNamespace("productCatalog", {
+  TrialOffers: TrialOfferResource
+});
+var Radar = resourceNamespace("radar", {
+  EarlyFraudWarnings: EarlyFraudWarningResource,
+  PaymentEvaluations: PaymentEvaluationResource,
+  ValueListItems: ValueListItemResource,
+  ValueLists: ValueListResource
+});
+var Reporting = resourceNamespace("reporting", {
+  ReportRuns: ReportRunResource,
+  ReportTypes: ReportTypeResource
+});
+var Sigma = resourceNamespace("sigma", {
+  ScheduledQueryRuns: ScheduledQueryRunResource
+});
+var Tax = resourceNamespace("tax", {
+  Associations: AssociationResource,
+  Calculations: CalculationResource,
+  Locations: LocationResource,
+  Registrations: RegistrationResource,
+  Settings: SettingResource,
+  Transactions: TransactionResource3
+});
+var Terminal = resourceNamespace("terminal", {
+  Configurations: ConfigurationResource2,
+  ConnectionTokens: ConnectionTokenResource,
+  Locations: LocationResource2,
+  OnboardingLinks: OnboardingLinkResource,
+  Readers: ReaderResource
+});
+var TestHelpers = resourceNamespace("testHelpers", {
+  ConfirmationTokens: ConfirmationTokenResource,
+  Customers: CustomerResource,
+  Refunds: RefundResource,
+  TestClocks: TestClockResource,
+  Issuing: resourceNamespace("issuing", {
+    Authorizations: AuthorizationResource2,
+    Cards: CardResource2,
+    PersonalizationDesigns: PersonalizationDesignResource2,
+    Transactions: TransactionResource4
+  }),
+  Terminal: resourceNamespace("terminal", {
+    Readers: ReaderResource2
+  }),
+  Treasury: resourceNamespace("treasury", {
+    InboundTransfers: InboundTransferResource,
+    OutboundPayments: OutboundPaymentResource,
+    OutboundTransfers: OutboundTransferResource,
+    ReceivedCredits: ReceivedCreditResource,
+    ReceivedDebits: ReceivedDebitResource
+  })
+});
+var ThreeDSecure = resourceNamespace("threeDSecure", {
+  Authentications: AuthenticationResource
+});
+var Treasury = resourceNamespace("treasury", {
+  CreditReversals: CreditReversalResource,
+  DebitReversals: DebitReversalResource,
+  FinancialAccounts: FinancialAccountResource,
+  InboundTransfers: InboundTransferResource2,
+  OutboundPayments: OutboundPaymentResource2,
+  OutboundTransfers: OutboundTransferResource2,
+  ReceivedCredits: ReceivedCreditResource2,
+  ReceivedDebits: ReceivedDebitResource2,
+  TransactionEntries: TransactionEntryResource,
+  Transactions: TransactionResource5
+});
+var V2 = resourceNamespace("v2", {
+  Billing: resourceNamespace("billing", {
+    MeterEventAdjustments: MeterEventAdjustmentResource2,
+    MeterEventSession: MeterEventSessionResource,
+    MeterEventStream: MeterEventStreamResource,
+    MeterEvents: MeterEventResource2
+  }),
+  Commerce: resourceNamespace("commerce", {
+    ProductCatalog: resourceNamespace("productCatalog", {
+      Imports: ImportResource
+    })
+  }),
+  Core: resourceNamespace("core", {
+    AccountLinks: AccountLinkResource,
+    AccountTokens: AccountTokenResource,
+    Accounts: AccountResource2,
+    EventDestinations: EventDestinationResource,
+    Events: EventResource
+  })
+});
+
+// node_modules/stripe/esm/StripeEventNotificationHandler.js
+var KNOWN_EVENT_TYPES = /* @__PURE__ */ new Set([
+  // event-types: The beginning of the section generated from our OpenAPI spec
+  "v1.account.application.authorized",
+  "v1.account.application.deauthorized",
+  "v1.account.external_account.created",
+  "v1.account.external_account.deleted",
+  "v1.account.external_account.updated",
+  "v1.account.updated",
+  "v1.application_fee.created",
+  "v1.application_fee.refund.updated",
+  "v1.application_fee.refunded",
+  "v1.balance.available",
+  "v1.balance_settings.updated",
+  "v1.billing.alert.triggered",
+  "v1.billing.credit_balance_transaction.created",
+  "v1.billing.credit_grant.created",
+  "v1.billing.credit_grant.updated",
+  "v1.billing.meter.created",
+  "v1.billing.meter.deactivated",
+  "v1.billing.meter.error_report_triggered",
+  "v1.billing.meter.no_meter_found",
+  "v1.billing.meter.reactivated",
+  "v1.billing.meter.updated",
+  "v1.billing_portal.configuration.created",
+  "v1.billing_portal.configuration.updated",
+  "v1.billing_portal.session.created",
+  "v1.capability.updated",
+  "v1.cash_balance.funds_available",
+  "v1.charge.captured",
+  "v1.charge.dispute.closed",
+  "v1.charge.dispute.created",
+  "v1.charge.dispute.funds_reinstated",
+  "v1.charge.dispute.funds_withdrawn",
+  "v1.charge.dispute.updated",
+  "v1.charge.expired",
+  "v1.charge.failed",
+  "v1.charge.pending",
+  "v1.charge.refund.updated",
+  "v1.charge.refunded",
+  "v1.charge.succeeded",
+  "v1.charge.updated",
+  "v1.checkout.session.async_payment_failed",
+  "v1.checkout.session.async_payment_succeeded",
+  "v1.checkout.session.completed",
+  "v1.checkout.session.expired",
+  "v1.climate.order.canceled",
+  "v1.climate.order.created",
+  "v1.climate.order.delayed",
+  "v1.climate.order.delivered",
+  "v1.climate.order.product_substituted",
+  "v1.climate.product.created",
+  "v1.climate.product.pricing_updated",
+  "v1.coupon.created",
+  "v1.coupon.deleted",
+  "v1.coupon.updated",
+  "v1.credit_note.created",
+  "v1.credit_note.updated",
+  "v1.credit_note.voided",
+  "v1.customer.created",
+  "v1.customer.deleted",
+  "v1.customer.discount.created",
+  "v1.customer.discount.deleted",
+  "v1.customer.discount.updated",
+  "v1.customer.subscription.created",
+  "v1.customer.subscription.deleted",
+  "v1.customer.subscription.paused",
+  "v1.customer.subscription.pending_update_applied",
+  "v1.customer.subscription.pending_update_expired",
+  "v1.customer.subscription.resumed",
+  "v1.customer.subscription.trial_will_end",
+  "v1.customer.subscription.updated",
+  "v1.customer.tax_id.created",
+  "v1.customer.tax_id.deleted",
+  "v1.customer.tax_id.updated",
+  "v1.customer.updated",
+  "v1.customer_cash_balance_transaction.created",
+  "v1.entitlements.active_entitlement_summary.updated",
+  "v1.file.created",
+  "v1.financial_connections.account.account_numbers_updated",
+  "v1.financial_connections.account.created",
+  "v1.financial_connections.account.deactivated",
+  "v1.financial_connections.account.disconnected",
+  "v1.financial_connections.account.expected_deactivation_date_updated",
+  "v1.financial_connections.account.reactivated",
+  "v1.financial_connections.account.refreshed_balance",
+  "v1.financial_connections.account.refreshed_ownership",
+  "v1.financial_connections.account.refreshed_transactions",
+  "v1.financial_connections.account.supported_payment_method_types_updated",
+  "v1.financial_connections.account.upcoming_account_number_expiry",
+  "v1.financial_connections.account.upcoming_deactivation",
+  "v1.identity.verification_session.canceled",
+  "v1.identity.verification_session.created",
+  "v1.identity.verification_session.processing",
+  "v1.identity.verification_session.redacted",
+  "v1.identity.verification_session.requires_input",
+  "v1.identity.verification_session.verified",
+  "v1.invoice.created",
+  "v1.invoice.deleted",
+  "v1.invoice.finalization_failed",
+  "v1.invoice.finalized",
+  "v1.invoice.marked_uncollectible",
+  "v1.invoice.overdue",
+  "v1.invoice.overpaid",
+  "v1.invoice.paid",
+  "v1.invoice.payment_action_required",
+  "v1.invoice.payment_attempt_required",
+  "v1.invoice.payment_failed",
+  "v1.invoice.payment_succeeded",
+  "v1.invoice.sent",
+  "v1.invoice.upcoming",
+  "v1.invoice.updated",
+  "v1.invoice.voided",
+  "v1.invoice.will_be_due",
+  "v1.invoice_payment.paid",
+  "v1.invoiceitem.created",
+  "v1.invoiceitem.deleted",
+  "v1.issuing_authorization.created",
+  "v1.issuing_authorization.request",
+  "v1.issuing_authorization.updated",
+  "v1.issuing_card.created",
+  "v1.issuing_card.updated",
+  "v1.issuing_cardholder.created",
+  "v1.issuing_cardholder.updated",
+  "v1.issuing_dispute.closed",
+  "v1.issuing_dispute.created",
+  "v1.issuing_dispute.funds_reinstated",
+  "v1.issuing_dispute.funds_rescinded",
+  "v1.issuing_dispute.submitted",
+  "v1.issuing_dispute.updated",
+  "v1.issuing_personalization_design.activated",
+  "v1.issuing_personalization_design.deactivated",
+  "v1.issuing_personalization_design.rejected",
+  "v1.issuing_personalization_design.updated",
+  "v1.issuing_token.created",
+  "v1.issuing_token.updated",
+  "v1.issuing_transaction.created",
+  "v1.issuing_transaction.purchase_details_receipt_updated",
+  "v1.issuing_transaction.updated",
+  "v1.mandate.updated",
+  "v1.payment_intent.amount_capturable_updated",
+  "v1.payment_intent.canceled",
+  "v1.payment_intent.created",
+  "v1.payment_intent.partially_funded",
+  "v1.payment_intent.payment_failed",
+  "v1.payment_intent.processing",
+  "v1.payment_intent.requires_action",
+  "v1.payment_intent.succeeded",
+  "v1.payment_link.created",
+  "v1.payment_link.updated",
+  "v1.payment_method.attached",
+  "v1.payment_method.automatically_updated",
+  "v1.payment_method.detached",
+  "v1.payment_method.updated",
+  "v1.payout.canceled",
+  "v1.payout.created",
+  "v1.payout.failed",
+  "v1.payout.paid",
+  "v1.payout.reconciliation_completed",
+  "v1.payout.updated",
+  "v1.person.created",
+  "v1.person.deleted",
+  "v1.person.updated",
+  "v1.plan.created",
+  "v1.plan.deleted",
+  "v1.plan.updated",
+  "v1.price.created",
+  "v1.price.deleted",
+  "v1.price.updated",
+  "v1.product.created",
+  "v1.product.deleted",
+  "v1.product.updated",
+  "v1.promotion_code.created",
+  "v1.promotion_code.updated",
+  "v1.quote.accepted",
+  "v1.quote.canceled",
+  "v1.quote.created",
+  "v1.quote.finalized",
+  "v1.radar.early_fraud_warning.created",
+  "v1.radar.early_fraud_warning.updated",
+  "v1.refund.created",
+  "v1.refund.failed",
+  "v1.refund.updated",
+  "v1.review.closed",
+  "v1.review.opened",
+  "v1.setup_intent.canceled",
+  "v1.setup_intent.created",
+  "v1.setup_intent.requires_action",
+  "v1.setup_intent.setup_failed",
+  "v1.setup_intent.succeeded",
+  "v1.sigma.scheduled_query_run.created",
+  "v1.source.canceled",
+  "v1.source.chargeable",
+  "v1.source.failed",
+  "v1.source.refund_attributes_required",
+  "v1.subscription_schedule.aborted",
+  "v1.subscription_schedule.canceled",
+  "v1.subscription_schedule.completed",
+  "v1.subscription_schedule.created",
+  "v1.subscription_schedule.expiring",
+  "v1.subscription_schedule.released",
+  "v1.subscription_schedule.updated",
+  "v1.tax.settings.updated",
+  "v1.tax_rate.created",
+  "v1.tax_rate.updated",
+  "v1.terminal.reader.action_failed",
+  "v1.terminal.reader.action_succeeded",
+  "v1.terminal.reader.action_updated",
+  "v1.test_helpers.test_clock.advancing",
+  "v1.test_helpers.test_clock.created",
+  "v1.test_helpers.test_clock.deleted",
+  "v1.test_helpers.test_clock.internal_failure",
+  "v1.test_helpers.test_clock.ready",
+  "v1.topup.canceled",
+  "v1.topup.created",
+  "v1.topup.failed",
+  "v1.topup.reversed",
+  "v1.topup.succeeded",
+  "v1.transfer.created",
+  "v1.transfer.reversed",
+  "v1.transfer.updated",
+  "v2.commerce.product_catalog.imports.failed",
+  "v2.commerce.product_catalog.imports.processing",
+  "v2.commerce.product_catalog.imports.succeeded",
+  "v2.commerce.product_catalog.imports.succeeded_with_errors",
+  "v2.core.account.closed",
+  "v2.core.account.created",
+  "v2.core.account.updated",
+  "v2.core.account[configuration.customer].capability_status_updated",
+  "v2.core.account[configuration.customer].updated",
+  "v2.core.account[configuration.merchant].capability_status_updated",
+  "v2.core.account[configuration.merchant].updated",
+  "v2.core.account[configuration.recipient].capability_status_updated",
+  "v2.core.account[configuration.recipient].updated",
+  "v2.core.account[defaults].updated",
+  "v2.core.account[future_requirements].updated",
+  "v2.core.account[identity].updated",
+  "v2.core.account[requirements].updated",
+  "v2.core.account_link.returned",
+  "v2.core.account_person.created",
+  "v2.core.account_person.deleted",
+  "v2.core.account_person.updated",
+  "v2.core.event_destination.ping"
+  // event-types: The end of the section generated from our OpenAPI spec
+]);
+var BaseEventNotificationHandler = class {
+  // the body is empty but the parameter properties are not, so the lint is ignorable
+  // eslint-disable-next-line no-useless-constructor
+  constructor(client, fallbackCallback) {
+    this.client = client;
+    this.fallbackCallback = fallbackCallback;
+    this.registeredHandlers = {};
+    this.preHandleCallback = null;
+    this.hasHandledEvent = false;
+  }
+  on(type, callback) {
+    this.assertCanRegister();
+    if (this.registeredHandlers[type]) {
+      throw new Error(`Callback for event type "${type}" is already registered.`);
+    }
+    this.registeredHandlers[type] = callback;
+    return this;
+  }
+  /**
+   * Callbacks are expected to be registered once on startup, so registering
+   * anything after handling has begun indicates a bug.
+   */
+  assertCanRegister() {
+    if (this.hasHandledEvent) {
+      throw new Error("Cannot register new callbacks after an event has been handled. This is indicative of a bug.");
+    }
+  }
+  /**
+   * Registers a function that will be run before any event-specific callbacks. A useful place to store event-agnostic logic, such as logging or checking for [duplicate event deliveries](https://docs.stripe.com/webhooks#handle-duplicate-events).
+   *
+   * Returning `true` causes handling to continue as normal; returning `false` returns from `.handle()` immediately, so neither the registered callback nor the fallback callback are called.
+   */
+  preHandle(callback) {
+    this.assertCanRegister();
+    if (this.preHandleCallback) {
+      throw new Error("A preHandle callback is already registered");
+    }
+    this.preHandleCallback = callback;
+    return this;
+  }
+  registeredEventTypes() {
+    const keys = Object.keys(this.registeredHandlers);
+    keys.sort();
+    return keys;
+  }
+  async dispatchEvent(event) {
+    const eventClient = this.client.withStripeContext(event.context);
+    if (this.preHandleCallback && !await this.preHandleCallback(event, eventClient)) {
+      return;
+    }
+    const handler2 = this.registeredHandlers[event.type];
+    if (handler2) {
+      return await handler2(event, eventClient);
+    } else {
+      return await this.fallbackCallback(event, eventClient, {
+        isKnownEventType: KNOWN_EVENT_TYPES.has(event.type)
+      });
+    }
+  }
+};
+var StripeEventNotificationHandler = class extends BaseEventNotificationHandler {
+  constructor(client, webhookSecret, fallbackCallback) {
+    super(client, fallbackCallback);
+    this.webhookSecret = webhookSecret;
+    if (!webhookSecret) {
+      throw new Error("webhookSecret must be a non-empty string");
+    }
+  }
+  static withoutVerification(client, fallbackCallback) {
+    return new StripeEventNotificationHandlerWithoutVerification(client, fallbackCallback);
+  }
+  async handle(rawBody, signature) {
+    this.hasHandledEvent = true;
+    return await this.dispatchEvent(this.client.parseEventNotification(rawBody, signature, this.webhookSecret));
+  }
+};
+var StripeEventNotificationHandlerWithoutVerification = class extends BaseEventNotificationHandler {
+  async handle(rawBody) {
+    this.hasHandledEvent = true;
+    return await this.dispatchEvent(this.client.parseEventNotificationWithoutVerification(rawBody));
+  }
+};
+
+// node_modules/stripe/esm/resources/Apps/index.js
+var Apps2 = class {
+  constructor(stripe) {
+    this.stripe = stripe;
+    this.installs = new InstallResource(stripe);
+    this.secrets = new SecretResource(stripe);
+  }
+};
+
+// node_modules/stripe/esm/resources/Billing/index.js
+var Billing2 = class {
+  constructor(stripe) {
+    this.stripe = stripe;
+    this.alerts = new AlertResource(stripe);
+    this.creditBalanceSummaries = new CreditBalanceSummaryResource(stripe);
+    this.creditBalanceTransactions = new CreditBalanceTransactionResource(stripe);
+    this.creditGrants = new CreditGrantResource(stripe);
+    this.feedbackOptions = new FeedbackOptionResource(stripe);
+    this.meters = new MeterResource(stripe);
+    this.meterEvents = new MeterEventResource(stripe);
+    this.meterEventAdjustments = new MeterEventAdjustmentResource(stripe);
+  }
+};
+
+// node_modules/stripe/esm/resources/BillingPortal/index.js
+var BillingPortal2 = class {
+  constructor(stripe) {
+    this.stripe = stripe;
+    this.configurations = new ConfigurationResource(stripe);
+    this.sessions = new SessionResource(stripe);
+  }
+};
+
+// node_modules/stripe/esm/resources/Checkout/index.js
+var Checkout2 = class {
+  constructor(stripe) {
+    this.stripe = stripe;
+    this.sessions = new SessionResource2(stripe);
+  }
+};
+
+// node_modules/stripe/esm/resources/Climate/index.js
+var Climate2 = class {
+  constructor(stripe) {
+    this.stripe = stripe;
+    this.orders = new OrderResource(stripe);
+    this.products = new ProductResource(stripe);
+    this.suppliers = new SupplierResource(stripe);
+  }
+};
+
+// node_modules/stripe/esm/resources/Entitlements/index.js
+var Entitlements2 = class {
+  constructor(stripe) {
+    this.stripe = stripe;
+    this.activeEntitlements = new ActiveEntitlementResource(stripe);
+    this.features = new FeatureResource(stripe);
+  }
+};
+
+// node_modules/stripe/esm/resources/FinancialConnections/index.js
+var FinancialConnections2 = class {
+  constructor(stripe) {
+    this.stripe = stripe;
+    this.accounts = new AccountResource(stripe);
+    this.sessions = new SessionResource3(stripe);
+    this.transactions = new TransactionResource(stripe);
+  }
+};
+
+// node_modules/stripe/esm/resources/Forwarding/index.js
+var Forwarding2 = class {
+  constructor(stripe) {
+    this.stripe = stripe;
+    this.requests = new RequestResource(stripe);
+  }
+};
+
+// node_modules/stripe/esm/resources/Identity/index.js
+var Identity2 = class {
+  constructor(stripe) {
+    this.stripe = stripe;
+    this.verificationReports = new VerificationReportResource(stripe);
+    this.verificationSessions = new VerificationSessionResource(stripe);
+  }
+};
+
+// node_modules/stripe/esm/resources/Issuing/index.js
+var Issuing2 = class {
+  constructor(stripe) {
+    this.stripe = stripe;
+    this.authorizations = new AuthorizationResource(stripe);
+    this.cards = new CardResource(stripe);
+    this.cardholders = new CardholderResource(stripe);
+    this.disputes = new DisputeResource(stripe);
+    this.personalizationDesigns = new PersonalizationDesignResource(stripe);
+    this.physicalBundles = new PhysicalBundleResource(stripe);
+    this.tokens = new TokenResource(stripe);
+    this.transactions = new TransactionResource2(stripe);
+  }
+};
+
+// node_modules/stripe/esm/resources/ProductCatalog/index.js
+var ProductCatalog2 = class {
+  constructor(stripe) {
+    this.stripe = stripe;
+    this.trialOffers = new TrialOfferResource(stripe);
+  }
+};
+
+// node_modules/stripe/esm/resources/Radar/index.js
+var Radar2 = class {
+  constructor(stripe) {
+    this.stripe = stripe;
+    this.earlyFraudWarnings = new EarlyFraudWarningResource(stripe);
+    this.paymentEvaluations = new PaymentEvaluationResource(stripe);
+    this.valueLists = new ValueListResource(stripe);
+    this.valueListItems = new ValueListItemResource(stripe);
+  }
+};
+
+// node_modules/stripe/esm/resources/Reporting/index.js
+var Reporting2 = class {
+  constructor(stripe) {
+    this.stripe = stripe;
+    this.reportRuns = new ReportRunResource(stripe);
+    this.reportTypes = new ReportTypeResource(stripe);
+  }
+};
+
+// node_modules/stripe/esm/resources/Sigma/index.js
+var Sigma2 = class {
+  constructor(stripe) {
+    this.stripe = stripe;
+    this.scheduledQueryRuns = new ScheduledQueryRunResource(stripe);
+  }
+};
+
+// node_modules/stripe/esm/resources/Tax/index.js
+var Tax2 = class {
+  constructor(stripe) {
+    this.stripe = stripe;
+    this.associations = new AssociationResource(stripe);
+    this.calculations = new CalculationResource(stripe);
+    this.locations = new LocationResource(stripe);
+    this.registrations = new RegistrationResource(stripe);
+    this.settings = new SettingResource(stripe);
+    this.transactions = new TransactionResource3(stripe);
+  }
+};
+
+// node_modules/stripe/esm/resources/Terminal/index.js
+var Terminal2 = class {
+  constructor(stripe) {
+    this.stripe = stripe;
+    this.configurations = new ConfigurationResource2(stripe);
+    this.connectionTokens = new ConnectionTokenResource(stripe);
+    this.locations = new LocationResource2(stripe);
+    this.onboardingLinks = new OnboardingLinkResource(stripe);
+    this.readers = new ReaderResource(stripe);
+  }
+};
+
+// node_modules/stripe/esm/resources/TestHelpers/Issuing/index.js
+var Issuing3 = class {
+  constructor(stripe) {
+    this.stripe = stripe;
+    this.authorizations = new AuthorizationResource2(stripe);
+    this.cards = new CardResource2(stripe);
+    this.personalizationDesigns = new PersonalizationDesignResource2(stripe);
+    this.transactions = new TransactionResource4(stripe);
+  }
+};
+
+// node_modules/stripe/esm/resources/TestHelpers/Terminal/index.js
+var Terminal3 = class {
+  constructor(stripe) {
+    this.stripe = stripe;
+    this.readers = new ReaderResource2(stripe);
+  }
+};
+
+// node_modules/stripe/esm/resources/TestHelpers/Treasury/index.js
+var Treasury2 = class {
+  constructor(stripe) {
+    this.stripe = stripe;
+    this.inboundTransfers = new InboundTransferResource(stripe);
+    this.outboundPayments = new OutboundPaymentResource(stripe);
+    this.outboundTransfers = new OutboundTransferResource(stripe);
+    this.receivedCredits = new ReceivedCreditResource(stripe);
+    this.receivedDebits = new ReceivedDebitResource(stripe);
+  }
+};
+
+// node_modules/stripe/esm/resources/TestHelpers/index.js
+var TestHelpers2 = class {
+  constructor(stripe) {
+    this.stripe = stripe;
+    this.confirmationTokens = new ConfirmationTokenResource(stripe);
+    this.customers = new CustomerResource(stripe);
+    this.refunds = new RefundResource(stripe);
+    this.testClocks = new TestClockResource(stripe);
+    this.issuing = new Issuing3(stripe);
+    this.terminal = new Terminal3(stripe);
+    this.treasury = new Treasury2(stripe);
+  }
+};
+
+// node_modules/stripe/esm/resources/ThreeDSecure/index.js
+var ThreeDSecure2 = class {
+  constructor(stripe) {
+    this.stripe = stripe;
+    this.authentications = new AuthenticationResource(stripe);
+  }
+};
+
+// node_modules/stripe/esm/resources/Treasury/index.js
+var Treasury3 = class {
+  constructor(stripe) {
+    this.stripe = stripe;
+    this.creditReversals = new CreditReversalResource(stripe);
+    this.debitReversals = new DebitReversalResource(stripe);
+    this.financialAccounts = new FinancialAccountResource(stripe);
+    this.inboundTransfers = new InboundTransferResource2(stripe);
+    this.outboundPayments = new OutboundPaymentResource2(stripe);
+    this.outboundTransfers = new OutboundTransferResource2(stripe);
+    this.receivedCredits = new ReceivedCreditResource2(stripe);
+    this.receivedDebits = new ReceivedDebitResource2(stripe);
+    this.transactions = new TransactionResource5(stripe);
+    this.transactionEntries = new TransactionEntryResource(stripe);
+  }
+};
+
+// node_modules/stripe/esm/resources/V2/Billing/index.js
+var Billing3 = class {
+  constructor(stripe) {
+    this.stripe = stripe;
+    this.meterEvents = new MeterEventResource2(stripe);
+    this.meterEventAdjustments = new MeterEventAdjustmentResource2(stripe);
+    this.meterEventSession = new MeterEventSessionResource(stripe);
+    this.meterEventStream = new MeterEventStreamResource(stripe);
+  }
+};
+
+// node_modules/stripe/esm/resources/V2/Commerce/ProductCatalog/index.js
+var ProductCatalog3 = class {
+  constructor(stripe) {
+    this.stripe = stripe;
+    this.imports = new ImportResource(stripe);
+  }
+};
+
+// node_modules/stripe/esm/resources/V2/Commerce/index.js
+var Commerce = class {
+  constructor(stripe) {
+    this.stripe = stripe;
+    this.productCatalog = new ProductCatalog3(stripe);
+  }
+};
+
+// node_modules/stripe/esm/resources/V2/Core/index.js
+var Core = class {
+  constructor(stripe) {
+    this.stripe = stripe;
+    this.accounts = new AccountResource2(stripe);
+    this.accountLinks = new AccountLinkResource(stripe);
+    this.accountTokens = new AccountTokenResource(stripe);
+    this.events = new EventResource(stripe);
+    this.eventDestinations = new EventDestinationResource(stripe);
+  }
+};
+
+// node_modules/stripe/esm/resources/V2/index.js
+var V22 = class {
+  constructor(stripe) {
+    this.stripe = stripe;
+    this.billing = new Billing3(stripe);
+    this.commerce = new Commerce(stripe);
+    this.core = new Core(stripe);
+  }
+};
+
+// node_modules/stripe/esm/stripe.esm.node.js
+var DEFAULT_HOST = "api.stripe.com";
+var DEFAULT_PORT = "443";
+var DEFAULT_BASE_PATH = "/v1/";
+var DEFAULT_API_VERSION = ApiVersion;
+var DEFAULT_TIMEOUT = 8e4;
+var MAX_NETWORK_RETRY_DELAY_SEC = 5;
+var INITIAL_NETWORK_RETRY_DELAY_SEC = 0.5;
+var APP_INFO_PROPERTIES = [
+  "name",
+  "version",
+  "url",
+  "partner_id"
+];
+var ALLOWED_CONFIG_PROPERTIES = [
+  "authenticator",
+  "apiVersion",
+  "typescript",
+  "maxNetworkRetries",
+  "httpAgent",
+  "httpClient",
+  "timeout",
+  "host",
+  "port",
+  "protocol",
+  "telemetry",
+  "emitEventBodies",
+  "appInfo",
+  "stripeAccount",
+  "stripeContext"
+];
+var defaultRequestSenderFactory = (stripe) => new RequestSender(stripe, StripeResource.MAX_BUFFERED_REQUEST_METRICS);
+var Stripe = class _Stripe {
+  static initialize(platformFunctions, requestSenderFactory = defaultRequestSenderFactory) {
+    _Stripe._platformFunctions = platformFunctions;
+    _Stripe._requestSenderFactory = requestSenderFactory;
+    _Stripe.webhooks = createWebhooks(platformFunctions);
+    _Stripe.createNodeHttpClient = platformFunctions.createNodeHttpClient;
+    _Stripe.createFetchHttpClient = platformFunctions.createFetchHttpClient;
+    _Stripe.createNodeCryptoProvider = platformFunctions.createNodeCryptoProvider;
+    _Stripe.createSubtleCryptoProvider = platformFunctions.createSubtleCryptoProvider;
+    const env = platformFunctions.getEnv();
+    const runtimeVersion = platformFunctions.getRuntimeVersion();
+    if (env?.CLAUDECODE || env?.CLAUDE_CODE_CHILD_SESSION) {
+      try {
+        platformFunctions.writeStderr('<claude-code-hint v="1" type="plugin" value="stripe@claude-plugins-official" />\n');
+      } catch {
+      }
+    }
+    _Stripe.aiAgent = env ? detectAIAgent(env) : "";
+    _Stripe.AI_AGENT = _Stripe.aiAgent;
+    _Stripe.USER_AGENT = {
+      bindings_version: _Stripe.PACKAGE_VERSION,
+      lang: "node",
+      typescript: false,
+      ...runtimeVersion ? { lang_version: runtimeVersion } : {},
+      ..._Stripe.aiAgent ? { ai_agent: _Stripe.aiAgent } : {}
+    };
+  }
+  constructor(key, config = {}, constructorOptions) {
+    this._authenticator = null;
+    const props = this._getPropsFromConfig(config);
+    this._platformFunctions = _Stripe._platformFunctions;
+    Object.defineProperty(this, "_emitter", {
+      value: constructorOptions?.emitter ?? this._platformFunctions.createEmitter(),
+      enumerable: false,
+      configurable: false,
+      writable: false
+    });
+    this.VERSION = _Stripe.PACKAGE_VERSION;
+    this.on = this._emitter.on.bind(this._emitter);
+    this.once = this._emitter.once.bind(this._emitter);
+    this.off = this._emitter.removeListener.bind(this._emitter);
+    const agent = props.httpAgent || null;
+    this._api = {
+      host: props.host || DEFAULT_HOST,
+      port: props.port || DEFAULT_PORT,
+      protocol: props.protocol || "https",
+      basePath: DEFAULT_BASE_PATH,
+      version: props.apiVersion || DEFAULT_API_VERSION,
+      timeout: validateInteger("timeout", props.timeout, DEFAULT_TIMEOUT),
+      maxNetworkRetries: validateInteger("maxNetworkRetries", props.maxNetworkRetries, 2),
+      agent,
+      httpClient: props.httpClient || (agent ? this._platformFunctions.createNodeHttpClient(agent) : this._platformFunctions.createDefaultHttpClient()),
+      dev: false,
+      stripeAccount: props.stripeAccount || null,
+      stripeContext: props.stripeContext || null
+    };
+    const typescript = props.typescript || false;
+    if (typescript !== _Stripe.USER_AGENT.typescript) {
+      _Stripe.USER_AGENT.typescript = typescript;
+    }
+    if (props.appInfo) {
+      this._setAppInfo(props.appInfo);
+    }
+    this._setAuthenticator(key, props.authenticator || null);
+    this.errors = Error_exports;
+    this.Decimal = Decimal;
+    this.webhooks = _Stripe.webhooks;
+    this._prevRequestMetrics = constructorOptions?.prevRequestMetrics ?? [];
+    this._enableTelemetry = props.telemetry !== false;
+    this._emitEventBodies = props.emitEventBodies === true;
+    this._requestSender = _Stripe._requestSenderFactory(this);
+    this.accountLinks = new AccountLinkResource2(this);
+    this.accountSessions = new AccountSessionResource(this);
+    this.accounts = new AccountResource3(this);
+    this.applePayDomains = new ApplePayDomainResource(this);
+    this.applicationFees = new ApplicationFeeResource(this);
+    this.balance = new BalanceResource(this);
+    this.balanceSettings = new BalanceSettingResource(this);
+    this.balanceTransactions = new BalanceTransactionResource(this);
+    this.charges = new ChargeResource(this);
+    this.confirmationTokens = new ConfirmationTokenResource2(this);
+    this.countrySpecs = new CountrySpecResource(this);
+    this.coupons = new CouponResource(this);
+    this.creditNotes = new CreditNoteResource(this);
+    this.customerSessions = new CustomerSessionResource(this);
+    this.customers = new CustomerResource2(this);
+    this.disputes = new DisputeResource2(this);
+    this.ephemeralKeys = new EphemeralKeyResource(this);
+    this.events = new EventResource2(this);
+    this.exchangeRates = new ExchangeRateResource(this);
+    this.fileLinks = new FileLinkResource(this);
+    this.files = new FileResource(this);
+    this.invoiceItems = new InvoiceItemResource(this);
+    this.invoicePayments = new InvoicePaymentResource(this);
+    this.invoiceRenderingTemplates = new InvoiceRenderingTemplateResource(this);
+    this.invoices = new InvoiceResource(this);
+    this.mandates = new MandateResource(this);
+    this.paymentAttemptRecords = new PaymentAttemptRecordResource(this);
+    this.paymentIntents = new PaymentIntentResource(this);
+    this.paymentLinks = new PaymentLinkResource(this);
+    this.paymentMethodConfigurations = new PaymentMethodConfigurationResource(this);
+    this.paymentMethodDomains = new PaymentMethodDomainResource(this);
+    this.paymentMethods = new PaymentMethodResource(this);
+    this.paymentRecords = new PaymentRecordResource(this);
+    this.payouts = new PayoutResource(this);
+    this.plans = new PlanResource(this);
+    this.prices = new PriceResource(this);
+    this.products = new ProductResource2(this);
+    this.promotionCodes = new PromotionCodeResource(this);
+    this.quotes = new QuoteResource(this);
+    this.refunds = new RefundResource2(this);
+    this.reviews = new ReviewResource(this);
+    this.setupAttempts = new SetupAttemptResource(this);
+    this.setupIntents = new SetupIntentResource(this);
+    this.shippingRates = new ShippingRateResource(this);
+    this.sources = new SourceResource(this);
+    this.subscriptionItems = new SubscriptionItemResource(this);
+    this.subscriptionSchedules = new SubscriptionScheduleResource(this);
+    this.subscriptions = new SubscriptionResource(this);
+    this.taxCodes = new TaxCodeResource(this);
+    this.taxIds = new TaxIdResource(this);
+    this.taxRates = new TaxRateResource(this);
+    this.tokens = new TokenResource2(this);
+    this.topups = new TopupResource(this);
+    this.transfers = new TransferResource(this);
+    this.webhookEndpoints = new WebhookEndpointResource(this);
+    this.apps = new Apps2(this);
+    this.billing = new Billing2(this);
+    this.billingPortal = new BillingPortal2(this);
+    this.checkout = new Checkout2(this);
+    this.climate = new Climate2(this);
+    this.entitlements = new Entitlements2(this);
+    this.financialConnections = new FinancialConnections2(this);
+    this.forwarding = new Forwarding2(this);
+    this.identity = new Identity2(this);
+    this.issuing = new Issuing2(this);
+    this.productCatalog = new ProductCatalog2(this);
+    this.radar = new Radar2(this);
+    this.reporting = new Reporting2(this);
+    this.sigma = new Sigma2(this);
+    this.tax = new Tax2(this);
+    this.terminal = new Terminal2(this);
+    this.testHelpers = new TestHelpers2(this);
+    this.threeDSecure = new ThreeDSecure2(this);
+    this.treasury = new Treasury3(this);
+    this.v2 = new V22(this);
+    this.account = this.accounts;
+    this.oauth = new OAuthResource(this);
+  }
+  /**
+   * Allows for sending "raw" requests to the Stripe API, which can be used for
+   * testing new API endpoints or performing requests that the library does
+   * not support yet.
+   *
+   * @param method - HTTP request method, 'GET', 'POST', or 'DELETE'
+   * @param path - The path of the request, e.g. '/v1/beta_endpoint'
+   * @param params - The parameters to include in the request body.
+   * @param options - Additional request options.
+   */
+  rawRequest(method, path3, params, options) {
+    return this._requestSender._rawRequest(method, path3, params, options);
+  }
+  /**
+   * @private
+   */
+  _setAuthenticator(key, authenticator) {
+    if (key && authenticator) {
+      throw new Error("Can't specify both apiKey and authenticator");
+    }
+    if (!key && !authenticator) {
+      throw new Error("Neither apiKey nor config.authenticator provided");
+    }
+    this._authenticator = key ? createApiKeyAuthenticator(key) : authenticator;
+  }
+  /**
+   * @private
+   * This may be removed in the future.
+   */
+  _setAppInfo(info) {
+    if (info && typeof info !== "object") {
+      throw new Error("AppInfo must be an object.");
+    }
+    if (info && !info.name) {
+      throw new Error("AppInfo.name is required");
+    }
+    info = info || {};
+    this._appInfo = APP_INFO_PROPERTIES.reduce((accum, prop) => {
+      if (typeof info[prop] == "string") {
+        accum = accum || {};
+        accum[prop] = info[prop];
+      }
+      return accum;
+    }, {});
+  }
+  setClientId(clientId) {
+    this._clientId = clientId;
+  }
+  getClientId() {
+    return this._clientId;
+  }
+  /**
+   * @private
+   * Please open or upvote an issue at github.com/stripe/stripe-node
+   * if you use this, detailing your use-case.
+   *
+   * It may be deprecated and removed in the future.
+   */
+  getConstant(c) {
+    switch (c) {
+      case "DEFAULT_HOST":
+        return DEFAULT_HOST;
+      case "DEFAULT_PORT":
+        return DEFAULT_PORT;
+      case "DEFAULT_BASE_PATH":
+        return DEFAULT_BASE_PATH;
+      case "DEFAULT_API_VERSION":
+        return DEFAULT_API_VERSION;
+      case "DEFAULT_TIMEOUT":
+        return DEFAULT_TIMEOUT;
+      case "MAX_NETWORK_RETRY_DELAY_SEC":
+        return MAX_NETWORK_RETRY_DELAY_SEC;
+      case "INITIAL_NETWORK_RETRY_DELAY_SEC":
+        return INITIAL_NETWORK_RETRY_DELAY_SEC;
+    }
+    return _Stripe[c];
+  }
+  resolveBaseAddress(apiBase) {
+    const instanceHost = this.getApiField("host");
+    if (instanceHost !== DEFAULT_HOST) {
+      return instanceHost;
+    }
+    return DEFAULT_BASE_ADDRESSES[apiBase];
+  }
+  getMaxNetworkRetries() {
+    return this.getApiField("maxNetworkRetries");
+  }
+  /**
+   * @private
+   * This may be removed in the future.
+   */
+  _setApiNumberField(prop, n, defaultVal) {
+    const val = validateInteger(prop, n, defaultVal);
+    this._setApiField(prop, val);
+  }
+  getMaxNetworkRetryDelay() {
+    return MAX_NETWORK_RETRY_DELAY_SEC;
+  }
+  getInitialNetworkRetryDelay() {
+    return INITIAL_NETWORK_RETRY_DELAY_SEC;
+  }
+  /**
+   * @private
+   * Please open or upvote an issue at github.com/stripe/stripe-node
+   * if you use this, detailing your use-case.
+   *
+   * It may be deprecated and removed in the future.
+   *
+   * Gets a JSON version of a User-Agent and uses a cached version for a slight
+   * speed advantage.
+   */
+  getClientUserAgent(cb) {
+    return this.getClientUserAgentSeeded(_Stripe.USER_AGENT, cb);
+  }
+  /**
+   * @private
+   * Please open or upvote an issue at github.com/stripe/stripe-node
+   * if you use this, detailing your use-case.
+   *
+   * It may be deprecated and removed in the future.
+   *
+   * Gets a JSON version of a User-Agent by encoding a seeded object and
+   * fetching a uname from the system.
+   */
+  getClientUserAgentSeeded(seed, cb) {
+    const userAgent = {};
+    for (const field in seed) {
+      if (!Object.prototype.hasOwnProperty.call(seed, field)) {
+        continue;
+      }
+      userAgent[field] = encodeURIComponent(seed[field] ?? "null");
+    }
+    const platformInfo = this._platformFunctions.getPlatformInfo();
+    if (platformInfo && this.getTelemetryEnabled()) {
+      userAgent.platform = encodeURIComponent(platformInfo);
+    } else {
+      delete userAgent.platform;
+    }
+    const client = this.getApiField("httpClient");
+    if (client) {
+      userAgent.httplib = encodeURIComponent(client.getClientName());
+    }
+    if (this._appInfo) {
+      userAgent.application = this._appInfo;
+    }
+    cb(JSON.stringify(userAgent));
+  }
+  /**
+   * @private
+   * Please open or upvote an issue at github.com/stripe/stripe-node
+   * if you use this, detailing your use-case.
+   *
+   * It may be deprecated and removed in the future.
+   */
+  getAppInfoAsString() {
+    if (!this._appInfo) {
+      return "";
+    }
+    let formatted = this._appInfo.name;
+    if (this._appInfo.version) {
+      formatted += `/${this._appInfo.version}`;
+    }
+    if (this._appInfo.url) {
+      formatted += ` (${this._appInfo.url})`;
+    }
+    return formatted;
+  }
+  getTelemetryEnabled() {
+    return this._enableTelemetry;
+  }
+  getEmitEventBodiesEnabled() {
+    return this._emitEventBodies;
+  }
+  /**
+   * @private
+   * This may be removed in the future.
+   */
+  _prepResources() {
+    for (const name in resources_exports) {
+      if (!Object.prototype.hasOwnProperty.call(resources_exports, name)) {
+        continue;
+      }
+      this[pascalToCamelCase(name.replace("Resource", ""))] = new resources_exports[name](this);
+    }
+  }
+  /**
+   * @private
+   * This may be removed in the future.
+   */
+  _getPropsFromConfig(config) {
+    if (!config) {
+      return {};
+    }
+    const isString2 = typeof config === "string";
+    const isObject3 = config === Object(config) && !Array.isArray(config);
+    if (!isObject3 && !isString2) {
+      throw new Error("Config must either be an object or a string");
+    }
+    if (isString2) {
+      return {
+        apiVersion: config
+      };
+    }
+    const values = Object.keys(config).filter((value) => !ALLOWED_CONFIG_PROPERTIES.includes(value));
+    if (values.length > 0) {
+      throw new Error(`Config object may only contain the following: ${ALLOWED_CONFIG_PROPERTIES.join(", ")}`);
+    }
+    return config;
+  }
+  /**
+   * @private
+   * This may be removed in the future.
+   */
+  _setApiField(key, value) {
+    this._api[key] = value;
+  }
+  /**
+   * @private
+   * Please open or upvote an issue at github.com/stripe/stripe-node
+   * if you use this, detailing your use-case.
+   *
+   * It may be deprecated and removed in the future.
+   */
+  getApiField(key) {
+    return this._api[key];
+  }
+  _buildEventNotification(parsed) {
+    if (parsed.context) {
+      parsed.context = StripeContext.parse(parsed.context);
+    }
+    parsed.fetchEvent = () => {
+      return this._requestSender._rawRequest(
+        "GET",
+        // `id` comes from the notification body, so encode it the way the
+        // generated resources do -- otherwise it can inject path or query segments.
+        `/v2/core/events/${encodeURIComponent(parsed.id)}`,
+        void 0,
+        {
+          stripeContext: parsed.context,
+          headers: {
+            "Stripe-Request-Trigger": `event=${parsed.id}`
+          }
+        },
+        ["fetch_event"]
+      );
+    };
+    parsed.fetchRelatedObject = () => {
+      if (!parsed.related_object) {
+        return Promise.resolve(null);
+      }
+      return this._requestSender._rawRequest("GET", parsed.related_object.url, void 0, {
+        stripeContext: parsed.context,
+        headers: {
+          "Stripe-Request-Trigger": `event=${parsed.id}`
+        }
+      }, ["fetch_related_object"]);
+    };
+    return parsed;
+  }
+  parseEventNotification(payload, header, secret, tolerance, cryptoProvider, receivedAt) {
+    if (!this.webhooks.signature) {
+      throw new Error("ERR: missing signature helper, unable to verify");
+    }
+    this.webhooks.signature.verifyHeader(payload, header, secret, tolerance || this.webhooks.DEFAULT_TOLERANCE, cryptoProvider || this._platformFunctions.createDefaultCryptoProvider(), receivedAt);
+    const eventNotification = payload instanceof Uint8Array ? JSON.parse(new TextDecoder("utf8").decode(payload)) : JSON.parse(payload);
+    if (eventNotification.object === "event") {
+      throw new Error("You passed a webhook payload to stripe.parseEventNotification, which expects an event notification. Use stripe.webhooks.constructEvent instead.");
+    }
+    if (eventNotification.object !== "v2.core.event") {
+      throw new Error(`Unexpected object type '${eventNotification.object}'. Expected 'v2.core.event' for an event notification.`);
+    }
+    return this._buildEventNotification(eventNotification);
+  }
+  async parseEventNotificationAsync(payload, header, secret, tolerance, cryptoProvider, receivedAt) {
+    if (!this.webhooks.signature) {
+      throw new Error("ERR: missing signature helper, unable to verify");
+    }
+    await this.webhooks.signature.verifyHeaderAsync(payload, header, secret, tolerance || this.webhooks.DEFAULT_TOLERANCE, cryptoProvider || this._platformFunctions.createDefaultCryptoProvider(), receivedAt);
+    const eventNotification = payload instanceof Uint8Array ? JSON.parse(new TextDecoder("utf8").decode(payload)) : JSON.parse(payload);
+    if (eventNotification && eventNotification.object === "event") {
+      throw new Error("You passed a webhook payload to stripe.parseEventNotificationAsync, which expects an event notification. Use stripe.webhooks.constructEventAsync instead.");
+    }
+    if (eventNotification.object !== "v2.core.event") {
+      throw new Error(`Unexpected object type '${eventNotification.object}'. Expected 'v2.core.event' for an event notification.`);
+    }
+    return this._buildEventNotification(eventNotification);
+  }
+  /**
+   * Parses an EventNotification from a payload string, with no signature verification.
+   * Accepts raw Stripe Event Notification JSON as well as payloads wrapped in an
+   * [AWS EventBridge](https://docs.stripe.com/event-destinations/eventbridge)
+   * or [Azure Event Grid](https://docs.stripe.com/event-destinations/eventgrid) envelope.
+   */
+  parseEventNotificationWithoutVerification(payload) {
+    const inner = maybeExtractFromCloudProviderEnvelope(payload);
+    if (inner.object === "event") {
+      throw new Error("It looks like this cloud event contains a webhook body instead of a thin event notification. Use webhooks.constructEventWithoutVerification instead.");
+    }
+    if (inner.object !== "v2.core.event") {
+      throw new Error(`Unexpected object type '${inner.object}'. Expected 'v2.core.event' for an event notification.`);
+    }
+    return this._buildEventNotification(inner);
+  }
+  /**
+   * Creates a new Stripe client with the same configuration and a different
+   * Stripe context. The new client does not inherit this client's Stripe account.
+   */
+  withStripeContext(stripeContext) {
+    const StripeClient = this.constructor;
+    const client = new StripeClient("", {
+      apiVersion: this.getApiField("version"),
+      authenticator: this._authenticator ?? void 0,
+      typescript: StripeClient.USER_AGENT.typescript === true ? true : void 0,
+      maxNetworkRetries: this.getApiField("maxNetworkRetries"),
+      httpClient: this.getApiField("httpClient"),
+      timeout: this.getApiField("timeout"),
+      host: this.getApiField("host"),
+      port: this.getApiField("port"),
+      protocol: this.getApiField("protocol"),
+      telemetry: this.getTelemetryEnabled(),
+      emitEventBodies: this.getEmitEventBodiesEnabled(),
+      appInfo: this._appInfo,
+      stripeContext: stripeContext ?? void 0
+    }, {
+      emitter: this._emitter,
+      prevRequestMetrics: this._prevRequestMetrics
+    });
+    const clientId = this.getClientId();
+    if (clientId) {
+      client.setClientId(clientId);
+    }
+    return client;
+  }
+  notificationHandler(webhookSecret, fallbackCallback) {
+    return new StripeEventNotificationHandler(this, webhookSecret, fallbackCallback);
+  }
+  notificationHandlerWithoutVerification(fallbackCallback) {
+    return StripeEventNotificationHandler.withoutVerification(this, fallbackCallback);
+  }
+};
+Stripe.PACKAGE_VERSION = "23.0.0";
+Stripe.API_VERSION = ApiVersion;
+Stripe.MAJOR_API_VERSION = ApiMajorVersion;
+Stripe.aiAgent = "";
+Stripe.AI_AGENT = "";
+Stripe.USER_AGENT = {
+  bindings_version: Stripe.PACKAGE_VERSION,
+  lang: "node",
+  typescript: false
+};
+Stripe.StripeResource = StripeResource;
+Stripe.resources = resources_exports;
+Stripe.HttpClient = HttpClient2;
+Stripe.HttpClientResponse = HttpClientResponse;
+Stripe.CryptoProvider = CryptoProvider;
+Stripe.StripeContext = StripeContext;
+Stripe.errors = Error_exports;
+Stripe.Decimal = Decimal;
+Stripe._requestSenderFactory = defaultRequestSenderFactory;
+Stripe.initialize(new NodePlatformFunctions());
+var stripe_esm_node_default = Stripe;
+
+// server/billing/billing.service.ts
+var import_mercadopago = __toESM(require_dist6(), 1);
+var BillingService = class {
+  constructor(storage) {
+    this.storage = storage;
+    this.initStripe();
+    this.initMercadoPago();
+  }
+  logger = new Logger(BillingService.name);
+  stripeClient = null;
+  mpClient = null;
+  initStripe() {
+    const key = process.env.STRIPE_SECRET_KEY;
+    if (key && !key.startsWith("pk_")) {
+      try {
+        this.stripeClient = new stripe_esm_node_default(key, {
+          apiVersion: "2025-02-24.acacia"
+        });
+        this.logger.log("Stripe client initialized successfully.");
+      } catch (err) {
+        this.logger.warn("Failed to initialize Stripe client:", err);
+      }
+    } else {
+      this.logger.log("STRIPE_SECRET_KEY not provided. Stripe checkout will run in demo/configuration mode.");
+    }
+  }
+  initMercadoPago() {
+    const token = process.env.MERCADOPAGO_ACCESS_TOKEN;
+    if (token) {
+      try {
+        this.mpClient = new import_mercadopago.MercadoPagoConfig({
+          accessToken: token,
+          options: { timeout: 1e4 }
+        });
+        this.logger.log("Mercado Pago client initialized successfully.");
+      } catch (err) {
+        this.logger.warn("Failed to initialize Mercado Pago client:", err);
+      }
+    } else {
+      this.logger.log("MERCADOPAGO_ACCESS_TOKEN not provided. Mercado Pago will run in demo/configuration mode.");
+    }
+  }
+  getGatewayStatus() {
+    return {
+      stripeConfigured: Boolean(process.env.STRIPE_SECRET_KEY),
+      stripeWebhookConfigured: Boolean(process.env.STRIPE_WEBHOOK_SECRET),
+      mercadopagoConfigured: Boolean(process.env.MERCADOPAGO_ACCESS_TOKEN),
+      mercadopagoWebhookConfigured: Boolean(process.env.MERCADOPAGO_WEBHOOK_SECRET)
+    };
+  }
+  /**
+   * Create Stripe Checkout Session
+   */
+  async createStripeCheckout(dto) {
+    const origin = dto.origin || "https://www.mapflex.app";
+    const plan = dto.planId;
+    const cycle = dto.billingCycle || (plan === "business" ? "monthly" : "one_time");
+    if (!this.stripeClient) {
+      return {
+        isDemo: true,
+        url: `${origin}/planes?payment=demo_preview&plan=${plan}&cycle=${cycle}&gateway=stripe`
+      };
+    }
+    try {
+      let unitAmount = 2900;
+      let productName = "FlexMap Plan Pro \u2014 Acceso Permanente";
+      let productDesc = "Hasta 5 planos activos en la nube, incrustaci\xF3n iFrame y recorridos virtuales 360\xB0.";
+      let mode = "payment";
+      if (plan === "pro") {
+        if (cycle === "monthly") {
+          unitAmount = 1900;
+          productName = "FlexMap Plan Pro \u2014 Suscripci\xF3n Mensual";
+          mode = "subscription";
+        } else {
+          unitAmount = 2900;
+          productName = "FlexMap Plan Pro \u2014 Pago \xDAnico por Evento";
+          mode = "payment";
+        }
+      } else if (plan === "business") {
+        unitAmount = 5900;
+        productName = "FlexMap Plan Business \u2014 Para Desarrollos & Equipos";
+        productDesc = "Hasta 20 planos en la nube, recorridos ilimitados y soporte prioritario directo.";
+        mode = "subscription";
+      }
+      const session = await this.stripeClient.checkout.sessions.create({
+        customer_email: dto.email,
+        client_reference_id: dto.userId,
+        metadata: {
+          userId: dto.userId,
+          planId: plan,
+          billingCycle: cycle
+        },
+        payment_method_types: ["card"],
+        line_items: [
+          {
+            price_data: {
+              currency: "usd",
+              product_data: {
+                name: productName,
+                description: productDesc,
+                images: [`${origin}/images/hero-map-qr.jpg`]
+              },
+              unit_amount: unitAmount,
+              ...mode === "subscription" ? { recurring: { interval: "month" } } : {}
+            },
+            quantity: 1
+          }
+        ],
+        mode,
+        success_url: `${origin}/planes?payment=success&session_id={CHECKOUT_SESSION_ID}&plan=${plan}`,
+        cancel_url: `${origin}/#precios`
+      });
+      return {
+        url: session.url || `${origin}/planes?payment=success`,
+        sessionId: session.id
+      };
+    } catch (err) {
+      this.logger.error("Error creating Stripe session:", err);
+      throw new BadRequestException(err?.message || "Error al conectar con Stripe");
+    }
+  }
+  /**
+   * Handle Stripe Webhooks
+   */
+  async handleStripeWebhook(signature, rawBody) {
+    if (!this.stripeClient) {
+      this.logger.warn("Stripe webhook received but Stripe client is not initialized.");
+      return { received: false };
+    }
+    const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
+    let event;
+    try {
+      if (webhookSecret) {
+        event = this.stripeClient.webhooks.constructEvent(rawBody, signature, webhookSecret);
+      } else {
+        event = JSON.parse(rawBody.toString("utf-8"));
+      }
+    } catch (err) {
+      this.logger.error(`Stripe signature verification failed: ${err.message}`);
+      throw new BadRequestException(`Webhook signature verification failed: ${err.message}`);
+    }
+    this.logger.log(`Processing Stripe webhook event: ${event.type}`);
+    switch (event.type) {
+      case "checkout.session.completed": {
+        const session = event.data.object;
+        const userId = session.metadata?.userId || session.client_reference_id;
+        const planId = session.metadata?.planId || "pro";
+        if (userId) {
+          await this.storage.updateUser(userId, {
+            tier: planId,
+            stripeCustomerId: String(session.customer || ""),
+            stripeSubscriptionId: String(session.subscription || ""),
+            billingProvider: "stripe"
+          });
+          this.logger.log(`User ${userId} successfully upgraded to tier ${planId} via Stripe checkout.`);
+        }
+        break;
+      }
+      case "customer.subscription.deleted": {
+        const subscription = event.data.object;
+        const customerId = String(subscription.customer);
+        const allUsers = Object.values(this.storage.store?.users || {});
+        const user = allUsers.find((u) => u.stripeCustomerId === customerId);
+        if (user) {
+          await this.storage.updateUser(user.id, {
+            tier: "free"
+          });
+          this.logger.log(`User ${user.id} reverted to free tier due to subscription cancellation.`);
+        }
+        break;
+      }
+      default:
+        this.logger.debug(`Unhandled event type: ${event.type}`);
+    }
+    return { received: true };
+  }
+  /**
+   * Create Mercado Pago Checkout Preference
+   */
+  async createMercadoPagoPreference(dto) {
+    const origin = dto.origin || "https://www.mapflex.app";
+    const plan = dto.planId;
+    const cycle = dto.billingCycle || "one_time";
+    if (!this.mpClient) {
+      return {
+        isDemo: true,
+        url: `${origin}/planes?payment=demo_preview&plan=${plan}&cycle=${cycle}&gateway=mercadopago`
+      };
+    }
+    try {
+      const preference = new import_mercadopago.Preference(this.mpClient);
+      let unitPrice = 35e3;
+      let title = "FlexMap Plan Pro \u2014 Acceso Permanente";
+      if (plan === "pro") {
+        if (cycle === "monthly") {
+          unitPrice = Number(process.env.MP_PRICE_PRO_MONTHLY_ARS || 24e3);
+          title = "FlexMap Plan Pro \u2014 Mensual";
+        } else {
+          unitPrice = Number(process.env.MP_PRICE_PRO_ARS || 35e3);
+          title = "FlexMap Plan Pro \u2014 Pago \xDAnico por Evento";
+        }
+      } else if (plan === "business") {
+        unitPrice = Number(process.env.MP_PRICE_BUSINESS_ARS || 75e3);
+        title = "FlexMap Plan Business \u2014 Mensual";
+      }
+      const res = await preference.create({
+        body: {
+          items: [
+            {
+              id: `flexmap_${plan}_${cycle}`,
+              title,
+              quantity: 1,
+              unit_price: unitPrice,
+              currency_id: "ARS",
+              description: "Plataforma interactiva FlexMap para trazado y recorridos virtuales 360\xB0."
+            }
+          ],
+          payer: {
+            email: dto.email
+          },
+          metadata: {
+            user_id: dto.userId,
+            plan_id: plan,
+            billing_cycle: cycle
+          },
+          back_urls: {
+            success: `${origin}/planes?payment=success&provider=mercadopago&plan=${plan}`,
+            failure: `${origin}/#precios`,
+            pending: `${origin}/planes?payment=pending&provider=mercadopago&plan=${plan}`
+          },
+          auto_return: "approved",
+          notification_url: `${origin}/api/billing/webhook/mercadopago`,
+          statement_descriptor: "FLEXMAP"
+        }
+      });
+      return {
+        url: res.init_point || res.sandbox_init_point || `${origin}/planes?payment=success`,
+        preferenceId: res.id
+      };
+    } catch (err) {
+      this.logger.error("Error creating Mercado Pago preference:", err);
+      throw new BadRequestException(err?.message || "Error al conectar con Mercado Pago");
+    }
+  }
+  /**
+   * Handle Mercado Pago Webhook / IPN
+   */
+  async handleMercadoPagoWebhook(body, query) {
+    if (!this.mpClient) {
+      this.logger.warn("Mercado Pago webhook received but client is not initialized.");
+      return { received: false };
+    }
+    try {
+      const topic = query?.topic || query?.type || body?.type || body?.topic;
+      const paymentId = query?.id || query?.["data.id"] || body?.data?.id || body?.id;
+      if ((topic === "payment" || body?.action === "payment.created" || body?.action === "payment.updated") && paymentId) {
+        const paymentApi = new import_mercadopago.Payment(this.mpClient);
+        const paymentData = await paymentApi.get({ id: String(paymentId) });
+        this.logger.log(`Mercado Pago payment status for ${paymentId}: ${paymentData.status}`);
+        if (paymentData.status === "approved") {
+          const userId = paymentData.metadata?.user_id;
+          const planId = paymentData.metadata?.plan_id || "pro";
+          if (userId) {
+            await this.storage.updateUser(userId, {
+              tier: planId,
+              mpPaymentId: String(paymentId),
+              billingProvider: "mercadopago"
+            });
+            this.logger.log(`User ${userId} successfully upgraded to tier ${planId} via Mercado Pago.`);
+          }
+        }
+      }
+      return { received: true };
+    } catch (err) {
+      this.logger.error("Error handling Mercado Pago webhook:", err);
+      return { received: false };
+    }
+  }
+};
+BillingService = __decorateClass([
+  Injectable(),
+  __decorateParam(0, Inject(StorageService))
+], BillingService);
+
+// server/billing/billing.controller.ts
+var BillingController = class {
+  constructor(billingService, authService) {
+    this.billingService = billingService;
+    this.authService = authService;
+  }
+  async getStatus(authHeader) {
+    const gatewayStatus = this.billingService.getGatewayStatus();
+    let userTier = "free";
+    if (authHeader) {
+      try {
+        const token = authHeader.replace(/^Bearer\s+/i, "").trim();
+        const profile = await this.authService.getProfile(token);
+        if (profile?.user?.tier) {
+          userTier = profile.user.tier;
+        }
+      } catch {
+      }
+    }
+    return {
+      status: "ok",
+      currentTier: userTier,
+      gateways: gatewayStatus
+    };
+  }
+  async createStripeCheckout(body, authHeader, headerOrigin) {
+    if (!authHeader) {
+      throw new UnauthorizedException("Debes iniciar sesi\xF3n para suscribirte o adquirir un plan.");
+    }
+    const token = authHeader.replace(/^Bearer\s+/i, "").trim();
+    const profile = await this.authService.getProfile(token);
+    if (!profile?.user?.id) {
+      throw new UnauthorizedException("Token de sesi\xF3n inv\xE1lido o expirado.");
+    }
+    const planId = body.planId || "pro";
+    const origin = body.origin || headerOrigin || "https://www.mapflex.app";
+    return this.billingService.createStripeCheckout({
+      userId: profile.user.id,
+      email: profile.user.email,
+      planId,
+      billingCycle: body.billingCycle,
+      origin
+    });
+  }
+  async createMercadoPagoCheckout(body, authHeader, headerOrigin) {
+    if (!authHeader) {
+      throw new UnauthorizedException("Debes iniciar sesi\xF3n para suscribirte o adquirir un plan.");
+    }
+    const token = authHeader.replace(/^Bearer\s+/i, "").trim();
+    const profile = await this.authService.getProfile(token);
+    if (!profile?.user?.id) {
+      throw new UnauthorizedException("Token de sesi\xF3n inv\xE1lido o expirado.");
+    }
+    const planId = body.planId || "pro";
+    const origin = body.origin || headerOrigin || "https://www.mapflex.app";
+    return this.billingService.createMercadoPagoPreference({
+      userId: profile.user.id,
+      email: profile.user.email,
+      planId,
+      billingCycle: body.billingCycle,
+      origin
+    });
+  }
+  async stripeWebhook(req, signature, body) {
+    if (!signature && !body) {
+      throw new BadRequestException("Invalid Stripe webhook request");
+    }
+    const rawBody = req.rawBody || Buffer.from(JSON.stringify(body || {}));
+    return this.billingService.handleStripeWebhook(signature || "", rawBody);
+  }
+  async mercadoPagoWebhook(body, query) {
+    return this.billingService.handleMercadoPagoWebhook(body, query);
+  }
+};
+__decorateClass([
+  Get("status"),
+  __decorateParam(0, Headers2("authorization"))
+], BillingController.prototype, "getStatus", 1);
+__decorateClass([
+  Post("checkout/stripe"),
+  __decorateParam(0, Body()),
+  __decorateParam(1, Headers2("authorization")),
+  __decorateParam(2, Headers2("origin"))
+], BillingController.prototype, "createStripeCheckout", 1);
+__decorateClass([
+  Post("checkout/mercadopago"),
+  __decorateParam(0, Body()),
+  __decorateParam(1, Headers2("authorization")),
+  __decorateParam(2, Headers2("origin"))
+], BillingController.prototype, "createMercadoPagoCheckout", 1);
+__decorateClass([
+  Post("webhook/stripe"),
+  __decorateParam(0, Req()),
+  __decorateParam(1, Headers2("stripe-signature")),
+  __decorateParam(2, Body())
+], BillingController.prototype, "stripeWebhook", 1);
+__decorateClass([
+  Post("webhook/mercadopago"),
+  __decorateParam(0, Body()),
+  __decorateParam(1, Query())
+], BillingController.prototype, "mercadoPagoWebhook", 1);
+BillingController = __decorateClass([
+  Controller("billing"),
+  __decorateParam(0, Inject(BillingService)),
+  __decorateParam(1, Inject(AuthService))
+], BillingController);
+
+// server/billing/billing.module.ts
+var BillingModule = class {
+};
+BillingModule = __decorateClass([
+  Module({
+    imports: [StorageModule, AuthModule],
+    controllers: [BillingController],
+    providers: [BillingService],
+    exports: [BillingService]
+  })
+], BillingModule);
+
 // server/app.module.ts
 var AppController = class {
   getStatus() {
@@ -107064,7 +129028,7 @@ var AppModule = class {
 };
 AppModule = __decorateClass([
   Module({
-    imports: [StorageModule, AuthModule, ProjectsModule],
+    imports: [StorageModule, AuthModule, ProjectsModule, BillingModule],
     controllers: [AppController]
   })
 ], AppModule);
@@ -107072,7 +129036,14 @@ AppModule = __decorateClass([
 // server/vercel.ts
 var import_express2 = __toESM(require_express2(), 1);
 var server = (0, import_express2.default)();
-server.use(import_express2.default.json({ limit: "50mb" }));
+server.use(
+  import_express2.default.json({
+    limit: "50mb",
+    verify: (req, _res, buf) => {
+      req.rawBody = buf;
+    }
+  })
+);
 server.use(import_express2.default.urlencoded({ limit: "50mb", extended: true }));
 var isReady = false;
 var initPromise = null;

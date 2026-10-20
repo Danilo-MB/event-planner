@@ -53,6 +53,7 @@ interface AuthContextValue {
   sendMagicLink: (email: string) => Promise<{ success: boolean; email: string; devCode?: string; devLink?: string }>;
   verifyMagicToken: (token: string) => Promise<void>;
   verifyMagicCode: (email: string, code: string) => Promise<void>;
+  refreshProfile: () => Promise<void>;
   logout: () => void;
 }
 
@@ -180,6 +181,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     toast('Sesión cerrada');
   };
 
+  const refreshProfile = async () => {
+    try {
+      const profile = await api.auth.me();
+      if (profile) {
+        setUser(profile);
+        setStoredUser(profile);
+      }
+    } catch {
+      // Ignore if unauthenticated
+    }
+  };
+
   const cleanEmail = user?.email?.toLowerCase().trim() || '';
   const isAdmin = Boolean(
     user?.isAdmin ||
@@ -208,6 +221,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         sendMagicLink,
         verifyMagicToken,
         verifyMagicCode,
+        refreshProfile,
         logout
       }}>
       {children}

@@ -12,6 +12,12 @@ export interface UserEntity {
   tier?: 'free' | 'pro' | 'business';
   emailVerified?: boolean;
   createdAt: number;
+  stripeCustomerId?: string;
+  stripeSubscriptionId?: string;
+  mpPaymentId?: string;
+  mpPreferenceId?: string;
+  billingProvider?: 'stripe' | 'mercadopago';
+  tierExpiresAt?: number;
 }
 
 export function isAdminEmail(email?: string): boolean {

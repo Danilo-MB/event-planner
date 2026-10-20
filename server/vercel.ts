@@ -5,7 +5,14 @@ import { AppModule } from './app.module';
 import express, { Express, Request, Response } from 'express';
 
 const server: Express = express();
-server.use(express.json({ limit: '50mb' }));
+server.use(
+  express.json({
+    limit: '50mb',
+    verify: (req: any, _res, buf) => {
+      req.rawBody = buf;
+    }
+  })
+);
 server.use(express.urlencoded({ limit: '50mb', extended: true }));
 let isReady = false;
 let initPromise: Promise<void> | null = null;

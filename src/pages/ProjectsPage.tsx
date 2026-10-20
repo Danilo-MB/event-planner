@@ -27,6 +27,7 @@ import { FeatureCards } from '../components/home/FeatureCards';
 import { EmbedShowcase } from '../components/home/EmbedShowcase';
 import { PricingSection } from '../components/home/PricingSection';
 import { AiWizardModal } from '../components/ai/AiWizardModal';
+import { CheckoutModal } from '../components/billing/CheckoutModal';
 import { MapFlexLogo } from '../components/common/MapFlexLogo';
 import { useProjects } from '../contexts/ProjectsContext';
 import { useLanguage } from '../contexts/LanguageContext';
@@ -37,16 +38,45 @@ import type { NewPlanInput, Project, TemplateId } from '../types/plan';
 
 export function ProjectsPage() {
   const { projects, createProject, deleteProject, restoreProject, demoProjectId } = useProjects();
-  const { user, isAuthenticated, openAuthModal } = useAuth();
+  const { user, isAuthenticated, openAuthModal, refreshProfile } = useAuth();
   const { t, language } = useLanguage();
   const navigate = useNavigate();
   const templates = useMemo(() => getPlanTemplates(language), [language]);
   const [dialogTemplate, setDialogTemplate] = useState<TemplateId | null>(null);
   const [isAiWizardOpen, setIsAiWizardOpen] = useState(false);
+  const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
+  const [checkoutPlan, setCheckoutPlan] = useState<'pro' | 'business'>('pro');
   const [projectToDelete, setProjectToDelete] = useState<Project | null>(null);
   const [activeSection, setActiveSection] = useState<string>('inicio');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const sorted = useMemo(() => [...projects].sort((a, b) => b.updatedAt - a.updatedAt), [projects]);
+
+  const handleOpenCheckout = (plan: 'pro' | 'business') => {
+    if (!user) {
+      toast.info('Inicia sesión o crea tu cuenta para continuar con tu plan.');
+      openAuthModal();
+      return;
+    }
+    setCheckoutPlan(plan);
+    setIsCheckoutOpen(true);
+  };
+
+  useEffect(() => {
+    if (typeof window !== 'undefined' && window.location.search) {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('payment') === 'success') {
+        refreshProfile();
+        toast.success('🎉 ¡Pago confirmado! Tu Plan Pro ya está activo.', { duration: 6000 });
+        params.delete('payment');
+        params.delete('session_id');
+        params.delete('provider');
+        params.delete('plan');
+        const newSearch = params.toString();
+        const cleanUrl = window.location.pathname + (newSearch ? `?${newSearch}` : '') + window.location.hash;
+        window.history.replaceState({}, document.title, cleanUrl);
+      }
+    }
+  }, [refreshProfile]);
 
   const carouselRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
@@ -268,7 +298,11 @@ export function ProjectsPage() {
       <EmbedShowcase demoProjectId={demoId} />
 
       {/* 4. Pricing & Plans Section */}
-      <PricingSection onCreateFree={() => handleStartNewPlan('event')} />
+      <PricingSection
+        onCreateFree={() => handleStartNewPlan('event')}
+        onSelectPro={() => handleOpenCheckout('pro')}
+        onSelectBusiness={() => handleOpenCheckout('business')}
+      />
 
       {/* 5. Plans Workspace Section */}
       <main id="mis-planos" className="scroll-mt-16 mx-auto max-w-6xl px-4 py-12 sm:px-6 lg:py-16">
@@ -548,6 +582,14 @@ export function ProjectsPage() {
               </div>
             </motion.div>
           </div>
+        )}
+        {isCheckoutOpen && (
+          <CheckoutModal
+            key="checkout-modal"
+            isOpen={isCheckoutOpen}
+            onClose={() => setIsCheckoutOpen(false)}
+            initialPlan={checkoutPlan}
+          />
         )}
       </AnimatePresence>
     </div>

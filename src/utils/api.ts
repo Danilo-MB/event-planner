@@ -148,5 +148,18 @@ export const api = {
         method: 'PUT',
         body: JSON.stringify({ demoProjectId })
       })
+  },
+  billing: {
+    getStatus: () => request<{ status: string; currentTier: string; gateways: any }>('/api/billing/status'),
+    checkoutStripe: (data: { planId?: 'pro' | 'business'; billingCycle?: 'monthly' | 'one_time'; origin?: string }) =>
+      request<{ url: string; sessionId?: string; isDemo?: boolean }>('/api/billing/checkout/stripe', {
+        method: 'POST',
+        body: JSON.stringify(data)
+      }),
+    checkoutMercadoPago: (data: { planId?: 'pro' | 'business'; billingCycle?: 'monthly' | 'one_time'; origin?: string }) =>
+      request<{ url: string; preferenceId?: string; isDemo?: boolean }>('/api/billing/checkout/mercadopago', {
+        method: 'POST',
+        body: JSON.stringify(data)
+      })
   }
 };
