@@ -9,6 +9,7 @@ import { ImageGallery } from './ImageGallery';
 import { ElementStyleControls } from './ElementStyleControls';
 import { RouteWaypointManager } from '../streetview/RouteWaypointManager';
 import { useLanguage } from '../../contexts/LanguageContext';
+import { getCategoryDisplayName } from '../../utils/categoryLocalization';
 import type { Category, PlanFeature } from '../../types/plan';
 
 interface ElementDetailsProps {
@@ -36,7 +37,7 @@ export function ElementDetails({
   onDelete,
   onOpenStreetView
 }: ElementDetailsProps) {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const nameRef = useRef<HTMLInputElement>(null);
   const kind = featureKinds[feature.kind];
   const KindIcon = kind.icon;
@@ -78,7 +79,7 @@ export function ElementDetails({
           <ActionButton
             onClick={() => onOpenStreetView(0)}
             icon={<FootprintsIcon className="h-4 w-4 text-amber-500" aria-hidden />}
-            label="Recorrido 360°"
+            label={language === 'es' ? 'Recorrido 360°' : '360° Tour'}
           />
         )}
         <button
@@ -100,7 +101,7 @@ export function ElementDetails({
           id="element-name"
           value={feature.name}
           onChange={(e) => onChange({ name: e.target.value })}
-          placeholder="Nombre de este elemento"
+          placeholder={language === 'es' ? 'Nombre de este elemento' : 'Element name'}
           className="mt-1.5 h-11 w-full rounded-lg border border-line bg-surface px-3 text-lg font-semibold text-ink placeholder:font-normal placeholder:text-muted focus:border-ink focus:outline-none" />
         
         <p className="mt-2 text-sm tabular-nums text-muted">
@@ -113,10 +114,12 @@ export function ElementDetails({
             <div className="flex items-center justify-between text-xs font-semibold text-ink">
               <span className="flex items-center gap-1.5">
                 <RulerIcon className="h-3.5 w-3.5 text-amber-500" aria-hidden="true" />
-                {feature.kind === 'area' ? 'Medidas de cada lado' : 'Tramos del recorrido'}
+                {feature.kind === 'area'
+                  ? (language === 'es' ? 'Medidas de cada lado' : 'Side measurements')
+                  : (language === 'es' ? 'Tramos del recorrido' : 'Path segments')}
               </span>
               <span className="text-[11px] font-normal text-muted">
-                {edges.length} {edges.length === 1 ? 'lado' : 'lados'}
+                {edges.length} {edges.length === 1 ? (language === 'es' ? 'lado' : 'side') : (language === 'es' ? 'lados' : 'sides')}
               </span>
             </div>
             <div className="mt-2 grid grid-cols-2 gap-1.5 text-xs">
@@ -124,7 +127,7 @@ export function ElementDetails({
                 <div
                   key={idx}
                   className="flex items-center justify-between rounded-lg border border-line/60 bg-surface px-2.5 py-1.5 shadow-2xs">
-                  <span className="text-[11px] text-muted">Lado {idx + 1}</span>
+                  <span className="text-[11px] text-muted">{language === 'es' ? 'Lado' : 'Side'} {idx + 1}</span>
                   <span className="font-mono text-xs font-semibold text-ink">{edge.label}</span>
                 </div>
               ))}
@@ -150,7 +153,7 @@ export function ElementDetails({
                 }>
                 
                 <LayerSwatch category={c} size="sm" />
-                {c.name}
+                {getCategoryDisplayName(c, language)}
               </button>);
 
           })}

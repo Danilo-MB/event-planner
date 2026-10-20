@@ -85214,78 +85214,78 @@ var require_carbriata_data = __commonJS({
           categories: [
             {
               id: "lots",
-              name: "Lots",
+              name: "Lotes",
               color: "#E8590C",
               icon: "house",
               kindHint: "area"
             },
             {
               id: "streets",
-              name: "Streets",
+              name: "Calles y accesos",
               color: "#F59F00",
               icon: "route",
               kindHint: "line"
             },
             {
               id: "green",
-              name: "Green spaces",
+              name: "Espacios verdes",
               color: "#74B816",
               icon: "trees"
             },
             {
               id: "amenities",
-              name: "Amenities",
+              name: "Amenidades",
               color: "#AE3EC9",
               icon: "store"
             },
             {
               id: "common",
-              name: "Common areas",
+              name: "\xC1reas comunes",
               color: "#1C7ED6",
               icon: "building"
             },
             {
               id: "poi",
-              name: "Points of interest",
+              name: "Puntos de inter\xE9s",
               color: "#F06595",
               icon: "pin",
               kindHint: "point"
             },
             {
               id: "zones",
-              name: "Zones",
+              name: "Zonas",
               color: "#E8590C",
               icon: "tent",
               kindHint: "area"
             },
             {
               id: "stages",
-              name: "Stages & shows",
+              name: "Escenarios y shows",
               color: "#AE3EC9",
               icon: "music"
             },
             {
               id: "food",
-              name: "Food & drinks",
+              name: "Gastronom\xEDa y bebidas",
               color: "#F59F00",
               icon: "food"
             },
             {
               id: "parking",
-              name: "Parking",
+              name: "Estacionamiento",
               color: "#1C7ED6",
               icon: "parking"
             },
             {
               id: "access",
-              name: "Access & paths",
+              name: "Accesos y senderos",
               color: "#F06595",
               icon: "door",
               kindHint: "line"
             },
             {
               id: "safety",
-              name: "Safety & services",
+              name: "Seguridad y servicios",
               color: "#0CA678",
               icon: "ambulance",
               kindHint: "point"

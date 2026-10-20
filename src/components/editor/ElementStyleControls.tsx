@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { BookmarkIcon, CheckIcon, PaletteIcon, RotateCcwIcon, SlidersIcon, Trash2Icon } from 'lucide-react';
 import { OFFICIAL_PALETTE, clearUserColorPresets, getUserColorPresets, saveUserColorPreset } from '../../data/palettePresets';
+import { useLanguage } from '../../contexts/LanguageContext';
+import { getCategoryDisplayName } from '../../utils/categoryLocalization';
 import type { Category, PlanFeature } from '../../types/plan';
 
 interface ElementStyleControlsProps {
@@ -10,6 +12,7 @@ interface ElementStyleControlsProps {
 }
 
 export function ElementStyleControls({ feature, category, onChange }: ElementStyleControlsProps) {
+  const { language } = useLanguage();
   const currentColor = (feature.color || category.color).toUpperCase();
   const hasCustomColor = Boolean(feature.color);
   const [hexInput, setHexInput] = useState(currentColor.replace('#', ''));
@@ -68,7 +71,7 @@ export function ElementStyleControls({ feature, category, onChange }: ElementSty
           <button
             type="button"
             onClick={() => onChange({ color: undefined })}
-            title={`Restablecer al color oficial de ${category.name}`}
+            title={`Restablecer al color oficial de ${getCategoryDisplayName(category, language)}`}
             className="inline-flex items-center gap-1 text-[11px] font-medium text-muted hover:text-ink transition-colors">
             <RotateCcwIcon className="h-3 w-3" />
             Restablecer a capa

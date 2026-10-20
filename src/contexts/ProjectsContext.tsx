@@ -67,8 +67,11 @@ function ensureStreetViewSeed(projs: Project[]): Project[] {
       const seedFeatureIds = new Set(seedProj.features.map((sf) => sf.id));
       const extraFeatures = current.features.filter((f) => !seedFeatureIds.has(f.id));
 
+      const isCuratedSeedProject = p.id === 'ijdhormmv8a4760' || p.id === 'i6666hqmv8mdpge' || p.id === 'w3xini1mv8zaemz';
+
       current = {
         ...current,
+        categories: isCuratedSeedProject && seedProj.categories ? seedProj.categories : current.categories,
         features: [...mergedFeatures, ...extraFeatures]
       };
 

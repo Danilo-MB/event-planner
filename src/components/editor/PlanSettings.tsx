@@ -19,7 +19,7 @@ interface PlanSettingsProps {
 }
 
 export function PlanSettings({ project, editor, onRename, onSaveCenter, onGoToCenter, onExport }: PlanSettingsProps) {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const { user } = useAuth();
   const showGeoJSON = canExportGeoJSON(user);
   const canCollab = canManageCollaborators(user);
@@ -186,7 +186,9 @@ export function PlanSettings({ project, editor, onRename, onSaveCenter, onGoToCe
           </button>
         </div>
         <p className="mt-1 text-sm text-muted">
-          Organiza elementos por categoría. Sus colores e iconos se muestran en el mapa.
+          {language === 'es'
+            ? 'Organiza elementos por categoría. Sus colores e iconos se muestran en el mapa.'
+            : 'Organize elements by category. Their colors and icons appear on the map.'}
         </p>
         <ul className="mt-2 divide-y divide-line">
           {project.categories.map((c) => (

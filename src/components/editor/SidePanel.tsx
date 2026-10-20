@@ -37,7 +37,7 @@ export function SidePanel({
   onRename,
   onOpenStreetView
 }: SidePanelProps) {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const { selected, sheetOpen, setSheetOpen, mode } = editor;
   const selectedCategory = selected ? project.categories.find((c) => c.id === selected.categoryId) : undefined;
 
@@ -156,10 +156,10 @@ export function SidePanel({
                       </span>
                       <div className="min-w-0">
                         <h3 className="truncate text-xs font-bold text-ink">
-                          Recorrido Virtual 360°
+                          {language === 'es' ? 'Recorrido Virtual 360°' : '360° Virtual Tour'}
                         </h3>
                         <p className="truncate text-[11px] text-muted">
-                          {streetViewRoutes.length} {streetViewRoutes.length === 1 ? 'recorrido interactivo' : 'recorridos interactivos'}
+                          {streetViewRoutes.length} {streetViewRoutes.length === 1 ? (language === 'es' ? 'recorrido interactivo' : 'interactive tour') : (language === 'es' ? 'recorridos interactivos' : 'interactive tours')}
                         </p>
                       </div>
                     </div>
@@ -168,7 +168,7 @@ export function SidePanel({
                       onClick={() => onOpenStreetView(streetViewRoutes[0], 0)}
                       className="shrink-0 rounded-lg bg-amber-500 px-3 py-1.5 text-xs font-bold text-black shadow-sm hover:bg-amber-400 active:scale-95 transition-all"
                     >
-                      Caminar →
+                      {language === 'es' ? 'Caminar →' : 'Walk →'}
                     </button>
                   </div>
                 </div>

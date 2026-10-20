@@ -18,6 +18,7 @@ import { measureFeature } from '../../utils/geo';
 import { computeEdgeMetrics } from '../../utils/dimensions';
 import { LayerSwatch } from './LayerSwatch';
 import { useLanguage } from '../../contexts/LanguageContext';
+import { getCategoryDisplayName, getFeatureKindLabel } from '../../utils/categoryLocalization';
 import type { Category, PlanFeature } from '../../types/plan';
 
 interface VisitorElementDetailsProps {
@@ -37,7 +38,7 @@ export function VisitorElementDetails({
   onSwitchToEditor,
   onOpenStreetView
 }: VisitorElementDetailsProps) {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const [activeImageIdx, setActiveImageIdx] = useState(0);
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const kind = featureKinds[feature.kind];
@@ -101,16 +102,18 @@ export function VisitorElementDetails({
             </span>
             <div className="min-w-0 flex-1">
               <span className="inline-block rounded-full bg-amber-500/20 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-amber-700 dark:text-amber-300">
-                Recorrido Virtual 360°
+                {language === 'es' ? 'Recorrido Virtual 360°' : '360° Virtual Tour'}
               </span>
               <h3 className="truncate text-sm font-bold text-ink sm:text-base">
-                Recorrer camino foto a foto
+                {language === 'es' ? 'Recorrer camino foto a foto' : 'Walk trail photo-by-photo'}
               </h3>
             </div>
           </div>
 
           <p className="mt-2 text-xs text-muted leading-relaxed">
-            Camina virtualmente por este trayecto con fotos, orientación en tiempo real y mini-mapa interactivo.
+            {language === 'es'
+              ? 'Camina virtualmente por este trayecto con fotos, orientación en tiempo real y mini-mapa interactivo.'
+              : 'Walk virtually through this trail with photos, real-time orientation and interactive mini-map.'}
           </p>
 
           <button
@@ -119,7 +122,7 @@ export function VisitorElementDetails({
             className="mt-3 flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 py-2.5 px-4 text-xs font-bold text-black shadow-md hover:from-amber-400 hover:to-orange-400 transition-all active:scale-98"
           >
             <FootprintsIcon className="h-4 w-4" />
-            Comenzar recorrido virtual
+            {language === 'es' ? 'Comenzar recorrido virtual' : 'Start virtual tour'}
           </button>
         </div>
       )}
@@ -216,11 +219,11 @@ export function VisitorElementDetails({
           className="inline-flex items-center gap-1.5 rounded-full border border-line bg-subtle px-2.5 py-1 text-xs font-semibold text-ink shadow-2xs"
           style={{ borderColor: `${feature.color || category.color}40` }}>
           <LayerSwatch category={category} colorOverride={feature.color} size="sm" />
-          {category.name}
+          {getCategoryDisplayName(category, language)}
         </span>
         <span className="inline-flex items-center gap-1 text-xs text-muted">
           <KindIcon className="h-3 w-3" aria-hidden="true" />
-          {kind.label}
+          {getFeatureKindLabel(feature.kind, language)}
         </span>
       </div>
 
@@ -249,11 +252,11 @@ export function VisitorElementDetails({
             {feature.kind === 'area'
               ? t('perimeter')
               : feature.kind === 'line'
-              ? 'Tramos'
-              : 'Ubicación'}
+              ? (language === 'es' ? 'Tramos' : 'Segments')
+              : (language === 'es' ? 'Ubicación' : 'Location')}
           </p>
           <p className="mt-1 font-mono text-sm font-semibold text-ink sm:text-base">
-            {measure.secondary || (feature.kind === 'point' ? 'En el mapa' : '--')}
+            {measure.secondary || (feature.kind === 'point' ? (language === 'es' ? 'En el mapa' : 'On map') : '--')}
           </p>
         </div>
       </div>
@@ -264,7 +267,9 @@ export function VisitorElementDetails({
           <div className="flex items-center justify-between text-xs font-semibold text-ink">
             <span className="flex items-center gap-1.5">
               <RulerIcon className="h-3.5 w-3.5 text-amber-500" aria-hidden="true" />
-              {feature.kind === 'area' ? 'Dimensiones de los lados' : 'Tramos del recorrido'}
+              {feature.kind === 'area'
+                ? (language === 'es' ? 'Dimensiones de los lados' : 'Side dimensions')
+                : (language === 'es' ? 'Tramos del recorrido' : 'Path segments')}
             </span>
             <span className="text-[11px] font-normal text-muted">
               {edges.length} {edges.length === 1 ? t('side') : t('sides')}
@@ -296,7 +301,7 @@ export function VisitorElementDetails({
         </div>
       ) : (
         <div className="mt-4 rounded-xl border border-dashed border-line p-3 text-center text-xs text-muted">
-          Sin notas adicionales.
+          {language === 'es' ? 'Sin notas adicionales.' : 'No additional notes.'}
         </div>
       )}
 
@@ -354,7 +359,7 @@ export function VisitorElementDetails({
 
               <div className="mt-3 flex items-center gap-4 text-white">
                 <span className="text-sm font-medium">
-                  {feature.name} · Foto {activeImageIdx + 1} de {images.length}
+                  {feature.name} · {language === 'es' ? `Foto ${activeImageIdx + 1} de ${images.length}` : `Photo ${activeImageIdx + 1} of ${images.length}`}
                 </span>
                 {images.length > 1 && (
                   <div className="flex gap-2">
