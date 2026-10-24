@@ -156,7 +156,9 @@ export function StreetViewPlayer({
 
   // Fallback image if current waypoint has no image
   const sampleList = useMemo(() => getSampleListForFeature(feature), [feature]);
-  const currentImage = currentWaypoint.image || sampleList[currentIndex % sampleList.length].image;
+  const featureImages = feature.images || [];
+  const fallbackFromFeature = featureImages.length > 0 ? featureImages[currentIndex % featureImages.length] : null;
+  const currentImage = currentWaypoint.image || fallbackFromFeature || sampleList[currentIndex % sampleList.length].image;
 
   // Save / download image to user's device
   const handleDownloadImage = () => {
@@ -414,7 +416,8 @@ export function StreetViewPlayer({
         <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-thin">
           {waypoints.map((wp, idx) => {
             const isActive = idx === currentIndex;
-            const img = wp.image || sampleList[idx % sampleList.length].image;
+            const fallbackFromFeature = featureImages.length > 0 ? featureImages[idx % featureImages.length] : null;
+            const img = wp.image || fallbackFromFeature || sampleList[idx % sampleList.length].image;
             return (
               <button
                 key={idx}

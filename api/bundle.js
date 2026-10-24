@@ -88048,7 +88048,9 @@ var require_carbriata_data = __commonJS({
                   title: "Ingreso Av. Bernab\xE9 M\xE1rquez",
                   notes: "Acceso principal del p\xFAblico por la avenida M\xE1rquez hacia el parque arbolado del Hip\xF3dromo de San Isidro.",
                   image: "/streetview/autoclasica/sendero_cadenas_bulevar.jpg",
-                  heading: 220
+                  heading: 220,
+                  index: 0,
+                  caption: "Acceso principal del p\xFAblico por la avenida M\xE1rquez hacia el parque arbolado del Hip\xF3dromo de San Isidro."
                 },
                 {
                   lat: -34.48095447185303,
@@ -88056,7 +88058,9 @@ var require_carbriata_data = __commonJS({
                   title: "Paseo Central de los Pl\xE1tanos",
                   notes: "Paseo peatonal arbolado colmado de familias y fan\xE1ticos disfrutando del d\xEDa bajo la sombra de los pl\xE1tanos centenarios.",
                   image: "/streetview/autoclasica/publico_paseo_platanos.jpg",
-                  heading: 225
+                  heading: 225,
+                  index: 1,
+                  caption: "Paseo peatonal arbolado colmado de familias y fan\xE1ticos disfrutando del d\xEDa bajo la sombra de los pl\xE1tanos centenarios."
                 },
                 {
                   lat: -34.48211763444187,
@@ -88064,7 +88068,9 @@ var require_carbriata_data = __commonJS({
                   title: "T\xFAnel de Pl\xE1tanos & Dupla Ferrari 308",
                   notes: "Exhibici\xF3n de la dupla Ferrari 308 GTB amarilla y roja sobre el c\xE9sped, flanqueadas por las unidades de auxilio del ACA.",
                   image: "/streetview/autoclasica/ferrari_duo_amarilla_roja.jpg",
-                  heading: 230
+                  heading: 230,
+                  index: 2,
+                  caption: "Exhibici\xF3n de la dupla Ferrari 308 GTB amarilla y roja sobre el c\xE9sped, flanqueadas por las unidades de auxilio del ACA."
                 },
                 {
                   lat: -34.484256310424854,
@@ -88072,7 +88078,9 @@ var require_carbriata_data = __commonJS({
                   title: "Bulevar de Clubes & Ford V8",
                   notes: "Tramo sur del bulevar junto a los p\xF3rticos de carpas institucionales y stands de marcas cl\xE1sicas.",
                   image: "/streetview/autoclasica/ford_v8_bienvenidos.jpg",
-                  heading: 235
+                  heading: 235,
+                  index: 3,
+                  caption: "Tramo sur del bulevar junto a los p\xF3rticos de carpas institucionales y stands de marcas cl\xE1sicas."
                 }
               ],
               createdAt: 1792788740778
@@ -88118,7 +88126,9 @@ var require_carbriata_data = __commonJS({
                   title: "Rotonda de Desv\xEDo Norte",
                   notes: "Cruce que conecta el acceso principal con el circuito perimetral de utilitarios.",
                   image: "/streetview/autoclasica/sendero_cadenas_bulevar.jpg",
-                  heading: 270
+                  heading: 270,
+                  index: 0,
+                  caption: "Cruce que conecta el acceso principal con el circuito perimetral de utilitarios."
                 },
                 {
                   lat: -34.479878844703855,
@@ -88126,7 +88136,9 @@ var require_carbriata_data = __commonJS({
                   title: "Avenida de Colectivos y Utilitarios",
                   notes: "Exhibici\xF3n de transporte hist\xF3rico con colectivos Mercedes-Benz, pick-ups cl\xE1sicas y sedanes nacionales.",
                   image: "/streetview/autoclasica/comerciales_colectivo_falcon.jpg",
-                  heading: 260
+                  heading: 260,
+                  index: 1,
+                  caption: "Exhibici\xF3n de transporte hist\xF3rico con colectivos Mercedes-Benz, pick-ups cl\xE1sicas y sedanes nacionales."
                 },
                 {
                   lat: -34.47937854828142,
@@ -88134,7 +88146,9 @@ var require_carbriata_data = __commonJS({
                   title: "Callej\xF3n del Autojumble",
                   notes: "Hilera de gazebos con venta de repuestos antiguos, maquetas, memorabilia y antig\xFCedades mec\xE1nicas.",
                   image: "/streetview/autoclasica/autojumble_stands_carpas.jpg",
-                  heading: 250
+                  heading: 250,
+                  index: 2,
+                  caption: "Hilera de gazebos con venta de repuestos antiguos, maquetas, memorabilia y antig\xFCedades mec\xE1nicas."
                 },
                 {
                   lat: -34.479065861493865,
@@ -88142,7 +88156,9 @@ var require_carbriata_data = __commonJS({
                   title: "Paseo de Visitantes y Bulevar Norte",
                   notes: "Gran concurrencia de p\xFAblico recorriendo los senderos arbolados entre banderas y stands de marcas cl\xE1sicas.",
                   image: "/streetview/autoclasica/publico_paseo_platanos.jpg",
-                  heading: 200
+                  heading: 200,
+                  index: 3,
+                  caption: "Gran concurrencia de p\xFAblico recorriendo los senderos arbolados entre banderas y stands de marcas cl\xE1sicas."
                 },
                 {
                   lat: -34.47784011798586,
@@ -88150,7 +88166,9 @@ var require_carbriata_data = __commonJS({
                   title: "Plaza de Veh\xEDculos Hist\xF3ricos Binacionales",
                   notes: "Sector de concentraci\xF3n de veh\xEDculos participantes con emblemas de la hermandad cl\xE1sica Brasil - Argentina.",
                   image: "/streetview/autoclasica/emblema_autoclasica_brasil_argentina.jpg",
-                  heading: 140
+                  heading: 140,
+                  index: 4,
+                  caption: "Sector de concentraci\xF3n de veh\xEDculos participantes con emblemas de la hermandad cl\xE1sica Brasil - Argentina."
                 }
               ],
               createdAt: 1792788768768

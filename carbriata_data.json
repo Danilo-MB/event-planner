@@ -2893,7 +2893,9 @@
               "title": "Ingreso Av. Bernab\u00e9 M\u00e1rquez",
               "notes": "Acceso principal del p\u00fablico por la avenida M\u00e1rquez hacia el parque arbolado del Hip\u00f3dromo de San Isidro.",
               "image": "/streetview/autoclasica/sendero_cadenas_bulevar.jpg",
-              "heading": 220
+              "heading": 220,
+              "index": 0,
+              "caption": "Acceso principal del p\u00fablico por la avenida M\u00e1rquez hacia el parque arbolado del Hip\u00f3dromo de San Isidro."
             },
             {
               "lat": -34.48095447185303,
@@ -2901,7 +2903,9 @@
               "title": "Paseo Central de los Pl\u00e1tanos",
               "notes": "Paseo peatonal arbolado colmado de familias y fan\u00e1ticos disfrutando del d\u00eda bajo la sombra de los pl\u00e1tanos centenarios.",
               "image": "/streetview/autoclasica/publico_paseo_platanos.jpg",
-              "heading": 225
+              "heading": 225,
+              "index": 1,
+              "caption": "Paseo peatonal arbolado colmado de familias y fan\u00e1ticos disfrutando del d\u00eda bajo la sombra de los pl\u00e1tanos centenarios."
             },
             {
               "lat": -34.48211763444187,
@@ -2909,7 +2913,9 @@
               "title": "T\u00fanel de Pl\u00e1tanos & Dupla Ferrari 308",
               "notes": "Exhibici\u00f3n de la dupla Ferrari 308 GTB amarilla y roja sobre el c\u00e9sped, flanqueadas por las unidades de auxilio del ACA.",
               "image": "/streetview/autoclasica/ferrari_duo_amarilla_roja.jpg",
-              "heading": 230
+              "heading": 230,
+              "index": 2,
+              "caption": "Exhibici\u00f3n de la dupla Ferrari 308 GTB amarilla y roja sobre el c\u00e9sped, flanqueadas por las unidades de auxilio del ACA."
             },
             {
               "lat": -34.484256310424854,
@@ -2917,7 +2923,9 @@
               "title": "Bulevar de Clubes & Ford V8",
               "notes": "Tramo sur del bulevar junto a los p\u00f3rticos de carpas institucionales y stands de marcas cl\u00e1sicas.",
               "image": "/streetview/autoclasica/ford_v8_bienvenidos.jpg",
-              "heading": 235
+              "heading": 235,
+              "index": 3,
+              "caption": "Tramo sur del bulevar junto a los p\u00f3rticos de carpas institucionales y stands de marcas cl\u00e1sicas."
             }
           ],
           "createdAt": 1792788740778
@@ -2963,7 +2971,9 @@
               "title": "Rotonda de Desv\u00edo Norte",
               "notes": "Cruce que conecta el acceso principal con el circuito perimetral de utilitarios.",
               "image": "/streetview/autoclasica/sendero_cadenas_bulevar.jpg",
-              "heading": 270
+              "heading": 270,
+              "index": 0,
+              "caption": "Cruce que conecta el acceso principal con el circuito perimetral de utilitarios."
             },
             {
               "lat": -34.479878844703855,
@@ -2971,7 +2981,9 @@
               "title": "Avenida de Colectivos y Utilitarios",
               "notes": "Exhibici\u00f3n de transporte hist\u00f3rico con colectivos Mercedes-Benz, pick-ups cl\u00e1sicas y sedanes nacionales.",
               "image": "/streetview/autoclasica/comerciales_colectivo_falcon.jpg",
-              "heading": 260
+              "heading": 260,
+              "index": 1,
+              "caption": "Exhibici\u00f3n de transporte hist\u00f3rico con colectivos Mercedes-Benz, pick-ups cl\u00e1sicas y sedanes nacionales."
             },
             {
               "lat": -34.47937854828142,
@@ -2979,7 +2991,9 @@
               "title": "Callej\u00f3n del Autojumble",
               "notes": "Hilera de gazebos con venta de repuestos antiguos, maquetas, memorabilia y antig\u00fcedades mec\u00e1nicas.",
               "image": "/streetview/autoclasica/autojumble_stands_carpas.jpg",
-              "heading": 250
+              "heading": 250,
+              "index": 2,
+              "caption": "Hilera de gazebos con venta de repuestos antiguos, maquetas, memorabilia y antig\u00fcedades mec\u00e1nicas."
             },
             {
               "lat": -34.479065861493865,
@@ -2987,7 +3001,9 @@
               "title": "Paseo de Visitantes y Bulevar Norte",
               "notes": "Gran concurrencia de p\u00fablico recorriendo los senderos arbolados entre banderas y stands de marcas cl\u00e1sicas.",
               "image": "/streetview/autoclasica/publico_paseo_platanos.jpg",
-              "heading": 200
+              "heading": 200,
+              "index": 3,
+              "caption": "Gran concurrencia de p\u00fablico recorriendo los senderos arbolados entre banderas y stands de marcas cl\u00e1sicas."
             },
             {
               "lat": -34.47784011798586,
@@ -2995,7 +3011,9 @@
               "title": "Plaza de Veh\u00edculos Hist\u00f3ricos Binacionales",
               "notes": "Sector de concentraci\u00f3n de veh\u00edculos participantes con emblemas de la hermandad cl\u00e1sica Brasil - Argentina.",
               "image": "/streetview/autoclasica/emblema_autoclasica_brasil_argentina.jpg",
-              "heading": 140
+              "heading": 140,
+              "index": 4,
+              "caption": "Sector de concentraci\u00f3n de veh\u00edculos participantes con emblemas de la hermandad cl\u00e1sica Brasil - Argentina."
             }
           ],
           "createdAt": 1792788768768

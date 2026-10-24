@@ -147,6 +147,21 @@ export function getSampleListForFeature(featureContext?: PlanFeature | boolean):
 
   if (isIndustrial) return SAMPLE_INDUSTRIAL_WAYPOINTS;
 
+  const isEvent =
+    cat === 'access' ||
+    cat === 'zones' ||
+    name.includes('platanos') ||
+    name.includes('plátanos') ||
+    name.includes('autoclasica') ||
+    name.includes('autoclásica') ||
+    name.includes('clasic') ||
+    name.includes('clásic') ||
+    name.includes('concours') ||
+    name.includes('feria') ||
+    name.includes('paddock');
+
+  if (isEvent) return SAMPLE_STREETVIEW_WAYPOINTS;
+
   const isRealEstate =
     cat === 'streets' ||
     cat === 'lots' ||
@@ -188,10 +203,11 @@ export function generateSampleWaypointsForCoords(
 }
 
 /**
- * Checks if a feature has at least one waypoint photo.
+ * Checks if a feature has at least one waypoint photo or assigned images.
  */
 export function hasStreetViewPhotos(feature: PlanFeature | null | undefined): boolean {
   if (!feature || feature.kind !== 'line') return false;
+  if (feature.images && feature.images.length > 0) return true;
   if (!feature.routeWaypoints || feature.routeWaypoints.length === 0) return false;
   return feature.routeWaypoints.some((w) => !!w.image && w.image.trim().length > 0);
 }
@@ -204,16 +220,28 @@ export function getEffectiveWaypoints(feature: PlanFeature): RouteWaypoint[] {
   if (feature.kind !== 'line') return [];
   const coordsCount = feature.coords.length;
   const existingMap = new Map<number, RouteWaypoint>();
-  (feature.routeWaypoints || []).forEach((w) => existingMap.set(w.index, w));
+  (feature.routeWaypoints || []).forEach((w, idx) => {
+    const effectiveIndex = typeof w.index === 'number' ? w.index : idx;
+    existingMap.set(effectiveIndex, { ...w, index: effectiveIndex });
+  });
+
+  const featureImages = feature.images || [];
 
   const result: RouteWaypoint[] = [];
   for (let i = 0; i < coordsCount; i++) {
     if (existingMap.has(i)) {
-      result.push(existingMap.get(i)!);
+      const wp = existingMap.get(i)!;
+      const fallbackImg = featureImages.length > 0 ? featureImages[i % featureImages.length] : undefined;
+      result.push({
+        ...wp,
+        image: wp.image || fallbackImg,
+      });
     } else {
+      const fallbackImg = featureImages.length > 0 ? featureImages[i % featureImages.length] : undefined;
       result.push({
         index: i,
         title: `Punto ${i + 1}`,
+        image: fallbackImg,
       });
     }
   }
