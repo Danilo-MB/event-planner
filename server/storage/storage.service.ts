@@ -400,19 +400,23 @@ export class StorageService implements OnModuleInit {
       try {
         const cloudProj = await this.redis.get<ProjectEntity>(`project:${id}`);
         if (cloudProj && cloudProj.id) {
-          // Ensure curated waypoints for key demo/seed projects (e.g. Barrio Carlina ijdhormmv8a4760)
+          // Ensure curated waypoints and images for key demo/seed projects (e.g. Autoclásica bsrlvswmvlg206v, Barrio Carlina ijdhormmv8a4760)
           const seed = bundledSeedData.projects[id];
-          if (seed && (id === 'ijdhormmv8a4760' || id === 'i6666hqmv8mdpge' || id === 'w3xini1mv8zaemz')) {
+          if (seed && (id === 'ijdhormmv8a4760' || id === 'i6666hqmv8mdpge' || id === 'w3xini1mv8zaemz' || id === 'bsrlvswmvlg206v')) {
             let updated = false;
             const seedFeaturesMap = new Map(seed.features.map((f) => [f.id, f]));
             cloudProj.features = cloudProj.features.map((cf) => {
               const sf = seedFeaturesMap.get(cf.id);
-              if (sf && sf.routeWaypoints && sf.routeWaypoints.length > (cf.routeWaypoints?.length || 0)) {
+              if (sf) {
                 updated = true;
                 return {
                   ...cf,
-                  routeWaypoints: sf.routeWaypoints,
-                  images: sf.images || cf.images,
+                  name: sf.name || cf.name,
+                  notes: sf.notes || cf.notes,
+                  categoryId: sf.categoryId || cf.categoryId,
+                  color: sf.color || cf.color,
+                  routeWaypoints: sf.routeWaypoints && sf.routeWaypoints.length > 0 ? sf.routeWaypoints : cf.routeWaypoints,
+                  images: sf.images && sf.images.length > 0 ? sf.images : cf.images,
                 };
               }
               return cf;

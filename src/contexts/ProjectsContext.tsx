@@ -38,12 +38,14 @@ function ensureStreetViewSeed(projs: Project[]): Project[] {
         const existing = existingFeatureMap.get(sf.id);
         if (!existing) return sf;
 
-        // If it's Barrio Carlina, industrial project, or Carbriata, always ensure the curated waypoints and images
-        if (p.id === 'ijdhormmv8a4760' || p.id === 'i6666hqmv8mdpge' || p.id === 'w3xini1mv8zaemz') {
+        // If it's Barrio Carlina, industrial project, Carbriata, or Autoclasica, always ensure curated names, notes, waypoints and images
+        if (p.id === 'ijdhormmv8a4760' || p.id === 'i6666hqmv8mdpge' || p.id === 'w3xini1mv8zaemz' || p.id === 'bsrlvswmvlg206v') {
           return {
             ...existing,
             name: sf.name || existing.name,
             notes: sf.notes || existing.notes,
+            categoryId: sf.categoryId || existing.categoryId,
+            color: sf.color || existing.color,
             images: sf.images && sf.images.length > 0 ? sf.images : existing.images,
             routeWaypoints: sf.routeWaypoints && sf.routeWaypoints.length > 0 ? sf.routeWaypoints : existing.routeWaypoints
           };
@@ -67,10 +69,12 @@ function ensureStreetViewSeed(projs: Project[]): Project[] {
       const seedFeatureIds = new Set(seedProj.features.map((sf) => sf.id));
       const extraFeatures = current.features.filter((f) => !seedFeatureIds.has(f.id));
 
-      const isCuratedSeedProject = p.id === 'ijdhormmv8a4760' || p.id === 'i6666hqmv8mdpge' || p.id === 'w3xini1mv8zaemz';
+      const isCuratedSeedProject = p.id === 'ijdhormmv8a4760' || p.id === 'i6666hqmv8mdpge' || p.id === 'w3xini1mv8zaemz' || p.id === 'bsrlvswmvlg206v';
 
       current = {
         ...current,
+        name: isCuratedSeedProject && seedProj.name ? seedProj.name : current.name,
+        description: isCuratedSeedProject && seedProj.description ? seedProj.description : current.description,
         categories: isCuratedSeedProject && seedProj.categories ? seedProj.categories : current.categories,
         features: [...mergedFeatures, ...extraFeatures]
       };
