@@ -3,7 +3,7 @@ export type Language = 'es' | 'en';
 export const translations = {
   es: {
     // Brand & Marketing
-    brandName: 'FlexMap',
+    brandName: 'MapFlex',
     brandTagline: 'Dibuja tus propios mapas interactivos para lo que necesites',
     heroTopBadgeTitle: 'Donde el mapa no existe',
     heroTopBadgeSub: 'Mapas interactivos + Recorridos virtuales',
@@ -26,7 +26,7 @@ export const translations = {
     featuresTitle: 'Mapas interactivos y recorridos virtuales donde las apps tradicionales no llegan',
     featuresSubtitle: 'Diseñado para crear el mapa de lo que aún no existe: festivales en el campo, desarrollos inmobiliarios, predios privados, ferias y eventos temporales.',
     feature1Title: 'Mapea lo que todavía no existe',
-    feature1Desc: 'Las aplicaciones convencionales solo muestran calles públicas y en un campo o predio privado solo ven un descampado. FlexMap te permite dibujar sectores, caminos, estacionamientos y accesos donde todavía no hay ningún plano definido.',
+    feature1Desc: 'Las aplicaciones convencionales solo muestran calles públicas y en un campo o predio privado solo ven un descampado. MapFlex te permite dibujar sectores, caminos, estacionamientos y accesos donde todavía no hay ningún plano definido.',
     feature2Title: 'Recorridos virtuales foto a foto',
     feature2Desc: 'Crea recorridos inmersivos en tus propios caminos y pabellones. Sube fotos a cada punto para que visitantes y clientes caminen virtualmente con brújula y mini-mapa interactivo.',
     feature3Title: 'Trazado satelital con medidas reales',
@@ -332,7 +332,7 @@ export const translations = {
   },
   en: {
     // Brand & Marketing
-    brandName: 'FlexMap',
+    brandName: 'MapFlex',
     brandTagline: 'Draw your own interactive maps for whatever you need',
     heroTopBadgeTitle: 'Where maps don’t exist',
     heroTopBadgeSub: 'Interactive maps + Virtual walkthroughs',
@@ -355,7 +355,7 @@ export const translations = {
     featuresTitle: 'Interactive maps and virtual walkthroughs where traditional apps cannot reach',
     featuresSubtitle: 'Designed to map what doesn’t exist yet: outdoor festivals, land developments, private venues, expos, and temporary events.',
     feature1Title: 'Map what doesn’t exist yet',
-    feature1Desc: 'Standard map apps only show public streets, showing an empty field for private venues. FlexMap lets you draw and name sectors, parking lots, gates, and booths where no map exists yet.',
+    feature1Desc: 'Standard map apps only show public streets, showing an empty field for private venues. MapFlex lets you draw and name sectors, parking lots, gates, and booths where no map exists yet.',
     feature2Title: 'Virtual walkthroughs photo-by-photo',
     feature2Desc: 'Build your own virtual walkthrough. Upload photos to each point along your routes so attendees and clients can walk virtually with real-time orientation, compass, and mini-map.',
     feature3Title: 'Satellite drafting with real metrics',

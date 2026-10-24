@@ -129416,22 +129416,22 @@ var BillingService = class {
     }
     try {
       let unitAmount = 2900;
-      let productName = "FlexMap Plan Pro \u2014 Acceso Permanente";
+      let productName = "MapFlex Plan Pro \u2014 Acceso Permanente";
       let productDesc = "Hasta 5 planos activos en la nube, incrustaci\xF3n iFrame y recorridos virtuales 360\xB0.";
       let mode = "payment";
       if (plan === "pro") {
         if (cycle === "monthly") {
           unitAmount = 1900;
-          productName = "FlexMap Plan Pro \u2014 Suscripci\xF3n Mensual";
+          productName = "MapFlex Plan Pro \u2014 Suscripci\xF3n Mensual";
           mode = "subscription";
         } else {
           unitAmount = 2900;
-          productName = "FlexMap Plan Pro \u2014 Pago \xDAnico por Evento";
+          productName = "MapFlex Plan Pro \u2014 Pago \xDAnico por Evento";
           mode = "payment";
         }
       } else if (plan === "business") {
         unitAmount = 5900;
-        productName = "FlexMap Plan Business \u2014 Para Desarrollos & Equipos";
+        productName = "MapFlex Plan Business \u2014 Para Desarrollos & Equipos";
         productDesc = "Hasta 20 planos en la nube, recorridos ilimitados y soporte prioritario directo.";
         mode = "subscription";
       }
@@ -129543,29 +129543,29 @@ var BillingService = class {
     try {
       const preference = new import_mercadopago.Preference(this.mpClient);
       let unitPrice = 35e3;
-      let title = "FlexMap Plan Pro \u2014 Acceso Permanente";
+      let title = "MapFlex Plan Pro \u2014 Acceso Permanente";
       if (plan === "pro") {
         if (cycle === "monthly") {
           unitPrice = Number(process.env.MP_PRICE_PRO_MONTHLY_ARS || 24e3);
-          title = "FlexMap Plan Pro \u2014 Mensual";
+          title = "MapFlex Plan Pro \u2014 Mensual";
         } else {
           unitPrice = Number(process.env.MP_PRICE_PRO_ARS || 35e3);
-          title = "FlexMap Plan Pro \u2014 Pago \xDAnico por Evento";
+          title = "MapFlex Plan Pro \u2014 Pago \xDAnico por Evento";
         }
       } else if (plan === "business") {
         unitPrice = Number(process.env.MP_PRICE_BUSINESS_ARS || 75e3);
-        title = "FlexMap Plan Business \u2014 Mensual";
+        title = "MapFlex Plan Business \u2014 Mensual";
       }
       const res = await preference.create({
         body: {
           items: [
             {
-              id: `flexmap_${plan}_${cycle}`,
+              id: `mapflex_${plan}_${cycle}`,
               title,
               quantity: 1,
               unit_price: unitPrice,
               currency_id: "ARS",
-              description: "Plataforma interactiva FlexMap para trazado y recorridos virtuales 360\xB0."
+              description: "Plataforma interactiva MapFlex para trazado y recorridos virtuales 360\xB0."
             }
           ],
           payer: {
@@ -129583,7 +129583,7 @@ var BillingService = class {
           },
           auto_return: "approved",
           notification_url: `${origin}/api/billing/webhook/mercadopago`,
-          statement_descriptor: "FLEXMAP"
+          statement_descriptor: "MAPFLEX"
         }
       });
       return {

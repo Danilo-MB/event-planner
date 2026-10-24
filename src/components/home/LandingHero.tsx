@@ -31,17 +31,17 @@ const HERO_SLIDES: HeroSlide[] = [
     id: 'map-qr',
     image: '/images/hero-map-qr.jpg',
     titleKey: 'heroSlideMap',
-    alt: 'FlexMap - Plataforma satelital interactiva con código QR',
+    alt: 'MapFlex - Plataforma satelital interactiva con código QR',
   },
   {
     id: 'event-qr',
     image: '/images/hero-event-qr.jpg',
-    alt: 'FlexMap - Cartelería física con QR en accesos a eventos',
+    alt: 'MapFlex - Cartelería física con QR en accesos a eventos',
   },
   {
     id: 'lot-qr',
     image: '/images/hero-lot-qr.jpg',
-    alt: 'FlexMap - Señalética de loteos y desarrollos con QR',
+    alt: 'MapFlex - Señalética de loteos y desarrollos con QR',
   },
 ];
 

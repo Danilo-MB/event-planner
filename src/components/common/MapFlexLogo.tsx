@@ -79,8 +79,8 @@ export function MapFlexLogo({
     return <MapFlexBadge size={cfg.badgeSize} className={className} />;
   }
 
-  const firstPart = casing === 'title' ? 'Flex' : 'flex';
-  const secondPart = casing === 'title' ? 'Map' : 'map';
+  const firstPart = casing === 'title' ? 'Map' : 'map';
+  const secondPart = casing === 'title' ? 'Flex' : 'flex';
 
   return (
     <div className={`inline-flex items-center gap-1.5 select-none ${className}`}>
