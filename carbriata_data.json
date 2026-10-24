@@ -3,7 +3,7 @@
     "u_demo": {
       "id": "u_demo",
       "email": "demo@carbriata.com",
-      "name": "Juan Pérez",
+      "name": "Juan P\u00e9rez",
       "passwordHash": "$2b$10$JbDMUFLryePevo.tCFnjieKbJQjoCyqegn9jjI0fSilC4ymg/.LTS",
       "createdAt": 1791499033432
     }
@@ -85,13 +85,13 @@
         },
         {
           "id": "common",
-          "name": "Áreas comunes",
+          "name": "\u00c1reas comunes",
           "color": "#1C7ED6",
           "icon": "building"
         },
         {
           "id": "poi",
-          "name": "Puntos de interés",
+          "name": "Puntos de inter\u00e9s",
           "color": "#F06595",
           "icon": "pin",
           "kindHint": "point"
@@ -111,7 +111,7 @@
         },
         {
           "id": "food",
-          "name": "Gastronomía y bebidas",
+          "name": "Gastronom\u00eda y bebidas",
           "color": "#F59F00",
           "icon": "food"
         },
@@ -160,7 +160,7 @@
           ],
           "name": "Traza Principal de Obra",
           "categoryId": "streets",
-          "notes": "Avenida principal del desarrollo. Apertura vial con maquinaria pesada, nivelación de calzada tosca y perímetro forestado.",
+          "notes": "Avenida principal del desarrollo. Apertura vial con maquinaria pesada, nivelaci\u00f3n de calzada tosca y per\u00edmetro forestado.",
           "images": [
             "/streetview/carlina/real_1_vista_aerea.jpg",
             "/streetview/carlina/real_5_maquinaria_camion.jpg",
@@ -171,26 +171,26 @@
           "routeWaypoints": [
             {
               "index": 0,
-              "title": "Acceso y Vista Aérea del Master Plan",
-              "caption": "Perspectiva aérea panorámica de la traza de Barrio Carlina y el entorno de Los Cardales.",
+              "title": "Acceso y Vista A\u00e9rea del Master Plan",
+              "caption": "Perspectiva a\u00e9rea panor\u00e1mica de la traza de Barrio Carlina y el entorno de Los Cardales.",
               "image": "/streetview/carlina/real_1_vista_aerea.jpg"
             },
             {
               "index": 1,
               "title": "Apertura de Traza y Maquinaria Pesada",
-              "caption": "Operación de excavadora y camiones volcadores consolidando la calzada de tosca.",
+              "caption": "Operaci\u00f3n de excavadora y camiones volcadores consolidando la calzada de tosca.",
               "image": "/streetview/carlina/real_5_maquinaria_camion.jpg"
             },
             {
               "index": 2,
               "title": "Avenida Central y Desmonte",
-              "caption": "Apertura de las arterias viales principales en dirección al óvalo central.",
+              "caption": "Apertura de las arterias viales principales en direcci\u00f3n al \u00f3valo central.",
               "image": "/streetview/carlina/real_3_avenidas_boulevard.jpg"
             },
             {
               "index": 3,
-              "title": "Sendero Forestado y Perímetro",
-              "caption": "Tranquera de acceso rural y perímetro arbolado del desarrollo.",
+              "title": "Sendero Forestado y Per\u00edmetro",
+              "caption": "Tranquera de acceso rural y per\u00edmetro arbolado del desarrollo.",
               "image": "/streetview/carlina/real_10_sendero_tranquera.jpg"
             }
           ]
@@ -276,7 +276,7 @@
           ],
           "name": "Lote 23211",
           "categoryId": "lots",
-          "notes": "Sector en etapa de nivelación, colocación de arbolado nativo con tractor y preparación de suelo.",
+          "notes": "Sector en etapa de nivelaci\u00f3n, colocaci\u00f3n de arbolado nativo con tractor y preparaci\u00f3n de suelo.",
           "images": [
             "/streetview/carlina/real_6_forestacion_tractor.jpg"
           ],
@@ -353,7 +353,7 @@
           ],
           "name": "Obrador Central y Showroom de Ventas",
           "categoryId": "parking",
-          "notes": "Módulo showroom comercial \"CARLINA\" con revestimiento de madera, sector de atención a clientes y gazebos para reuniones.",
+          "notes": "M\u00f3dulo showroom comercial \"CARLINA\" con revestimiento de madera, sector de atenci\u00f3n a clientes y gazebos para reuniones.",
           "images": [
             "/streetview/carlina/real_8_showroom_carlina.jpg",
             "/streetview/carlina/real_9_reunion_gazebos.jpg"
@@ -383,7 +383,7 @@
           ],
           "name": "Playa de Estacionamiento y Sector de Visitas",
           "categoryId": "parking",
-          "notes": "Playa de estacionamiento vehicular para visitas y eventos comerciales del barrio junto al área de carpas.",
+          "notes": "Playa de estacionamiento vehicular para visitas y eventos comerciales del barrio junto al \u00e1rea de carpas.",
           "images": [
             "/streetview/carlina/real_7_evento_lanzamiento.jpg"
           ],
@@ -412,7 +412,7 @@
           ],
           "name": "Lote 23212",
           "categoryId": "lots",
-          "notes": "Lote residencial amojonado, suelo tosca compactado y conexión de servicios lista sobre el frente.",
+          "notes": "Lote residencial amojonado, suelo tosca compactado y conexi\u00f3n de servicios lista sobre el frente.",
           "images": [
             "/streetview/carlina/real_2_pilares_servicios.jpg"
           ],
@@ -427,9 +427,9 @@
               -58.943057716684834
             ]
           ],
-          "name": "Pilar Eléctrico y Acometida Provisoria",
+          "name": "Pilar El\u00e9ctrico y Acometida Provisoria",
           "categoryId": "lots",
-          "notes": "Pilares de conexión de servicios con cajas estandarizadas de hormigón ya instaladas en el frente de las parcelas.",
+          "notes": "Pilares de conexi\u00f3n de servicios con cajas estandarizadas de hormig\u00f3n ya instaladas en el frente de las parcelas.",
           "images": [
             "/streetview/carlina/real_2_pilares_servicios.jpg"
           ],
@@ -444,9 +444,9 @@
               -58.942739086510095
             ]
           ],
-          "name": "Punto Geodésico y Esquina de Replanteo",
+          "name": "Punto Geod\u00e9sico y Esquina de Replanteo",
           "categoryId": "poi",
-          "notes": "Trazado geodésico y replanteo topográfico de precisión para ejes viales y tendido de redes.",
+          "notes": "Trazado geod\u00e9sico y replanteo topogr\u00e1fico de precisi\u00f3n para ejes viales y tendido de redes.",
           "images": [
             "/streetview/carlina/real_4_excavacion_zenital.jpg"
           ],
@@ -462,9 +462,9 @@
               -58.94226114124799
             ]
           ],
-          "name": "Tendido de Redes Subterráneas",
+          "name": "Tendido de Redes Subterr\u00e1neas",
           "categoryId": "poi",
-          "notes": "Excavación de zanja madre mediante retroexcavadora para tendido de redes subterráneas y pluviales.",
+          "notes": "Excavaci\u00f3n de zanja madre mediante retroexcavadora para tendido de redes subterr\u00e1neas y pluviales.",
           "images": [
             "/streetview/carlina/real_4_excavacion_zenital.jpg"
           ],
@@ -480,9 +480,9 @@
               -58.94204113469875
             ]
           ],
-          "name": "Operación de Maquinaria y Movimiento de Suelos",
+          "name": "Operaci\u00f3n de Maquinaria y Movimiento de Suelos",
           "categoryId": "zones",
-          "notes": "Sector activo de carga y distribución de suelo seleccionado con camiones volcadores y excavadoras de oruga.",
+          "notes": "Sector activo de carga y distribuci\u00f3n de suelo seleccionado con camiones volcadores y excavadoras de oruga.",
           "images": [
             "/streetview/carlina/real_5_maquinaria_camion.jpg"
           ],
@@ -505,9 +505,9 @@
               -58.94290566444398
             ]
           ],
-          "name": "Área Verde y Forestación Central",
+          "name": "\u00c1rea Verde y Forestaci\u00f3n Central",
           "categoryId": "green",
-          "notes": "Trabajos de parquización y forestación con tractor John Deere, colocación de pinos jóvenes y nivelación de suelo.",
+          "notes": "Trabajos de parquizaci\u00f3n y forestaci\u00f3n con tractor John Deere, colocaci\u00f3n de pinos j\u00f3venes y nivelaci\u00f3n de suelo.",
           "images": [
             "/streetview/carlina/real_6_forestacion_tractor.jpg"
           ],
@@ -524,7 +524,7 @@
           ],
           "name": "Sendero Perimetral y Arboleda",
           "categoryId": "green",
-          "notes": "Sendero perimetral arbolado con tranquera de campo tradicional y frondosa vegetación autóctona.",
+          "notes": "Sendero perimetral arbolado con tranquera de campo tradicional y frondosa vegetaci\u00f3n aut\u00f3ctona.",
           "images": [
             "/streetview/carlina/real_10_sendero_tranquera.jpg"
           ],
@@ -573,7 +573,7 @@
           ],
           "name": "Boulevard Secundario en Apertura",
           "categoryId": "streets",
-          "notes": "Traza secundaria de circulación interna. Apertura vial, tendido de servicios subterráneos, forestación y conexión con el showroom.",
+          "notes": "Traza secundaria de circulaci\u00f3n interna. Apertura vial, tendido de servicios subterr\u00e1neos, forestaci\u00f3n y conexi\u00f3n con el showroom.",
           "images": [
             "/streetview/carlina/real_1_vista_aerea.jpg",
             "/streetview/carlina/real_5_maquinaria_camion.jpg",
@@ -589,50 +589,50 @@
           "routeWaypoints": [
             {
               "index": 0,
-              "title": "Vista Aérea General - Acceso Norte",
-              "caption": "Perspectiva panorámica aérea del master plan de Barrio Carlina, traza vial y entorno natural.",
+              "title": "Vista A\u00e9rea General - Acceso Norte",
+              "caption": "Perspectiva panor\u00e1mica a\u00e9rea del master plan de Barrio Carlina, traza vial y entorno natural.",
               "image": "/streetview/carlina/real_1_vista_aerea.jpg"
             },
             {
               "index": 1,
               "title": "Apertura de Calzada y Maquinaria Pesada",
-              "caption": "Excavadora Caterpillar cargando material en camión volcador para apertura y nivelación de calle.",
+              "caption": "Excavadora Caterpillar cargando material en cami\u00f3n volcador para apertura y nivelaci\u00f3n de calle.",
               "image": "/streetview/carlina/real_5_maquinaria_camion.jpg"
             },
             {
               "index": 2,
               "title": "Avenidas Principales del Loteo",
-              "caption": "Vista aérea de las dos arterias paralelas del desarrollo, avance de desmonte y delimitación de manzanas.",
+              "caption": "Vista a\u00e9rea de las dos arterias paralelas del desarrollo, avance de desmonte y delimitaci\u00f3n de manzanas.",
               "image": "/streetview/carlina/real_3_avenidas_boulevard.jpg"
             },
             {
               "index": 3,
-              "title": "Zanjeo y Tendido de Redes Subterráneas",
-              "caption": "Excavación precisa sobre traza delimitada para desagües pluviales y distribución de servicios.",
+              "title": "Zanjeo y Tendido de Redes Subterr\u00e1neas",
+              "caption": "Excavaci\u00f3n precisa sobre traza delimitada para desag\u00fces pluviales y distribuci\u00f3n de servicios.",
               "image": "/streetview/carlina/real_4_excavacion_zenital.jpg"
             },
             {
               "index": 4,
-              "title": "Manzanas y Pilares de Conexión Eléctrica",
+              "title": "Manzanas y Pilares de Conexi\u00f3n El\u00e9ctrica",
               "caption": "Calzada interna consolidada con pilares de servicio ya instalados en frentes de parcelas.",
               "image": "/streetview/carlina/real_2_pilares_servicios.jpg"
             },
             {
               "index": 5,
-              "title": "Forestación de Parcelas con Tractor",
-              "caption": "Operarios y tractor John Deere plantando pinos jóvenes para cortinas forestales de vereda.",
+              "title": "Forestaci\u00f3n de Parcelas con Tractor",
+              "caption": "Operarios y tractor John Deere plantando pinos j\u00f3venes para cortinas forestales de vereda.",
               "image": "/streetview/carlina/real_6_forestacion_tractor.jpg"
             },
             {
               "index": 6,
-              "title": "Área de Visitas y Gazebos Comerciales",
-              "caption": "Sector de atención y presentación comercial al aire libre con gazebos y fardos campestres.",
+              "title": "\u00c1rea de Visitas y Gazebos Comerciales",
+              "caption": "Sector de atenci\u00f3n y presentaci\u00f3n comercial al aire libre con gazebos y fardos campestres.",
               "image": "/streetview/carlina/real_9_reunion_gazebos.jpg"
             },
             {
               "index": 7,
               "title": "Showroom Modular CARLINA",
-              "caption": "Oficina de ventas y atención comercial de Barrio Carlina revestida en madera.",
+              "caption": "Oficina de ventas y atenci\u00f3n comercial de Barrio Carlina revestida en madera.",
               "image": "/streetview/carlina/real_8_showroom_carlina.jpg"
             },
             {
@@ -664,9 +664,9 @@
               -58.94101696627993
             ]
           ],
-          "name": "Área de Encuentro y Gazebos",
+          "name": "\u00c1rea de Encuentro y Gazebos",
           "categoryId": "food",
-          "notes": "Sector de reunión y atención a visitantes bajo gazebos con fardos campestres junto al showroom.",
+          "notes": "Sector de reuni\u00f3n y atenci\u00f3n a visitantes bajo gazebos con fardos campestres junto al showroom.",
           "images": [
             "/streetview/carlina/real_9_reunion_gazebos.jpg"
           ],
@@ -683,7 +683,7 @@
           ],
           "name": "Acceso a Showroom CARLINA",
           "categoryId": "food",
-          "notes": "Puesto de ingreso y recepción comercial en el showroom modular de ventas de Barrio Carlina.",
+          "notes": "Puesto de ingreso y recepci\u00f3n comercial en el showroom modular de ventas de Barrio Carlina.",
           "images": [
             "/streetview/carlina/real_8_showroom_carlina.jpg"
           ],
@@ -696,9 +696,9 @@
     },
     "i6666hqmv8mdpge": {
       "id": "i6666hqmv8mdpge",
-      "name": "Planta Logística",
-      "description": "Predio industrial logístico con accesos para transporte pesado, pesaje de camiones, naves de almacenaje, dársenas de carga y Street View en cada recorrido.",
-      "location": "Ford Argentina, Luis María Drago",
+      "name": "Planta Log\u00edstica",
+      "description": "Predio industrial log\u00edstico con accesos para transporte pesado, pesaje de camiones, naves de almacenaje, d\u00e1rsenas de carga y Street View en cada recorrido.",
+      "location": "Ford Argentina, Luis Mar\u00eda Drago",
       "websiteUrl": "",
       "template": "event",
       "center": {
@@ -820,7 +820,7 @@
           ],
           "name": "Parking",
           "categoryId": "parking",
-          "notes": "Playa de estacionamiento pavimentada para personal operativo, administrativos, visitantes y flota liviana de logística.",
+          "notes": "Playa de estacionamiento pavimentada para personal operativo, administrativos, visitantes y flota liviana de log\u00edstica.",
           "images": [
             "/streetview/logistica/area_parking.jpg"
           ],
@@ -874,7 +874,7 @@
           ],
           "name": "Area 2",
           "categoryId": "parking",
-          "notes": "Playa de maniobras y pulmón de espera para camiones pesados y semirremolques con dársenas de espera numeradas.",
+          "notes": "Playa de maniobras y pulm\u00f3n de espera para camiones pesados y semirremolques con d\u00e1rsenas de espera numeradas.",
           "images": [
             "/streetview/logistica/area_pulmon_camiones.jpg"
           ],
@@ -891,7 +891,7 @@
           ],
           "name": "Parking 2",
           "categoryId": "parking",
-          "notes": "Puesto de asignación de dársenas para transporte pesado.",
+          "notes": "Puesto de asignaci\u00f3n de d\u00e1rsenas para transporte pesado.",
           "images": [
             "/streetview/logistica/area_pulmon_camiones.jpg"
           ],
@@ -942,37 +942,37 @@
             {
               "index": 0,
               "title": "Acceso Principal y Garita de Seguridad",
-              "caption": "Ingreso principal al predio logístico con barreras automáticas, control de accesos y garita de vigilancia.",
+              "caption": "Ingreso principal al predio log\u00edstico con barreras autom\u00e1ticas, control de accesos y garita de vigilancia.",
               "image": "/streetview/logistica/path1_pt0.jpg"
             },
             {
               "index": 1,
-              "title": "Control de Báscula y Pesaje de Camiones",
-              "caption": "Báscula de pesaje de camiones pesados, verificación de remitos y escaneo de patentes.",
+              "title": "Control de B\u00e1scula y Pesaje de Camiones",
+              "caption": "B\u00e1scula de pesaje de camiones pesados, verificaci\u00f3n de remitos y escaneo de patentes.",
               "image": "/streetview/logistica/path1_pt1.jpg"
             },
             {
               "index": 2,
-              "title": "Avenida Central de Circulación Logística",
-              "caption": "Arteria troncal de doble mano para camiones de gran porte flanqueada por centros de distribución.",
+              "title": "Avenida Central de Circulaci\u00f3n Log\u00edstica",
+              "caption": "Arteria troncal de doble mano para camiones de gran porte flanqueada por centros de distribuci\u00f3n.",
               "image": "/streetview/logistica/path1_pt2.jpg"
             },
             {
               "index": 3,
-              "title": "Derivador Sector Cargas y Almacén 2",
-              "caption": "Intersección señalizada para distribución de tránsito pesado hacia dársenas y depósitos.",
+              "title": "Derivador Sector Cargas y Almac\u00e9n 2",
+              "caption": "Intersecci\u00f3n se\u00f1alizada para distribuci\u00f3n de tr\u00e1nsito pesado hacia d\u00e1rsenas y dep\u00f3sitos.",
               "image": "/streetview/logistica/path1_pt3.jpg"
             },
             {
               "index": 4,
-              "title": "Corredor de Naves y Bahías de Descarga",
-              "caption": "Línea de portones seccionales y rampas para utilitarios y camiones de distribución interna.",
+              "title": "Corredor de Naves y Bah\u00edas de Descarga",
+              "caption": "L\u00ednea de portones seccionales y rampas para utilitarios y camiones de distribuci\u00f3n interna.",
               "image": "/streetview/logistica/path1_pt4.jpg"
             },
             {
               "index": 5,
               "title": "Terminal Norte de Contenedores y Carga",
-              "caption": "Playa de maniobras norte con acopio de contenedores intermodales, grúa pórtico y autoelevadores pesados.",
+              "caption": "Playa de maniobras norte con acopio de contenedores intermodales, gr\u00faa p\u00f3rtico y autoelevadores pesados.",
               "image": "/streetview/logistica/path1_pt5.jpg"
             }
           ]
@@ -998,9 +998,9 @@
               -58.701756
             ]
           ],
-          "name": "Depósito 1",
+          "name": "Dep\u00f3sito 1",
           "categoryId": "zones",
-          "notes": "Nave industrial de recepción y expedición de repuestos y componentes con portones seccionales y rampas niveladoras.",
+          "notes": "Nave industrial de recepci\u00f3n y expedici\u00f3n de repuestos y componentes con portones seccionales y rampas niveladoras.",
           "images": [
             "/streetview/logistica/area_deposito1.jpg"
           ],
@@ -1043,9 +1043,9 @@
               -58.698964
             ]
           ],
-          "name": "Depósito 2",
+          "name": "Dep\u00f3sito 2",
           "categoryId": "zones",
-          "notes": "Centro de distribución y almacenaje de alta densidad con racks industriales, autoelevadores eléctricos y control de stock.",
+          "notes": "Centro de distribuci\u00f3n y almacenaje de alta densidad con racks industriales, autoelevadores el\u00e9ctricos y control de stock.",
           "images": [
             "/streetview/logistica/area_deposito2.jpg"
           ],
@@ -1061,9 +1061,9 @@
               -58.700026
             ]
           ],
-          "name": "Depósito 2",
+          "name": "Dep\u00f3sito 2",
           "categoryId": "safety",
-          "notes": "Acceso principal a oficinas técnicas y control de stock de Depósito 2.",
+          "notes": "Acceso principal a oficinas t\u00e9cnicas y control de stock de Dep\u00f3sito 2.",
           "images": [
             "/streetview/logistica/area_deposito2.jpg"
           ],
@@ -1092,7 +1092,7 @@
           ],
           "name": "Area 5",
           "categoryId": "access",
-          "notes": "Playa de acopio exterior, racks industriales de intemperie y preparación de despacho final.",
+          "notes": "Playa de acopio exterior, racks industriales de intemperie y preparaci\u00f3n de despacho final.",
           "images": [
             "/streetview/logistica/area_sector5_carga.jpg"
           ],
@@ -1107,9 +1107,9 @@
               -58.69863
             ]
           ],
-          "name": "Área de Carga",
+          "name": "\u00c1rea de Carga",
           "categoryId": "safety",
-          "notes": "Punto neurálgico de carga, estiba de pallets y despacho de camiones playos.",
+          "notes": "Punto neur\u00e1lgico de carga, estiba de pallets y despacho de camiones playos.",
           "images": [
             "/streetview/logistica/area_sector5_carga.jpg"
           ],
@@ -1163,25 +1163,25 @@
             {
               "index": 1,
               "title": "Boulevard de Maniobras Este",
-              "caption": "Avenida de maniobras en pavimento de hormigón de alto tránsito y áreas de estacionamiento de trailers.",
+              "caption": "Avenida de maniobras en pavimento de hormig\u00f3n de alto tr\u00e1nsito y \u00e1reas de estacionamiento de trailers.",
               "image": "/streetview/logistica/path2_pt1.jpg"
             },
             {
               "index": 2,
-              "title": "Dársenas de Carga y Descarga (Bays 10 a 12)",
-              "caption": "Muelles de carga con fuelles neumáticos, niveladores hidráulicos y semirremolques acoplados.",
+              "title": "D\u00e1rsenas de Carga y Descarga (Bays 10 a 12)",
+              "caption": "Muelles de carga con fuelles neum\u00e1ticos, niveladores hidr\u00e1ulicos y semirremolques acoplados.",
               "image": "/streetview/logistica/path2_pt2.jpg"
             },
             {
               "index": 3,
-              "title": "Operación de Docks y Autoelevadores",
-              "caption": "Sector activo de carga con autoelevadores eléctricos, pallets filmados y personal de logística.",
+              "title": "Operaci\u00f3n de Docks y Autoelevadores",
+              "caption": "Sector activo de carga con autoelevadores el\u00e9ctricos, pallets filmados y personal de log\u00edstica.",
               "image": "/streetview/logistica/path2_pt3.jpg"
             },
             {
               "index": 4,
-              "title": "Playa de Acopio Exterior y Expedición",
-              "caption": "Racks metálicos pesados para intemperie, camiones playos y preparación de despacho general.",
+              "title": "Playa de Acopio Exterior y Expedici\u00f3n",
+              "caption": "Racks met\u00e1licos pesados para intemperie, camiones playos y preparaci\u00f3n de despacho general.",
               "image": "/streetview/logistica/path2_pt4.jpg"
             }
           ]
@@ -1195,7 +1195,7 @@
       "id": "w3xini1mv8zaemz",
       "name": "Carbriata",
       "description": "",
-      "location": "Autódromo Miguel Angel Atauri, Circuito Aeróbico",
+      "location": "Aut\u00f3dromo Miguel Angel Atauri, Circuito Aer\u00f3bico",
       "template": "event",
       "center": {
         "lat": -36.326183,
@@ -1278,9 +1278,9 @@
               -57.698784125017724
             ]
           ],
-          "name": "Área del evento",
+          "name": "\u00c1rea del evento",
           "categoryId": "zones",
-          "notes": "Predio principal del Carbriata Concours d'Elegance. Gran prado parquizado con sectores de exhibición libre sin vallado, boxes históricos y circulación de público.",
+          "notes": "Predio principal del Carbriata Concours d'Elegance. Gran prado parquizado con sectores de exhibici\u00f3n libre sin vallado, boxes hist\u00f3ricos y circulaci\u00f3n de p\u00fablico.",
           "images": [
             "/streetview/carbriata/concours_lawn.jpg"
           ],
@@ -1295,9 +1295,9 @@
               -57.70014166831971
             ]
           ],
-          "name": "Escenario Principal y Rampa de Premiación",
+          "name": "Escenario Principal y Rampa de Premiaci\u00f3n",
           "categoryId": "zones",
-          "notes": "Podio oficial con rampa de desfile de elegancia para la coronación Best of Show. Pantalla LED gigante, locución en vivo y entrega de trofeos.",
+          "notes": "Podio oficial con rampa de desfile de elegancia para la coronaci\u00f3n Best of Show. Pantalla LED gigante, locuci\u00f3n en vivo y entrega de trofeos.",
           "images": [
             "/streetview/carbriata/podium_stage.jpg"
           ],
@@ -1324,9 +1324,9 @@
               -57.70043134689332
             ]
           ],
-          "name": "Paddock Clásicos & Sport Históricos",
+          "name": "Paddock Cl\u00e1sicos & Sport Hist\u00f3ricos",
           "categoryId": "zones",
-          "notes": "Exhibición de coupés y roadsters clásicos de los años 50 a 70: Ferrari, Porsche 356, Jaguar E-Type, Alfa Romeo y Maserati sobre césped.",
+          "notes": "Exhibici\u00f3n de coup\u00e9s y roadsters cl\u00e1sicos de los a\u00f1os 50 a 70: Ferrari, Porsche 356, Jaguar E-Type, Alfa Romeo y Maserati sobre c\u00e9sped.",
           "images": [
             "/streetview/carbriata/classics_paddock.jpg"
           ],
@@ -1342,9 +1342,9 @@
               -57.70004510879517
             ]
           ],
-          "name": "Patio Gastronómico & Lounge",
+          "name": "Patio Gastron\u00f3mico & Lounge",
           "categoryId": "food",
-          "notes": "Sector gastronómico gourmet con food trucks de autor, café de especialidad, bebidas artesanales y carpa lounge para expositores y visitantes.",
+          "notes": "Sector gastron\u00f3mico gourmet con food trucks de autor, caf\u00e9 de especialidad, bebidas artesanales y carpa lounge para expositores y visitantes.",
           "images": [
             "/streetview/carbriata/foodcourt.jpg"
           ],
@@ -1395,7 +1395,7 @@
           ],
           "name": "Puesto de Primeros Auxilios y Seguridad",
           "categoryId": "safety",
-          "notes": "Base de asistencia médica y control de emergencias del predio con ambulancia de alta complejidad, paramédicos y bomberos de servicio.",
+          "notes": "Base de asistencia m\u00e9dica y control de emergencias del predio con ambulancia de alta complejidad, param\u00e9dicos y bomberos de servicio.",
           "images": [
             "/streetview/carbriata/safety_medical.jpg"
           ],
@@ -1442,7 +1442,7 @@
           ],
           "name": "Acreditaciones & Parking Expositores",
           "categoryId": "parking",
-          "notes": "Módulo de acreditación y entrega de pulseras para pilotos y expositores. Ingreso reservado y estacionamiento custodiado.",
+          "notes": "M\u00f3dulo de acreditaci\u00f3n y entrega de pulseras para pilotos y expositores. Ingreso reservado y estacionamiento custodiado.",
           "images": [
             "/streetview/carbriata/checkin_accreditation.jpg"
           ],
@@ -1483,7 +1483,7 @@
           ],
           "name": "Ingreso al evento",
           "categoryId": "access",
-          "notes": "Avenida principal de acceso al Carbriata. Conecta el pórtico exterior con el bulevar arbolado y el paddock central de exhibición.",
+          "notes": "Avenida principal de acceso al Carbriata. Conecta el p\u00f3rtico exterior con el bulevar arbolado y el paddock central de exhibici\u00f3n.",
           "images": [
             "/streetview/carbriata/entrance_gate.jpg"
           ],
@@ -1499,19 +1499,19 @@
             {
               "index": 1,
               "title": "Paseo Central Arbolado",
-              "caption": "Calzada principal pavimentada con arboleda y cartelería de orientación hacia los paddocks.",
+              "caption": "Calzada principal pavimentada con arboleda y carteler\u00eda de orientaci\u00f3n hacia los paddocks.",
               "image": "/streetview/carbriata/promenade.jpg"
             },
             {
               "index": 2,
               "title": "Avenida de Banderas de Fabricantes",
-              "caption": "Bulevar decorado con banderas de escuderías y carpas de patrocinadores oficiales.",
+              "caption": "Bulevar decorado con banderas de escuder\u00edas y carpas de patrocinadores oficiales.",
               "image": "/streetview/carbriata/ingreso_wp2.jpg"
             },
             {
               "index": 3,
-              "title": "Pórtico Central de Entrada al Paddock",
-              "caption": "Punto de recepción peatonal y acceso directo a la exhibición de autos sobre césped.",
+              "title": "P\u00f3rtico Central de Entrada al Paddock",
+              "caption": "Punto de recepci\u00f3n peatonal y acceso directo a la exhibici\u00f3n de autos sobre c\u00e9sped.",
               "image": "/streetview/carbriata/entrance_gate.jpg"
             }
           ]
@@ -1537,9 +1537,9 @@
               -57.699876571331124
             ]
           ],
-          "name": "Estacionamiento General y Público VIP",
+          "name": "Estacionamiento General y P\u00fablico VIP",
           "categoryId": "access",
-          "notes": "Playa de estacionamiento consolidada y organizada sobre césped para visitantes y asistentes VIP con transfers continuos en carritos.",
+          "notes": "Playa de estacionamiento consolidada y organizada sobre c\u00e9sped para visitantes y asistentes VIP con transfers continuos en carritos.",
           "images": [
             "/streetview/carbriata/parking_visitors.jpg"
           ],
@@ -1554,9 +1554,9 @@
               -57.699254483847106
             ]
           ],
-          "name": "Pórtico Central de Acceso Peatonal",
+          "name": "P\u00f3rtico Central de Acceso Peatonal",
           "categoryId": "access",
-          "notes": "Acceso peatonal principal con molinetes de lectura QR, entrega de revistas del evento y mapas de mano para el público.",
+          "notes": "Acceso peatonal principal con molinetes de lectura QR, entrega de revistas del evento y mapas de mano para el p\u00fablico.",
           "images": [
             "/streetview/carbriata/entrance_gate.jpg"
           ],
@@ -1583,9 +1583,9 @@
               -57.69911637601441
             ]
           ],
-          "name": "Zona dinámica",
+          "name": "Zona din\u00e1mica",
           "categoryId": "access",
-          "notes": "Trazado dinámico de pista para pruebas de aceleración, salidas de autos en marcha, desfiles y demostraciones de sonido de motores en vivo.",
+          "notes": "Trazado din\u00e1mico de pista para pruebas de aceleraci\u00f3n, salidas de autos en marcha, desfiles y demostraciones de sonido de motores en vivo.",
           "images": [
             "/streetview/carbriata/dynamic_track_1.jpg"
           ],
@@ -1594,25 +1594,25 @@
             {
               "index": 0,
               "title": "Salida de Boxes a Pista",
-              "caption": "Salida del pit lane hacia el circuito dinámico para tandas de demostración.",
+              "caption": "Salida del pit lane hacia el circuito din\u00e1mico para tandas de demostraci\u00f3n.",
               "image": "/streetview/carbriata/dynamic_track_1.jpg"
             },
             {
               "index": 1,
-              "title": "Curva de Aceleración Ferrari 250 GT",
-              "caption": "Curva de salida con aceleración a fondo de coupés clásicas y sonido V12.",
+              "title": "Curva de Aceleraci\u00f3n Ferrari 250 GT",
+              "caption": "Curva de salida con aceleraci\u00f3n a fondo de coup\u00e9s cl\u00e1sicas y sonido V12.",
               "image": "/streetview/carbriata/dynamic_track_2.jpg"
             },
             {
               "index": 2,
-              "title": "Recta de Demostración de Velocidad",
-              "caption": "Tramo recto donde superdeportivos modernos demuestran potencia ante el público.",
+              "title": "Recta de Demostraci\u00f3n de Velocidad",
+              "caption": "Tramo recto donde superdeportivos modernos demuestran potencia ante el p\u00fablico.",
               "image": "/streetview/carbriata/dynamic_track_3.jpg"
             },
             {
               "index": 3,
               "title": "Chicana y Retorno al Paddock",
-              "caption": "Chicana de desaceleración y calle de rodaje para el regreso seguro de los autos a boxes.",
+              "caption": "Chicana de desaceleraci\u00f3n y calle de rodaje para el regreso seguro de los autos a boxes.",
               "image": "/streetview/carbriata/dynamic_track_4.jpg"
             }
           ]
@@ -1626,10 +1626,10 @@
       "id": "xfb7p5vmva1kcj5",
       "userId": "u_goog_w1ihdcum",
       "authorEmail": "dmarinobata@gmail.com",
-      "authorName": "Juan Pérez",
+      "authorName": "Juan P\u00e9rez",
       "name": "Aeropuerto San Fernando",
-      "description": "Plano aeroportuario interactivo de San Fernando con terminal FBO, hangares, rampa de aeronaves, calle de rodaje y recorrido virtual 360° foto a foto.",
-      "location": "Aeropuerto San Fernando, Avenida Hipólito Yrigoyen",
+      "description": "Plano aeroportuario interactivo de San Fernando con terminal FBO, hangares, rampa de aeronaves, calle de rodaje y recorrido virtual 360\u00b0 foto a foto.",
+      "location": "Aeropuerto San Fernando, Avenida Hip\u00f3lito Yrigoyen",
       "template": "event",
       "center": {
         "lat": -33.332755,
@@ -1700,7 +1700,7 @@
               -58.590361475944526
             ]
           ],
-          "name": "Estacionamiento Terminal y Vehículos VIP",
+          "name": "Estacionamiento Terminal y Veh\u00edculos VIP",
           "categoryId": "parking",
           "notes": "Sector de estacionamiento para pasajeros ejecutivos, tripulaciones y transfers privados.",
           "images": [
@@ -1719,7 +1719,7 @@
           ],
           "name": "Acceso Vehicular y Barrera de Estacionamiento",
           "categoryId": "parking",
-          "notes": "Barrera automatizada y control de ingreso con ticket para vehículos particulares y remises autorizados.",
+          "notes": "Barrera automatizada y control de ingreso con ticket para veh\u00edculos particulares y remises autorizados.",
           "images": [
             "/streetview/aeropuerto/marker1_estacionamiento.jpg"
           ],
@@ -1748,7 +1748,7 @@
           ],
           "name": "Puesto de Control y Seguridad PSA",
           "categoryId": "safety",
-          "notes": "Edificio de control de la Policía de Seguridad Aeroportuaria (PSA), escáner de equipaje y control de acceso a plataforma.",
+          "notes": "Edificio de control de la Polic\u00eda de Seguridad Aeroportuaria (PSA), esc\u00e1ner de equipaje y control de acceso a plataforma.",
           "images": [
             "/streetview/aeropuerto/area2_seguridad.jpg"
           ],
@@ -1765,7 +1765,7 @@
           ],
           "name": "Puesto de Guardia PSA - Acceso a Rampa",
           "categoryId": "safety",
-          "notes": "Control de credenciales aeroportuarias, control de personal y vehículos de apoyo terrestre.",
+          "notes": "Control de credenciales aeroportuarias, control de personal y veh\u00edculos de apoyo terrestre.",
           "images": [
             "/streetview/aeropuerto/marker2_psa_control.jpg"
           ],
@@ -1800,7 +1800,7 @@
               -58.589658737182624
             ]
           ],
-          "name": "Terminal de Aviación Ejecutiva (FBO)",
+          "name": "Terminal de Aviaci\u00f3n Ejecutiva (FBO)",
           "categoryId": "zones",
           "notes": "Terminal de pasajeros con salas de espera ejecutivas, mostradores de check-in, aduana y migraciones.",
           "images": [
@@ -1817,9 +1817,9 @@
               -58.58949780464173
             ]
           ],
-          "name": "Sala VIP y Salón de Espera FBO",
+          "name": "Sala VIP y Sal\u00f3n de Espera FBO",
           "categoryId": "safety",
-          "notes": "Salón exclusivo para pasajeros con vista panorámica a la rampa de aeronaves, barra de café y conectividad.",
+          "notes": "Sal\u00f3n exclusivo para pasajeros con vista panor\u00e1mica a la rampa de aeronaves, barra de caf\u00e9 y conectividad.",
           "images": [
             "/streetview/aeropuerto/marker3_vip_lounge.jpg"
           ],
@@ -1846,7 +1846,7 @@
               -58.58870923519135
             ]
           ],
-          "name": "Hangar 1 - Aviación Ejecutiva",
+          "name": "Hangar 1 - Aviaci\u00f3n Ejecutiva",
           "categoryId": "zones",
           "notes": "Hangar climatizado para guarda y pernocte de aeronaves ejecutivas de gran porte (Gulfstream, Global Express).",
           "images": [
@@ -1864,7 +1864,7 @@
               -58.588907718658454
             ]
           ],
-          "name": "Bahía de Maniobras Hangar 1",
+          "name": "Bah\u00eda de Maniobras Hangar 1",
           "categoryId": "safety",
           "notes": "Zona de remolque y posicionamiento de aeronaves asistida por tractores de empuje (tugs).",
           "images": [
@@ -1894,9 +1894,9 @@
               -58.588666319847114
             ]
           ],
-          "name": "Hangar 2 - Mantenimiento y Helicópteros",
+          "name": "Hangar 2 - Mantenimiento y Helic\u00f3pteros",
           "categoryId": "zones",
-          "notes": "Taller de mantenimiento aeronáutico habilitado para inspecciones, mecánica de motores y servicios de aviónica.",
+          "notes": "Taller de mantenimiento aeron\u00e1utico habilitado para inspecciones, mec\u00e1nica de motores y servicios de avi\u00f3nica.",
           "images": [
             "/streetview/aeropuerto/area5_hangar2.jpg"
           ],
@@ -1912,9 +1912,9 @@
               -58.58850002288819
             ]
           ],
-          "name": "Taller Técnico y Banco de Motores",
+          "name": "Taller T\u00e9cnico y Banco de Motores",
           "categoryId": "safety",
-          "notes": "Área de bancos de trabajo, herramientas especializadas y servicio de turbinas y aviónica.",
+          "notes": "\u00c1rea de bancos de trabajo, herramientas especializadas y servicio de turbinas y avi\u00f3nica.",
           "images": [
             "/streetview/aeropuerto/marker5_taller_mantenimiento.jpg"
           ],
@@ -1944,7 +1944,7 @@
           ],
           "name": "Acceso Terrestre a Terminal FBO",
           "categoryId": "access",
-          "notes": "Recorrido desde el pórtico de ingreso sobre Av. Hipólito Yrigoyen hasta la terminal de aviación ejecutiva.",
+          "notes": "Recorrido desde el p\u00f3rtico de ingreso sobre Av. Hip\u00f3lito Yrigoyen hasta la terminal de aviaci\u00f3n ejecutiva.",
           "images": [
             "/streetview/aeropuerto/path1_wp0_acceso.jpg"
           ],
@@ -1953,7 +1953,7 @@
           "routeWaypoints": [
             {
               "index": 0,
-              "title": "Pórtico de Entrada (Av. Hipólito Yrigoyen)",
+              "title": "P\u00f3rtico de Entrada (Av. Hip\u00f3lito Yrigoyen)",
               "image": "/streetview/aeropuerto/path1_wp0_acceso.jpg",
               "caption": "Ingreso principal al predio del Aeropuerto Internacional de San Fernando."
             },
@@ -1961,7 +1961,7 @@
               "index": 1,
               "title": "Boulevard Interno y Rotonda",
               "image": "/streetview/aeropuerto/path1_wp1_rotonda.jpg",
-              "caption": "Circunvalación arbolada hacia terminales, hangares y estacionamientos."
+              "caption": "Circunvalaci\u00f3n arbolada hacia terminales, hangares y estacionamientos."
             },
             {
               "index": 2,
@@ -1973,7 +1973,7 @@
               "index": 3,
               "title": "Llegada a Terminal Ejecutiva FBO",
               "image": "/streetview/aeropuerto/path1_wp3_terminal_curb.jpg",
-              "caption": "Dársena de descenso de pasajeros frente a la terminal principal."
+              "caption": "D\u00e1rsena de descenso de pasajeros frente a la terminal principal."
             }
           ]
         },
@@ -2000,7 +2000,7 @@
           ],
           "name": "Rampa Principal de Aeronaves (Apron)",
           "categoryId": "zones",
-          "notes": "Plataforma de estacionamiento con posiciones numeradas para jets ejecutivos y turbohélices.",
+          "notes": "Plataforma de estacionamiento con posiciones numeradas para jets ejecutivos y turboh\u00e9lices.",
           "images": [
             "/streetview/aeropuerto/area6_rampa.jpg"
           ],
@@ -2015,7 +2015,7 @@
               -58.58819693326951
             ]
           ],
-          "name": "Posición de Estacionamiento Stand Norte",
+          "name": "Posici\u00f3n de Estacionamiento Stand Norte",
           "categoryId": "safety",
           "notes": "Puesto de rampa para embarque y desembarque de pasajeros ejecutivos con alfombra roja y asistencia en tierra.",
           "images": [
@@ -2061,29 +2061,29 @@
               "index": 0,
               "title": "Salida de Rampa Norte",
               "image": "/streetview/aeropuerto/path2_wp0_rampa_exit.jpg",
-              "caption": "Aeronave iniciando maniobra de pushback y rodaje guiada por señalero."
+              "caption": "Aeronave iniciando maniobra de pushback y rodaje guiada por se\u00f1alero."
             },
             {
               "index": 1,
               "title": "Calle de Rodaje Taxiway Alpha",
               "image": "/streetview/aeropuerto/path2_wp1_taxiway_alpha.jpg",
-              "caption": "Arteria principal de rodaje pavimentada con línea amarilla central de guía."
+              "caption": "Arteria principal de rodaje pavimentada con l\u00ednea amarilla central de gu\u00eda."
             },
             {
               "index": 2,
-              "title": "Curva de Conexión a Pista",
+              "title": "Curva de Conexi\u00f3n a Pista",
               "image": "/streetview/aeropuerto/path2_wp2_taxiway_turn.jpg",
-              "caption": "Viraje señalizado con luces de borde de calle de rodaje."
+              "caption": "Viraje se\u00f1alizado con luces de borde de calle de rodaje."
             },
             {
               "index": 3,
               "title": "Punto de Espera (Holding Point RWY 05)",
               "image": "/streetview/aeropuerto/path2_wp3_holding_point.jpg",
-              "caption": "Línea de detención obligatoria antes de recibir autorización de Torre de Control."
+              "caption": "L\u00ednea de detenci\u00f3n obligatoria antes de recibir autorizaci\u00f3n de Torre de Control."
             },
             {
               "index": 4,
-              "title": "Alineación en Cabecera Pista 05",
+              "title": "Alineaci\u00f3n en Cabecera Pista 05",
               "image": "/streetview/aeropuerto/path2_wp4_runway_threshold.jpg",
               "caption": "Aeronave alineada sobre el eje de Pista 05 lista para carrera de despegue."
             }
@@ -2110,9 +2110,9 @@
               -58.58767886178885
             ]
           ],
-          "name": "Planta de Combustible YPF Aviación",
+          "name": "Planta de Combustible YPF Aviaci\u00f3n",
           "categoryId": "zones",
-          "notes": "Depósito de tanques de combustible aeronáutico Jet A-1 y Avgas 100LL con sistemas de filtrado de alta seguridad.",
+          "notes": "Dep\u00f3sito de tanques de combustible aeron\u00e1utico Jet A-1 y Avgas 100LL con sistemas de filtrado de alta seguridad.",
           "images": [
             "/streetview/aeropuerto/area7_combustible.jpg"
           ],
@@ -2128,9 +2128,9 @@
               -58.587716817855835
             ]
           ],
-          "name": "Isla de Carga y Camión Cisterna",
+          "name": "Isla de Carga y Cami\u00f3n Cisterna",
           "categoryId": "safety",
-          "notes": "Unidad de reabastecimiento móvil para despacho directo de combustible a las aeronaves en rampa.",
+          "notes": "Unidad de reabastecimiento m\u00f3vil para despacho directo de combustible a las aeronaves en rampa.",
           "images": [
             "/streetview/aeropuerto/marker7_cisterna_fuel.jpg"
           ],
@@ -2159,7 +2159,7 @@
           ],
           "name": "Corredor de Servicio Operativo y Hangares",
           "categoryId": "access",
-          "notes": "Vía de circulación interna para vehículos de apoyo terrestre, cisternas de combustible y remolcadores.",
+          "notes": "V\u00eda de circulaci\u00f3n interna para veh\u00edculos de apoyo terrestre, cisternas de combustible y remolcadores.",
           "images": [
             "/streetview/aeropuerto/path3_wp0_hangar_road.jpg"
           ],
@@ -2170,25 +2170,25 @@
               "index": 0,
               "title": "Frente Hangar 1",
               "image": "/streetview/aeropuerto/path3_wp0_hangar_road.jpg",
-              "caption": "Calle de servicio frente al hangar principal de aviación ejecutiva."
+              "caption": "Calle de servicio frente al hangar principal de aviaci\u00f3n ejecutiva."
             },
             {
               "index": 1,
-              "title": "Vía de Tránsito de Apoyo Terrestre",
+              "title": "V\u00eda de Tr\u00e1nsito de Apoyo Terrestre",
               "image": "/streetview/aeropuerto/path3_wp1_service_road.jpg",
-              "caption": "Carril delimitado para tractores, carritos de equipaje y vans de tripulación."
+              "caption": "Carril delimitado para tractores, carritos de equipaje y vans de tripulaci\u00f3n."
             },
             {
               "index": 2,
-              "title": "Conexión a Planta de Combustible YPF",
+              "title": "Conexi\u00f3n a Planta de Combustible YPF",
               "image": "/streetview/aeropuerto/path3_wp2_fuel_corridor.jpg",
-              "caption": "Acceso regulado hacia la estación de reabastecimiento y camiones cisterna."
+              "caption": "Acceso regulado hacia la estaci\u00f3n de reabastecimiento y camiones cisterna."
             },
             {
               "index": 3,
               "title": "Plataforma de Mantenimiento Sur",
               "image": "/streetview/aeropuerto/path3_wp3_ramp_east.jpg",
-              "caption": "Área de operaciones frente a talleres aeronáuticos y hangares técnicos."
+              "caption": "\u00c1rea de operaciones frente a talleres aeron\u00e1uticos y hangares t\u00e9cnicos."
             }
           ]
         },
@@ -2215,7 +2215,7 @@
           ],
           "name": "Sector Sur - Hangares Aeroclub y Escuelas de Vuelo",
           "categoryId": "zones",
-          "notes": "Instalaciones tradicionales del Aeroclub San Fernando y escuelas de instrucción de pilotos civiles.",
+          "notes": "Instalaciones tradicionales del Aeroclub San Fernando y escuelas de instrucci\u00f3n de pilotos civiles.",
           "images": [
             "/streetview/aeropuerto/area8_aeroclub.jpg"
           ],
@@ -2233,7 +2233,7 @@
           ],
           "name": "Punto de Prueba de Motores (Run-Up Bay)",
           "categoryId": "safety",
-          "notes": "Área habilitada para chequeo previo de magnetos, potencia y hélices antes de ingresar a la pista.",
+          "notes": "\u00c1rea habilitada para chequeo previo de magnetos, potencia y h\u00e9lices antes de ingresar a la pista.",
           "images": [
             "/streetview/aeropuerto/marker8_runup_bay.jpg"
           ],
@@ -2263,7 +2263,7 @@
           ],
           "name": "Cabecera de Pista 05 y Franja de Seguridad",
           "categoryId": "zones",
-          "notes": "Umbral activo de la pista principal 05/23 (asfalto 1800m), zona libre de obstáculos y franja de seguridad operacional.",
+          "notes": "Umbral activo de la pista principal 05/23 (asfalto 1800m), zona libre de obst\u00e1culos y franja de seguridad operacional.",
           "images": [
             "/streetview/aeropuerto/area9_pista.jpg"
           ],
@@ -2281,7 +2281,7 @@
           ],
           "name": "Umbral de Pista 05 y Luces PAPI",
           "categoryId": "safety",
-          "notes": "Señalización horizontal de fajas de umbral e indicador visual de senda de aproximación de precisión PAPI.",
+          "notes": "Se\u00f1alizaci\u00f3n horizontal de fajas de umbral e indicador visual de senda de aproximaci\u00f3n de precisi\u00f3n PAPI.",
           "images": [
             "/streetview/aeropuerto/marker9_papi_lights.jpg"
           ],
@@ -2300,7 +2300,7 @@
       "authorEmail": "dmarinobata@gmail.com",
       "authorName": "Danilo",
       "name": "Impianto di Calcestruzzo per Infrastrutture Viarie",
-      "description": "Impianto di betonaggio e produzione calcestruzzo preconfezionato per opere viarie e infrastrutturali a Sant'Agata di Militello (ME), lungo il greto alluvionale della fiumara Rosmarino verso Alcara Li Fusi. Dotato di torre di dosaggio, silos verticali di cemento, stoccaggio e lavaggio inerti fluviali e tour fotografico interattivo a 360°.",
+      "description": "Impianto di betonaggio e produzione calcestruzzo preconfezionato per opere viarie e infrastrutturali a Sant'Agata di Militello (ME), lungo il greto alluvionale della fiumara Rosmarino verso Alcara Li Fusi. Dotato di torre di dosaggio, silos verticali di cemento, stoccaggio e lavaggio inerti fluviali e tour fotografico interattivo a 360\u00b0.",
       "location": "98070, Sant'Agata di Militello (ME)",
       "template": "logistics",
       "center": {
@@ -2333,14 +2333,14 @@
         },
         {
           "id": "aisles",
-          "name": "Percorsi e Viabilità Interna",
+          "name": "Percorsi e Viabilit\u00e0 Interna",
           "color": "#0CA678",
           "icon": "route",
           "kindHint": "line"
         },
         {
           "id": "office",
-          "name": "Uffici Direzione & Controllo Qualità",
+          "name": "Uffici Direzione & Controllo Qualit\u00e0",
           "color": "#AE3EC9",
           "icon": "building"
         },
@@ -2378,7 +2378,7 @@
         },
         {
           "id": "access",
-          "name": "Accesso & Viabilità Fluviale",
+          "name": "Accesso & Viabilit\u00e0 Fluviale",
           "color": "#F06595",
           "icon": "door",
           "kindHint": "line"
@@ -2587,11 +2587,11 @@
               "index": 4,
               "title": "Portale d'Ingresso e Controllo Stabilimento",
               "image": "/streetview/hormigon/path1_wp4_portal_acceso.jpg",
-              "caption": "Ingresso perimetrale dello stabilimento con segnaletica di cantiere, limiti di velocità e recinzione industriale."
+              "caption": "Ingresso perimetrale dello stabilimento con segnaletica di cantiere, limiti di velocit\u00e0 e recinzione industriale."
             },
             {
               "index": 5,
-              "title": "Biforcazione Viabilità Interna Mezzi Pesanti",
+              "title": "Biforcazione Viabilit\u00e0 Interna Mezzi Pesanti",
               "image": "/streetview/hormigon/path1_wp5_bifurcacion.jpg",
               "caption": "Snodo centrale di smistamento del traffico pesante verso la pesa a ponte, le baie di carico o il piazzale inerti."
             }
@@ -2621,7 +2621,7 @@
           ],
           "name": "Batteria Silos Verticali di Stoccaggio Cemento",
           "categoryId": "zones",
-          "notes": "Gruppo di silos cilindrici metallici verticali ad alta capacità (cemento Portland Tipo R 42.5 e 52.5 R) completi di filtri depolveratori a maniche ed elettrocompressori.",
+          "notes": "Gruppo di silos cilindrici metallici verticali ad alta capacit\u00e0 (cemento Portland Tipo R 42.5 e 52.5 R) completi di filtri depolveratori a maniche ed elettrocompressori.",
           "images": [
             "/streetview/hormigon/area4_silos_cemento.jpg"
           ],
@@ -2798,9 +2798,9 @@
       "authorEmail": "dmarinobata@gmail.com",
       "authorName": "Danilo",
       "websiteUrl": "https://www.autoclasica.com/",
-      "name": "Autoclásica 2027",
-      "description": "El mayor festival de vehículos clásicos e históricos de Sudamérica. Más de 1.000 automóviles y motos de colección en los jardines arbolados del Hipódromo de San Isidro.",
-      "location": "Hipódromo de San Isidro, San Isidro",
+      "name": "Autocl\u00e1sica 2027",
+      "description": "El mayor festival de veh\u00edculos cl\u00e1sicos e hist\u00f3ricos de Sudam\u00e9rica. M\u00e1s de 1.000 autom\u00f3viles y motos de colecci\u00f3n en los jardines arbolados del Hip\u00f3dromo de San Isidro.",
+      "location": "Hip\u00f3dromo de San Isidro, San Isidro",
       "template": "event",
       "center": {
         "lat": -34.481419,
@@ -2824,7 +2824,7 @@
         },
         {
           "id": "food",
-          "name": "Gastronomía y bebidas",
+          "name": "Gastronom\u00eda y bebidas",
           "color": "#F59F00",
           "icon": "food"
         },
@@ -2876,12 +2876,13 @@
               -58.5151753241695
             ]
           ],
-          "name": "Avenida Central de los Plátanos",
+          "name": "Avenida Central de los Pl\u00e1tanos",
           "categoryId": "access",
           "color": "#D4AF37",
-          "notes": "Bulevar principal arbolado de Autoclásica que atraviesa el corazón del Hipódromo de San Isidro bajo la frondosa copa de plátanos centenarios, conectando los accesos con los principales clubes de marcas y paddocks de superdeportivos.",
+          "notes": "Bulevar principal arbolado de Autocl\u00e1sica que atraviesa el coraz\u00f3n del Hip\u00f3dromo de San Isidro bajo la frondosa copa de pl\u00e1tanos centenarios, conectando los accesos con los principales clubes de marcas y paddocks de superdeportivos.",
           "images": [
-            "/streetview/autoclasica/ferrari_platanos_aca.jpg",
+            "/streetview/autoclasica/publico_paseo_platanos.jpg",
+            "/streetview/autoclasica/ferrari_duo_amarilla_roja.jpg",
             "/streetview/autoclasica/sendero_cadenas_bulevar.jpg",
             "/streetview/autoclasica/ford_v8_bienvenidos.jpg"
           ],
@@ -2889,32 +2890,32 @@
             {
               "lat": -34.480304094304124,
               "lng": -58.50751302711022,
-              "title": "Ingreso Av. Bernabé Márquez",
-              "notes": "Acceso principal del público por la avenida Márquez hacia el parque arbolado del Hipódromo de San Isidro.",
+              "title": "Ingreso Av. Bernab\u00e9 M\u00e1rquez",
+              "notes": "Acceso principal del p\u00fablico por la avenida M\u00e1rquez hacia el parque arbolado del Hip\u00f3dromo de San Isidro.",
               "image": "/streetview/autoclasica/sendero_cadenas_bulevar.jpg",
               "heading": 220
             },
             {
               "lat": -34.48095447185303,
               "lng": -58.50933377096591,
-              "title": "Paseo Central Delimitado",
-              "notes": "Sendero peatonal custodiado con cadenas y estacas que guía a los visitantes hacia la arboleda de exposiciones.",
-              "image": "/streetview/autoclasica/sendero_cadenas_bulevar.jpg",
+              "title": "Paseo Central de los Pl\u00e1tanos",
+              "notes": "Paseo peatonal arbolado colmado de familias y fan\u00e1ticos disfrutando del d\u00eda bajo la sombra de los pl\u00e1tanos centenarios.",
+              "image": "/streetview/autoclasica/publico_paseo_platanos.jpg",
               "heading": 225
             },
             {
               "lat": -34.48211763444187,
               "lng": -58.511564182189105,
-              "title": "Túnel de Plátanos & Ferrari 308",
-              "notes": "Espectacular sector sombreado donde reposan las Ferrari 308 GTB y GTS junto a las unidades históricas del ACA.",
-              "image": "/streetview/autoclasica/ferrari_platanos_aca.jpg",
+              "title": "T\u00fanel de Pl\u00e1tanos & Dupla Ferrari 308",
+              "notes": "Exhibici\u00f3n de la dupla Ferrari 308 GTB amarilla y roja sobre el c\u00e9sped, flanqueadas por las unidades de auxilio del ACA.",
+              "image": "/streetview/autoclasica/ferrari_duo_amarilla_roja.jpg",
               "heading": 230
             },
             {
               "lat": -34.484256310424854,
               "lng": -58.5151753241695,
               "title": "Bulevar de Clubes & Ford V8",
-              "notes": "Tramo sur del bulevar junto a los pórticos de carpas institucionales y stands de marcas clásicas.",
+              "notes": "Tramo sur del bulevar junto a los p\u00f3rticos de carpas institucionales y stands de marcas cl\u00e1sicas.",
               "image": "/streetview/autoclasica/ford_v8_bienvenidos.jpg",
               "heading": 235
             }
@@ -2948,17 +2949,18 @@
           ],
           "name": "Circuito Perimetral & Autojumble",
           "categoryId": "access",
-          "notes": "Circuito perimetral norte que recorre las áreas de vehículos utilitarios, colectivos históricos y la animada callejuela de carpas de autojumble, libros y repuestos de época.",
+          "notes": "Circuito perimetral norte que recorre las \u00e1reas de veh\u00edculos utilitarios, colectivos hist\u00f3ricos y la animada callejuela de carpas de autojumble, libros y repuestos de \u00e9poca.",
           "images": [
             "/streetview/autoclasica/comerciales_colectivo_falcon.jpg",
             "/streetview/autoclasica/autojumble_stands_carpas.jpg",
-            "/streetview/autoclasica/sendero_cadenas_bulevar.jpg"
+            "/streetview/autoclasica/publico_paseo_platanos.jpg",
+            "/streetview/autoclasica/emblema_autoclasica_brasil_argentina.jpg"
           ],
           "routeWaypoints": [
             {
               "lat": -34.480116484453575,
               "lng": -58.507558545706615,
-              "title": "Rotonda de Desvío Norte",
+              "title": "Rotonda de Desv\u00edo Norte",
               "notes": "Cruce que conecta el acceso principal con el circuito perimetral de utilitarios.",
               "image": "/streetview/autoclasica/sendero_cadenas_bulevar.jpg",
               "heading": 270
@@ -2967,32 +2969,32 @@
               "lat": -34.479878844703855,
               "lng": -58.51007724137362,
               "title": "Avenida de Colectivos y Utilitarios",
-              "notes": "Exhibición de transporte histórico con colectivos Mercedes-Benz, pick-ups clásicas y sedanes nacionales.",
+              "notes": "Exhibici\u00f3n de transporte hist\u00f3rico con colectivos Mercedes-Benz, pick-ups cl\u00e1sicas y sedanes nacionales.",
               "image": "/streetview/autoclasica/comerciales_colectivo_falcon.jpg",
               "heading": 260
             },
             {
               "lat": -34.47937854828142,
               "lng": -58.51365803762312,
-              "title": "Callejón del Autojumble",
-              "notes": "Hilera de gazebos con venta de repuestos antiguos, maquetas, memorabilia y antigüedades mecánicas.",
+              "title": "Callej\u00f3n del Autojumble",
+              "notes": "Hilera de gazebos con venta de repuestos antiguos, maquetas, memorabilia y antig\u00fcedades mec\u00e1nicas.",
               "image": "/streetview/autoclasica/autojumble_stands_carpas.jpg",
               "heading": 250
             },
             {
               "lat": -34.479065861493865,
               "lng": -58.51584293024992,
-              "title": "Paseo Frente a Paddock",
-              "notes": "Vista panorámica hacia el óvalo de césped del Hipódromo de San Isidro y carpas del evento.",
-              "image": "/streetview/autoclasica/autojumble_stands_carpas.jpg",
+              "title": "Paseo de Visitantes y Bulevar Norte",
+              "notes": "Gran concurrencia de p\u00fablico recorriendo los senderos arbolados entre banderas y stands de marcas cl\u00e1sicas.",
+              "image": "/streetview/autoclasica/publico_paseo_platanos.jpg",
               "heading": 200
             },
             {
               "lat": -34.47784011798586,
               "lng": -58.513460790372086,
-              "title": "Retorno Hacia Bulevar",
-              "notes": "Sendero arbolado de regreso conectando con los pabellones de motos clásicas y carruajes.",
-              "image": "/streetview/autoclasica/sendero_cadenas_bulevar.jpg",
+              "title": "Plaza de Veh\u00edculos Hist\u00f3ricos Binacionales",
+              "notes": "Sector de concentraci\u00f3n de veh\u00edculos participantes con emblemas de la hermandad cl\u00e1sica Brasil - Argentina.",
+              "image": "/streetview/autoclasica/emblema_autoclasica_brasil_argentina.jpg",
               "heading": 140
             }
           ],
@@ -3022,7 +3024,7 @@
           "name": "Sector Club Ford V8 Argentina",
           "categoryId": "zones",
           "color": "#E8590C",
-          "notes": "Espacio institucional del Club Ford V8 Argentina y The Early Ford V-8 Club of America. Alberga una cuidada selección de modelos Ford V8 construidos entre 1932 y 1953, cupés, sedanes y descapotables de época.",
+          "notes": "Espacio institucional del Club Ford V8 Argentina y The Early Ford V-8 Club of America. Alberga una cuidada selecci\u00f3n de modelos Ford V8 construidos entre 1932 y 1953, cup\u00e9s, sedanes y descapotables de \u00e9poca.",
           "images": [
             "/streetview/autoclasica/ford_v8_bienvenidos.jpg"
           ],
@@ -3037,10 +3039,10 @@
               -58.51486265659333
             ]
           ],
-          "name": "Pórtico y Stand Club Ford V8",
+          "name": "P\u00f3rtico y Stand Club Ford V8",
           "categoryId": "zones",
           "color": "#E8590C",
-          "notes": "Pórtico de bienvenida 'Club Ford V8 Argentina - Bienvenidos', carpa de acreditaciones y atención a socios y aficionados.",
+          "notes": "P\u00f3rtico de bienvenida 'Club Ford V8 Argentina - Bienvenidos', carpa de acreditaciones y atenci\u00f3n a socios y aficionados.",
           "images": [
             "/streetview/autoclasica/ford_v8_bienvenidos.jpg"
           ],
@@ -3070,8 +3072,9 @@
           "name": "Bulevar Ferrari & Superdeportivos",
           "categoryId": "zones",
           "color": "#D4AF37",
-          "notes": "Espacio consagrado a deportivos italianos y pura sangre de Maranello. En primer plano lucen las Ferrari 308 GTB y GTS bajo los árboles de San Isidro, acompañadas por vehículos de rescate histórico del ACA.",
+          "notes": "Espacio consagrado a deportivos italianos y pura sangre de Maranello. En primer plano lucen una Ferrari 308 GTB roja y una amarilla bajo la arboleda, con unidades hist\u00f3ricas del ACA de fondo.",
           "images": [
+            "/streetview/autoclasica/ferrari_duo_amarilla_roja.jpg",
             "/streetview/autoclasica/ferrari_platanos_aca.jpg"
           ],
           "createdAt": 1792808894546
@@ -3088,8 +3091,9 @@
           "name": "Paddock Ferrari 308 & Auxilio ACA",
           "categoryId": "zones",
           "color": "#D4AF37",
-          "notes": "Punto de exhibición de la icónica Ferrari 308 amarilla y roja junto a la grúa de auxilio mecánico del Automóvil Club Argentino.",
+          "notes": "Punto de exhibici\u00f3n de la dupla de Ferrari 308 (Giallo Fly y Rosso Corsa) junto a la gr\u00faa de auxilio hist\u00f3rico del Autom\u00f3vil Club Argentino.",
           "images": [
+            "/streetview/autoclasica/ferrari_duo_amarilla_roja.jpg",
             "/streetview/autoclasica/ferrari_platanos_aca.jpg"
           ],
           "createdAt": 1792808907721
@@ -3115,10 +3119,10 @@
               -58.51755157113076
             ]
           ],
-          "name": "Exhibición Colectivos & Comerciales Históricos",
+          "name": "Exhibici\u00f3n Colectivos & Comerciales Hist\u00f3ricos",
           "categoryId": "zones",
           "color": "#10B981",
-          "notes": "Sector dedicado a la historia del transporte en Argentina: colectivos Mercedes-Benz de media y corta distancia, pick-ups clásicas Ford y Chevrolet, y modelos de industria nacional como el Ford Falcon.",
+          "notes": "Sector dedicado a la historia del transporte en Argentina: colectivos Mercedes-Benz de media y corta distancia, pick-ups cl\u00e1sicas Ford y Chevrolet, y modelos de industria nacional como el Ford Falcon.",
           "images": [
             "/streetview/autoclasica/comerciales_colectivo_falcon.jpg"
           ],
@@ -3133,10 +3137,10 @@
               -58.51707951878522
             ]
           ],
-          "name": "Colectivo Mercedes-Benz & Falcon Clásico",
+          "name": "Colectivo Mercedes-Benz & Falcon Cl\u00e1sico",
           "categoryId": "zones",
           "color": "#10B981",
-          "notes": "Exhibición destacada del colectivo histórico Mercedes-Benz azul y celeste, pick-up verde y Ford Falcon en perfecto estado de conservación.",
+          "notes": "Exhibici\u00f3n destacada del colectivo hist\u00f3rico Mercedes-Benz azul y celeste, pick-up verde y Ford Falcon en perfecto estado de conservaci\u00f3n.",
           "images": [
             "/streetview/autoclasica/comerciales_colectivo_falcon.jpg"
           ],
@@ -3186,7 +3190,7 @@
           "name": "Plaza Autojumble & Automobilia",
           "categoryId": "zones",
           "color": "#0284C7",
-          "notes": "El famoso Autojumble de Autoclásica: un verdadero mercado de pulgas del coleccionismo donde encontrar piezas mecánicas inconseguibles, manuales, insignias, indumentaria retro y miniaturas.",
+          "notes": "El famoso Autojumble de Autocl\u00e1sica: un verdadero mercado de pulgas del coleccionismo donde encontrar piezas mec\u00e1nicas inconseguibles, manuales, insignias, indumentaria retro y miniaturas.",
           "images": [
             "/streetview/autoclasica/autojumble_stands_carpas.jpg"
           ],
@@ -3204,7 +3208,7 @@
           "name": "Puestos de Repuestos & Coleccionismo",
           "categoryId": "zones",
           "color": "#0284C7",
-          "notes": "Gazebos de venta de repuestos originales, herramientas de época, volantes de madera y memorabilia de automovilismo.",
+          "notes": "Gazebos de venta de repuestos originales, herramientas de \u00e9poca, volantes de madera y memorabilia de automovilismo.",
           "images": [
             "/streetview/autoclasica/autojumble_stands_carpas.jpg"
           ],
@@ -3234,8 +3238,9 @@
           "name": "Paseo Peatonal del Bulevar Central",
           "categoryId": "access",
           "color": "#F59E0B",
-          "notes": "Bulevar principal señalizado con cadenas de contención que permite a los espectadores circular cómodamente a pie entre los diferentes clubes y sectores del predio.",
+          "notes": "Bulevar principal arbolado con el constante transitar del p\u00fablico aficionado, familias y especialistas que admiran los veh\u00edculos expuestos bajo los a\u00f1osos pl\u00e1tanos.",
           "images": [
+            "/streetview/autoclasica/publico_paseo_platanos.jpg",
             "/streetview/autoclasica/sendero_cadenas_bulevar.jpg"
           ],
           "createdAt": 1792809037208
@@ -3249,12 +3254,12 @@
               -58.51315677165986
             ]
           ],
-          "name": "Punto de Acceso Bulevar de Plátanos",
+          "name": "Punto de Acceso Bulevar de Pl\u00e1tanos",
           "categoryId": "access",
           "color": "#F59E0B",
-          "notes": "Inicio de la senda peatonal delimitada por postes y cadenas blancas con vista hacia las carpas de clubes.",
+          "notes": "Inicio del paseo central arbolado con vista panor\u00e1mica del p\u00fablico recorriendo la muestra entre banderas y carpas de marcas.",
           "images": [
-            "/streetview/autoclasica/sendero_cadenas_bulevar.jpg"
+            "/streetview/autoclasica/publico_paseo_platanos.jpg"
           ],
           "createdAt": 1792809045108
         },
@@ -3282,9 +3287,9 @@
           "name": "Sector Autos Veteranos & Vintage (Pre-Guerra)",
           "categoryId": "zones",
           "color": "#8B5CF6",
-          "notes": "Vehículos construidos antes de 1930: carruajes a motor, baquets de competición pioneras y automóviles de vapor y arranque por manivela en impecable estado de funcionamiento.",
+          "notes": "Veh\u00edculos hist\u00f3ricos y participantes de rallies de regularidad. Destaca la chapa conmemorativa oficial Auto Cl\u00e1sica Brasil - Argentina presente en las carrocer\u00edas de \u00e9poca.",
           "images": [
-            "/streetview/autoclasica/ferrari_platanos_aca.jpg"
+            "/streetview/autoclasica/emblema_autoclasica_brasil_argentina.jpg"
           ],
           "createdAt": 1792809067360
         },
@@ -3300,9 +3305,9 @@
           "name": "Parada de Autos Veteranos & Baquets",
           "categoryId": "zones",
           "color": "#8B5CF6",
-          "notes": "Área de concentración de las baquets históricas y carruajes de principios de siglo XX.",
+          "notes": "Parada de veh\u00edculos con insignias oficiales del certamen y delegaciones sudamericanas participantes.",
           "images": [
-            "/streetview/autoclasica/ferrari_platanos_aca.jpg"
+            "/streetview/autoclasica/emblema_autoclasica_brasil_argentina.jpg"
           ],
           "createdAt": 1792809077733
         },
@@ -3327,10 +3332,10 @@
               -58.51286172866821
             ]
           ],
-          "name": "Barrio de Motos Clásicas & Vintage",
+          "name": "Barrio de Motos Cl\u00e1sicas & Vintage",
           "categoryId": "zones",
           "color": "#64748B",
-          "notes": "Más de 300 motocicletas de colección: ejemplares británicos (Norton, Triumph, BSA), italianos (Ducati, Moto Guzzi), americanos (Harley-Davidson, Indian) y motonetas clásicas como Vespa y Lambretta.",
+          "notes": "M\u00e1s de 300 motocicletas de colecci\u00f3n: ejemplares brit\u00e1nicos (Norton, Triumph, BSA), italianos (Ducati, Moto Guzzi), americanos (Harley-Davidson, Indian) y motonetas cl\u00e1sicas como Vespa y Lambretta.",
           "images": [
             "/streetview/autoclasica/autojumble_stands_carpas.jpg"
           ],
@@ -3345,10 +3350,10 @@
               -58.51313531398774
             ]
           ],
-          "name": "Pabellón Central de Motos Clásicas",
+          "name": "Pabell\u00f3n Central de Motos Cl\u00e1sicas",
           "categoryId": "zones",
           "color": "#64748B",
-          "notes": "Punto de encuentro para entusiastas de las dos ruedas con stands de clubes de motos clásicas argentinas.",
+          "notes": "Punto de encuentro para entusiastas de las dos ruedas con stands de clubes de motos cl\u00e1sicas argentinas.",
           "images": [
             "/streetview/autoclasica/autojumble_stands_carpas.jpg"
           ],
@@ -3375,11 +3380,12 @@
               -58.51244388578512
             ]
           ],
-          "name": "Rampa de Premiación & Best of Show",
+          "name": "Rampa de Premiaci\u00f3n & Best of Show",
           "categoryId": "stages",
           "color": "#AE3EC9",
-          "notes": "Escenario principal donde el jurado internacional acreditado por FIVA evalúa la autenticidad y restauración de cada ejemplar, culminando con la elección del cotizado premio 'Best of Show' de Autoclásica.",
+          "notes": "Escenario principal donde el jurado internacional acreditado por FIVA eval\u00faa la originalidad y restauraci\u00f3n de cada joya antes de otorgar el codiciado Best of Show.",
           "images": [
+            "/streetview/autoclasica/emblema_autoclasica_brasil_argentina.jpg",
             "/streetview/autoclasica/ford_v8_bienvenidos.jpg"
           ],
           "createdAt": 1792809150727
@@ -3396,9 +3402,9 @@
           "name": "Podio de Jurado & Ceremonia FIVA",
           "categoryId": "stages",
           "color": "#AE3EC9",
-          "notes": "Rampa de premiación donde desfilan los vehículos galardonados en cada categoría ante los aplausos del público.",
+          "notes": "Podio de premiaci\u00f3n por el que desfilan los ganadores luciendo sus placas y condecoraciones oficiales de Auto Cl\u00e1sica.",
           "images": [
-            "/streetview/autoclasica/ford_v8_bienvenidos.jpg"
+            "/streetview/autoclasica/emblema_autoclasica_brasil_argentina.jpg"
           ],
           "createdAt": 1792809172177
         },
@@ -3419,10 +3425,10 @@
               -58.51274766569527
             ]
           ],
-          "name": "Patio Gastronómico & Food Trucks",
+          "name": "Patio Gastron\u00f3mico & Food Trucks",
           "categoryId": "food",
           "color": "#F59F00",
-          "notes": "Espacio gastronómico al aire libre con food trucks gourmet, carritos de café de especialidad, bebidas y áreas de sombra con mesas para descansar durante la visita.",
+          "notes": "Espacio gastron\u00f3mico al aire libre con food trucks gourmet, carritos de caf\u00e9 de especialidad, bebidas y \u00e1reas de sombra con mesas para descansar durante la visita.",
           "images": [
             "/streetview/autoclasica/comerciales_colectivo_falcon.jpg"
           ],
@@ -3437,10 +3443,10 @@
               -58.51353665469941
             ]
           ],
-          "name": "Patio de Comidas y Café del Parque",
+          "name": "Patio de Comidas y Caf\u00e9 del Parque",
           "categoryId": "food",
           "color": "#F59F00",
-          "notes": "Punto central del patio de comidas con cafetería, heladerías y propuestas gastronómicas variadas.",
+          "notes": "Punto central del patio de comidas con cafeter\u00eda, helader\u00edas y propuestas gastron\u00f3micas variadas.",
           "images": [
             "/streetview/autoclasica/comerciales_colectivo_falcon.jpg"
           ],

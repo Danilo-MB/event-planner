@@ -1833,9 +1833,9 @@ export const seedProjects: Project[] = [
   "authorEmail": "dmarinobata@gmail.com",
   "authorName": "Danilo",
   "websiteUrl": "https://www.autoclasica.com/",
-  "name": "Autoclásica 2027",
-  "description": "El mayor festival de vehículos clásicos e históricos de Sudamérica. Más de 1.000 automóviles y motos de colección en los jardines arbolados del Hipódromo de San Isidro.",
-  "location": "Hipódromo de San Isidro, San Isidro",
+  "name": "Autocl\u00e1sica 2027",
+  "description": "El mayor festival de veh\u00edculos cl\u00e1sicos e hist\u00f3ricos de Sudam\u00e9rica. M\u00e1s de 1.000 autom\u00f3viles y motos de colecci\u00f3n en los jardines arbolados del Hip\u00f3dromo de San Isidro.",
+  "location": "Hip\u00f3dromo de San Isidro, San Isidro",
   "template": "event",
   "center": {
     "lat": -34.481419,
@@ -1859,7 +1859,7 @@ export const seedProjects: Project[] = [
     },
     {
       "id": "food",
-      "name": "Gastronomía y bebidas",
+      "name": "Gastronom\u00eda y bebidas",
       "color": "#F59F00",
       "icon": "food"
     },
@@ -1911,12 +1911,13 @@ export const seedProjects: Project[] = [
           -58.5151753241695
         ]
       ],
-      "name": "Avenida Central de los Plátanos",
+      "name": "Avenida Central de los Pl\u00e1tanos",
       "categoryId": "access",
       "color": "#D4AF37",
-      "notes": "Bulevar principal arbolado de Autoclásica que atraviesa el corazón del Hipódromo de San Isidro bajo la frondosa copa de plátanos centenarios, conectando los accesos con los principales clubes de marcas y paddocks de superdeportivos.",
+      "notes": "Bulevar principal arbolado de Autocl\u00e1sica que atraviesa el coraz\u00f3n del Hip\u00f3dromo de San Isidro bajo la frondosa copa de pl\u00e1tanos centenarios, conectando los accesos con los principales clubes de marcas y paddocks de superdeportivos.",
       "images": [
-        "/streetview/autoclasica/ferrari_platanos_aca.jpg",
+        "/streetview/autoclasica/publico_paseo_platanos.jpg",
+        "/streetview/autoclasica/ferrari_duo_amarilla_roja.jpg",
         "/streetview/autoclasica/sendero_cadenas_bulevar.jpg",
         "/streetview/autoclasica/ford_v8_bienvenidos.jpg"
       ],
@@ -1924,32 +1925,32 @@ export const seedProjects: Project[] = [
         {
           "lat": -34.480304094304124,
           "lng": -58.50751302711022,
-          "title": "Ingreso Av. Bernabé Márquez",
-          "notes": "Acceso principal del público por la avenida Márquez hacia el parque arbolado del Hipódromo de San Isidro.",
+          "title": "Ingreso Av. Bernab\u00e9 M\u00e1rquez",
+          "notes": "Acceso principal del p\u00fablico por la avenida M\u00e1rquez hacia el parque arbolado del Hip\u00f3dromo de San Isidro.",
           "image": "/streetview/autoclasica/sendero_cadenas_bulevar.jpg",
           "heading": 220
         },
         {
           "lat": -34.48095447185303,
           "lng": -58.50933377096591,
-          "title": "Paseo Central Delimitado",
-          "notes": "Sendero peatonal custodiado con cadenas y estacas que guía a los visitantes hacia la arboleda de exposiciones.",
-          "image": "/streetview/autoclasica/sendero_cadenas_bulevar.jpg",
+          "title": "Paseo Central de los Pl\u00e1tanos",
+          "notes": "Paseo peatonal arbolado colmado de familias y fan\u00e1ticos disfrutando del d\u00eda bajo la sombra de los pl\u00e1tanos centenarios.",
+          "image": "/streetview/autoclasica/publico_paseo_platanos.jpg",
           "heading": 225
         },
         {
           "lat": -34.48211763444187,
           "lng": -58.511564182189105,
-          "title": "Túnel de Plátanos & Ferrari 308",
-          "notes": "Espectacular sector sombreado donde reposan las Ferrari 308 GTB y GTS junto a las unidades históricas del ACA.",
-          "image": "/streetview/autoclasica/ferrari_platanos_aca.jpg",
+          "title": "T\u00fanel de Pl\u00e1tanos & Dupla Ferrari 308",
+          "notes": "Exhibici\u00f3n de la dupla Ferrari 308 GTB amarilla y roja sobre el c\u00e9sped, flanqueadas por las unidades de auxilio del ACA.",
+          "image": "/streetview/autoclasica/ferrari_duo_amarilla_roja.jpg",
           "heading": 230
         },
         {
           "lat": -34.484256310424854,
           "lng": -58.5151753241695,
           "title": "Bulevar de Clubes & Ford V8",
-          "notes": "Tramo sur del bulevar junto a los pórticos de carpas institucionales y stands de marcas clásicas.",
+          "notes": "Tramo sur del bulevar junto a los p\u00f3rticos de carpas institucionales y stands de marcas cl\u00e1sicas.",
           "image": "/streetview/autoclasica/ford_v8_bienvenidos.jpg",
           "heading": 235
         }
@@ -1983,17 +1984,18 @@ export const seedProjects: Project[] = [
       ],
       "name": "Circuito Perimetral & Autojumble",
       "categoryId": "access",
-      "notes": "Circuito perimetral norte que recorre las áreas de vehículos utilitarios, colectivos históricos y la animada callejuela de carpas de autojumble, libros y repuestos de época.",
+      "notes": "Circuito perimetral norte que recorre las \u00e1reas de veh\u00edculos utilitarios, colectivos hist\u00f3ricos y la animada callejuela de carpas de autojumble, libros y repuestos de \u00e9poca.",
       "images": [
         "/streetview/autoclasica/comerciales_colectivo_falcon.jpg",
         "/streetview/autoclasica/autojumble_stands_carpas.jpg",
-        "/streetview/autoclasica/sendero_cadenas_bulevar.jpg"
+        "/streetview/autoclasica/publico_paseo_platanos.jpg",
+        "/streetview/autoclasica/emblema_autoclasica_brasil_argentina.jpg"
       ],
       "routeWaypoints": [
         {
           "lat": -34.480116484453575,
           "lng": -58.507558545706615,
-          "title": "Rotonda de Desvío Norte",
+          "title": "Rotonda de Desv\u00edo Norte",
           "notes": "Cruce que conecta el acceso principal con el circuito perimetral de utilitarios.",
           "image": "/streetview/autoclasica/sendero_cadenas_bulevar.jpg",
           "heading": 270
@@ -2002,32 +2004,32 @@ export const seedProjects: Project[] = [
           "lat": -34.479878844703855,
           "lng": -58.51007724137362,
           "title": "Avenida de Colectivos y Utilitarios",
-          "notes": "Exhibición de transporte histórico con colectivos Mercedes-Benz, pick-ups clásicas y sedanes nacionales.",
+          "notes": "Exhibici\u00f3n de transporte hist\u00f3rico con colectivos Mercedes-Benz, pick-ups cl\u00e1sicas y sedanes nacionales.",
           "image": "/streetview/autoclasica/comerciales_colectivo_falcon.jpg",
           "heading": 260
         },
         {
           "lat": -34.47937854828142,
           "lng": -58.51365803762312,
-          "title": "Callejón del Autojumble",
-          "notes": "Hilera de gazebos con venta de repuestos antiguos, maquetas, memorabilia y antigüedades mecánicas.",
+          "title": "Callej\u00f3n del Autojumble",
+          "notes": "Hilera de gazebos con venta de repuestos antiguos, maquetas, memorabilia y antig\u00fcedades mec\u00e1nicas.",
           "image": "/streetview/autoclasica/autojumble_stands_carpas.jpg",
           "heading": 250
         },
         {
           "lat": -34.479065861493865,
           "lng": -58.51584293024992,
-          "title": "Paseo Frente a Paddock",
-          "notes": "Vista panorámica hacia el óvalo de césped del Hipódromo de San Isidro y carpas del evento.",
-          "image": "/streetview/autoclasica/autojumble_stands_carpas.jpg",
+          "title": "Paseo de Visitantes y Bulevar Norte",
+          "notes": "Gran concurrencia de p\u00fablico recorriendo los senderos arbolados entre banderas y stands de marcas cl\u00e1sicas.",
+          "image": "/streetview/autoclasica/publico_paseo_platanos.jpg",
           "heading": 200
         },
         {
           "lat": -34.47784011798586,
           "lng": -58.513460790372086,
-          "title": "Retorno Hacia Bulevar",
-          "notes": "Sendero arbolado de regreso conectando con los pabellones de motos clásicas y carruajes.",
-          "image": "/streetview/autoclasica/sendero_cadenas_bulevar.jpg",
+          "title": "Plaza de Veh\u00edculos Hist\u00f3ricos Binacionales",
+          "notes": "Sector de concentraci\u00f3n de veh\u00edculos participantes con emblemas de la hermandad cl\u00e1sica Brasil - Argentina.",
+          "image": "/streetview/autoclasica/emblema_autoclasica_brasil_argentina.jpg",
           "heading": 140
         }
       ],
@@ -2057,7 +2059,7 @@ export const seedProjects: Project[] = [
       "name": "Sector Club Ford V8 Argentina",
       "categoryId": "zones",
       "color": "#E8590C",
-      "notes": "Espacio institucional del Club Ford V8 Argentina y The Early Ford V-8 Club of America. Alberga una cuidada selección de modelos Ford V8 construidos entre 1932 y 1953, cupés, sedanes y descapotables de época.",
+      "notes": "Espacio institucional del Club Ford V8 Argentina y The Early Ford V-8 Club of America. Alberga una cuidada selecci\u00f3n de modelos Ford V8 construidos entre 1932 y 1953, cup\u00e9s, sedanes y descapotables de \u00e9poca.",
       "images": [
         "/streetview/autoclasica/ford_v8_bienvenidos.jpg"
       ],
@@ -2072,10 +2074,10 @@ export const seedProjects: Project[] = [
           -58.51486265659333
         ]
       ],
-      "name": "Pórtico y Stand Club Ford V8",
+      "name": "P\u00f3rtico y Stand Club Ford V8",
       "categoryId": "zones",
       "color": "#E8590C",
-      "notes": "Pórtico de bienvenida 'Club Ford V8 Argentina - Bienvenidos', carpa de acreditaciones y atención a socios y aficionados.",
+      "notes": "P\u00f3rtico de bienvenida 'Club Ford V8 Argentina - Bienvenidos', carpa de acreditaciones y atenci\u00f3n a socios y aficionados.",
       "images": [
         "/streetview/autoclasica/ford_v8_bienvenidos.jpg"
       ],
@@ -2105,8 +2107,9 @@ export const seedProjects: Project[] = [
       "name": "Bulevar Ferrari & Superdeportivos",
       "categoryId": "zones",
       "color": "#D4AF37",
-      "notes": "Espacio consagrado a deportivos italianos y pura sangre de Maranello. En primer plano lucen las Ferrari 308 GTB y GTS bajo los árboles de San Isidro, acompañadas por vehículos de rescate histórico del ACA.",
+      "notes": "Espacio consagrado a deportivos italianos y pura sangre de Maranello. En primer plano lucen una Ferrari 308 GTB roja y una amarilla bajo la arboleda, con unidades hist\u00f3ricas del ACA de fondo.",
       "images": [
+        "/streetview/autoclasica/ferrari_duo_amarilla_roja.jpg",
         "/streetview/autoclasica/ferrari_platanos_aca.jpg"
       ],
       "createdAt": 1792808894546
@@ -2123,8 +2126,9 @@ export const seedProjects: Project[] = [
       "name": "Paddock Ferrari 308 & Auxilio ACA",
       "categoryId": "zones",
       "color": "#D4AF37",
-      "notes": "Punto de exhibición de la icónica Ferrari 308 amarilla y roja junto a la grúa de auxilio mecánico del Automóvil Club Argentino.",
+      "notes": "Punto de exhibici\u00f3n de la dupla de Ferrari 308 (Giallo Fly y Rosso Corsa) junto a la gr\u00faa de auxilio hist\u00f3rico del Autom\u00f3vil Club Argentino.",
       "images": [
+        "/streetview/autoclasica/ferrari_duo_amarilla_roja.jpg",
         "/streetview/autoclasica/ferrari_platanos_aca.jpg"
       ],
       "createdAt": 1792808907721
@@ -2150,10 +2154,10 @@ export const seedProjects: Project[] = [
           -58.51755157113076
         ]
       ],
-      "name": "Exhibición Colectivos & Comerciales Históricos",
+      "name": "Exhibici\u00f3n Colectivos & Comerciales Hist\u00f3ricos",
       "categoryId": "zones",
       "color": "#10B981",
-      "notes": "Sector dedicado a la historia del transporte en Argentina: colectivos Mercedes-Benz de media y corta distancia, pick-ups clásicas Ford y Chevrolet, y modelos de industria nacional como el Ford Falcon.",
+      "notes": "Sector dedicado a la historia del transporte en Argentina: colectivos Mercedes-Benz de media y corta distancia, pick-ups cl\u00e1sicas Ford y Chevrolet, y modelos de industria nacional como el Ford Falcon.",
       "images": [
         "/streetview/autoclasica/comerciales_colectivo_falcon.jpg"
       ],
@@ -2168,10 +2172,10 @@ export const seedProjects: Project[] = [
           -58.51707951878522
         ]
       ],
-      "name": "Colectivo Mercedes-Benz & Falcon Clásico",
+      "name": "Colectivo Mercedes-Benz & Falcon Cl\u00e1sico",
       "categoryId": "zones",
       "color": "#10B981",
-      "notes": "Exhibición destacada del colectivo histórico Mercedes-Benz azul y celeste, pick-up verde y Ford Falcon en perfecto estado de conservación.",
+      "notes": "Exhibici\u00f3n destacada del colectivo hist\u00f3rico Mercedes-Benz azul y celeste, pick-up verde y Ford Falcon en perfecto estado de conservaci\u00f3n.",
       "images": [
         "/streetview/autoclasica/comerciales_colectivo_falcon.jpg"
       ],
@@ -2221,7 +2225,7 @@ export const seedProjects: Project[] = [
       "name": "Plaza Autojumble & Automobilia",
       "categoryId": "zones",
       "color": "#0284C7",
-      "notes": "El famoso Autojumble de Autoclásica: un verdadero mercado de pulgas del coleccionismo donde encontrar piezas mecánicas inconseguibles, manuales, insignias, indumentaria retro y miniaturas.",
+      "notes": "El famoso Autojumble de Autocl\u00e1sica: un verdadero mercado de pulgas del coleccionismo donde encontrar piezas mec\u00e1nicas inconseguibles, manuales, insignias, indumentaria retro y miniaturas.",
       "images": [
         "/streetview/autoclasica/autojumble_stands_carpas.jpg"
       ],
@@ -2239,7 +2243,7 @@ export const seedProjects: Project[] = [
       "name": "Puestos de Repuestos & Coleccionismo",
       "categoryId": "zones",
       "color": "#0284C7",
-      "notes": "Gazebos de venta de repuestos originales, herramientas de época, volantes de madera y memorabilia de automovilismo.",
+      "notes": "Gazebos de venta de repuestos originales, herramientas de \u00e9poca, volantes de madera y memorabilia de automovilismo.",
       "images": [
         "/streetview/autoclasica/autojumble_stands_carpas.jpg"
       ],
@@ -2269,8 +2273,9 @@ export const seedProjects: Project[] = [
       "name": "Paseo Peatonal del Bulevar Central",
       "categoryId": "access",
       "color": "#F59E0B",
-      "notes": "Bulevar principal señalizado con cadenas de contención que permite a los espectadores circular cómodamente a pie entre los diferentes clubes y sectores del predio.",
+      "notes": "Bulevar principal arbolado con el constante transitar del p\u00fablico aficionado, familias y especialistas que admiran los veh\u00edculos expuestos bajo los a\u00f1osos pl\u00e1tanos.",
       "images": [
+        "/streetview/autoclasica/publico_paseo_platanos.jpg",
         "/streetview/autoclasica/sendero_cadenas_bulevar.jpg"
       ],
       "createdAt": 1792809037208
@@ -2284,12 +2289,12 @@ export const seedProjects: Project[] = [
           -58.51315677165986
         ]
       ],
-      "name": "Punto de Acceso Bulevar de Plátanos",
+      "name": "Punto de Acceso Bulevar de Pl\u00e1tanos",
       "categoryId": "access",
       "color": "#F59E0B",
-      "notes": "Inicio de la senda peatonal delimitada por postes y cadenas blancas con vista hacia las carpas de clubes.",
+      "notes": "Inicio del paseo central arbolado con vista panor\u00e1mica del p\u00fablico recorriendo la muestra entre banderas y carpas de marcas.",
       "images": [
-        "/streetview/autoclasica/sendero_cadenas_bulevar.jpg"
+        "/streetview/autoclasica/publico_paseo_platanos.jpg"
       ],
       "createdAt": 1792809045108
     },
@@ -2317,9 +2322,9 @@ export const seedProjects: Project[] = [
       "name": "Sector Autos Veteranos & Vintage (Pre-Guerra)",
       "categoryId": "zones",
       "color": "#8B5CF6",
-      "notes": "Vehículos construidos antes de 1930: carruajes a motor, baquets de competición pioneras y automóviles de vapor y arranque por manivela en impecable estado de funcionamiento.",
+      "notes": "Veh\u00edculos hist\u00f3ricos y participantes de rallies de regularidad. Destaca la chapa conmemorativa oficial Auto Cl\u00e1sica Brasil - Argentina presente en las carrocer\u00edas de \u00e9poca.",
       "images": [
-        "/streetview/autoclasica/ferrari_platanos_aca.jpg"
+        "/streetview/autoclasica/emblema_autoclasica_brasil_argentina.jpg"
       ],
       "createdAt": 1792809067360
     },
@@ -2335,9 +2340,9 @@ export const seedProjects: Project[] = [
       "name": "Parada de Autos Veteranos & Baquets",
       "categoryId": "zones",
       "color": "#8B5CF6",
-      "notes": "Área de concentración de las baquets históricas y carruajes de principios de siglo XX.",
+      "notes": "Parada de veh\u00edculos con insignias oficiales del certamen y delegaciones sudamericanas participantes.",
       "images": [
-        "/streetview/autoclasica/ferrari_platanos_aca.jpg"
+        "/streetview/autoclasica/emblema_autoclasica_brasil_argentina.jpg"
       ],
       "createdAt": 1792809077733
     },
@@ -2362,10 +2367,10 @@ export const seedProjects: Project[] = [
           -58.51286172866821
         ]
       ],
-      "name": "Barrio de Motos Clásicas & Vintage",
+      "name": "Barrio de Motos Cl\u00e1sicas & Vintage",
       "categoryId": "zones",
       "color": "#64748B",
-      "notes": "Más de 300 motocicletas de colección: ejemplares británicos (Norton, Triumph, BSA), italianos (Ducati, Moto Guzzi), americanos (Harley-Davidson, Indian) y motonetas clásicas como Vespa y Lambretta.",
+      "notes": "M\u00e1s de 300 motocicletas de colecci\u00f3n: ejemplares brit\u00e1nicos (Norton, Triumph, BSA), italianos (Ducati, Moto Guzzi), americanos (Harley-Davidson, Indian) y motonetas cl\u00e1sicas como Vespa y Lambretta.",
       "images": [
         "/streetview/autoclasica/autojumble_stands_carpas.jpg"
       ],
@@ -2380,10 +2385,10 @@ export const seedProjects: Project[] = [
           -58.51313531398774
         ]
       ],
-      "name": "Pabellón Central de Motos Clásicas",
+      "name": "Pabell\u00f3n Central de Motos Cl\u00e1sicas",
       "categoryId": "zones",
       "color": "#64748B",
-      "notes": "Punto de encuentro para entusiastas de las dos ruedas con stands de clubes de motos clásicas argentinas.",
+      "notes": "Punto de encuentro para entusiastas de las dos ruedas con stands de clubes de motos cl\u00e1sicas argentinas.",
       "images": [
         "/streetview/autoclasica/autojumble_stands_carpas.jpg"
       ],
@@ -2410,11 +2415,12 @@ export const seedProjects: Project[] = [
           -58.51244388578512
         ]
       ],
-      "name": "Rampa de Premiación & Best of Show",
+      "name": "Rampa de Premiaci\u00f3n & Best of Show",
       "categoryId": "stages",
       "color": "#AE3EC9",
-      "notes": "Escenario principal donde el jurado internacional acreditado por FIVA evalúa la autenticidad y restauración de cada ejemplar, culminando con la elección del cotizado premio 'Best of Show' de Autoclásica.",
+      "notes": "Escenario principal donde el jurado internacional acreditado por FIVA eval\u00faa la originalidad y restauraci\u00f3n de cada joya antes de otorgar el codiciado Best of Show.",
       "images": [
+        "/streetview/autoclasica/emblema_autoclasica_brasil_argentina.jpg",
         "/streetview/autoclasica/ford_v8_bienvenidos.jpg"
       ],
       "createdAt": 1792809150727
@@ -2431,9 +2437,9 @@ export const seedProjects: Project[] = [
       "name": "Podio de Jurado & Ceremonia FIVA",
       "categoryId": "stages",
       "color": "#AE3EC9",
-      "notes": "Rampa de premiación donde desfilan los vehículos galardonados en cada categoría ante los aplausos del público.",
+      "notes": "Podio de premiaci\u00f3n por el que desfilan los ganadores luciendo sus placas y condecoraciones oficiales de Auto Cl\u00e1sica.",
       "images": [
-        "/streetview/autoclasica/ford_v8_bienvenidos.jpg"
+        "/streetview/autoclasica/emblema_autoclasica_brasil_argentina.jpg"
       ],
       "createdAt": 1792809172177
     },
@@ -2454,10 +2460,10 @@ export const seedProjects: Project[] = [
           -58.51274766569527
         ]
       ],
-      "name": "Patio Gastronómico & Food Trucks",
+      "name": "Patio Gastron\u00f3mico & Food Trucks",
       "categoryId": "food",
       "color": "#F59F00",
-      "notes": "Espacio gastronómico al aire libre con food trucks gourmet, carritos de café de especialidad, bebidas y áreas de sombra con mesas para descansar durante la visita.",
+      "notes": "Espacio gastron\u00f3mico al aire libre con food trucks gourmet, carritos de caf\u00e9 de especialidad, bebidas y \u00e1reas de sombra con mesas para descansar durante la visita.",
       "images": [
         "/streetview/autoclasica/comerciales_colectivo_falcon.jpg"
       ],
@@ -2472,10 +2478,10 @@ export const seedProjects: Project[] = [
           -58.51353665469941
         ]
       ],
-      "name": "Patio de Comidas y Café del Parque",
+      "name": "Patio de Comidas y Caf\u00e9 del Parque",
       "categoryId": "food",
       "color": "#F59F00",
-      "notes": "Punto central del patio de comidas con cafetería, heladerías y propuestas gastronómicas variadas.",
+      "notes": "Punto central del patio de comidas con cafeter\u00eda, helader\u00edas y propuestas gastron\u00f3micas variadas.",
       "images": [
         "/streetview/autoclasica/comerciales_colectivo_falcon.jpg"
       ],

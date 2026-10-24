@@ -88036,7 +88036,8 @@ var require_carbriata_data = __commonJS({
               color: "#D4AF37",
               notes: "Bulevar principal arbolado de Autocl\xE1sica que atraviesa el coraz\xF3n del Hip\xF3dromo de San Isidro bajo la frondosa copa de pl\xE1tanos centenarios, conectando los accesos con los principales clubes de marcas y paddocks de superdeportivos.",
               images: [
-                "/streetview/autoclasica/ferrari_platanos_aca.jpg",
+                "/streetview/autoclasica/publico_paseo_platanos.jpg",
+                "/streetview/autoclasica/ferrari_duo_amarilla_roja.jpg",
                 "/streetview/autoclasica/sendero_cadenas_bulevar.jpg",
                 "/streetview/autoclasica/ford_v8_bienvenidos.jpg"
               ],
@@ -88052,17 +88053,17 @@ var require_carbriata_data = __commonJS({
                 {
                   lat: -34.48095447185303,
                   lng: -58.50933377096591,
-                  title: "Paseo Central Delimitado",
-                  notes: "Sendero peatonal custodiado con cadenas y estacas que gu\xEDa a los visitantes hacia la arboleda de exposiciones.",
-                  image: "/streetview/autoclasica/sendero_cadenas_bulevar.jpg",
+                  title: "Paseo Central de los Pl\xE1tanos",
+                  notes: "Paseo peatonal arbolado colmado de familias y fan\xE1ticos disfrutando del d\xEDa bajo la sombra de los pl\xE1tanos centenarios.",
+                  image: "/streetview/autoclasica/publico_paseo_platanos.jpg",
                   heading: 225
                 },
                 {
                   lat: -34.48211763444187,
                   lng: -58.511564182189105,
-                  title: "T\xFAnel de Pl\xE1tanos & Ferrari 308",
-                  notes: "Espectacular sector sombreado donde reposan las Ferrari 308 GTB y GTS junto a las unidades hist\xF3ricas del ACA.",
-                  image: "/streetview/autoclasica/ferrari_platanos_aca.jpg",
+                  title: "T\xFAnel de Pl\xE1tanos & Dupla Ferrari 308",
+                  notes: "Exhibici\xF3n de la dupla Ferrari 308 GTB amarilla y roja sobre el c\xE9sped, flanqueadas por las unidades de auxilio del ACA.",
+                  image: "/streetview/autoclasica/ferrari_duo_amarilla_roja.jpg",
                   heading: 230
                 },
                 {
@@ -88107,7 +88108,8 @@ var require_carbriata_data = __commonJS({
               images: [
                 "/streetview/autoclasica/comerciales_colectivo_falcon.jpg",
                 "/streetview/autoclasica/autojumble_stands_carpas.jpg",
-                "/streetview/autoclasica/sendero_cadenas_bulevar.jpg"
+                "/streetview/autoclasica/publico_paseo_platanos.jpg",
+                "/streetview/autoclasica/emblema_autoclasica_brasil_argentina.jpg"
               ],
               routeWaypoints: [
                 {
@@ -88137,17 +88139,17 @@ var require_carbriata_data = __commonJS({
                 {
                   lat: -34.479065861493865,
                   lng: -58.51584293024992,
-                  title: "Paseo Frente a Paddock",
-                  notes: "Vista panor\xE1mica hacia el \xF3valo de c\xE9sped del Hip\xF3dromo de San Isidro y carpas del evento.",
-                  image: "/streetview/autoclasica/autojumble_stands_carpas.jpg",
+                  title: "Paseo de Visitantes y Bulevar Norte",
+                  notes: "Gran concurrencia de p\xFAblico recorriendo los senderos arbolados entre banderas y stands de marcas cl\xE1sicas.",
+                  image: "/streetview/autoclasica/publico_paseo_platanos.jpg",
                   heading: 200
                 },
                 {
                   lat: -34.47784011798586,
                   lng: -58.513460790372086,
-                  title: "Retorno Hacia Bulevar",
-                  notes: "Sendero arbolado de regreso conectando con los pabellones de motos cl\xE1sicas y carruajes.",
-                  image: "/streetview/autoclasica/sendero_cadenas_bulevar.jpg",
+                  title: "Plaza de Veh\xEDculos Hist\xF3ricos Binacionales",
+                  notes: "Sector de concentraci\xF3n de veh\xEDculos participantes con emblemas de la hermandad cl\xE1sica Brasil - Argentina.",
+                  image: "/streetview/autoclasica/emblema_autoclasica_brasil_argentina.jpg",
                   heading: 140
                 }
               ],
@@ -88225,8 +88227,9 @@ var require_carbriata_data = __commonJS({
               name: "Bulevar Ferrari & Superdeportivos",
               categoryId: "zones",
               color: "#D4AF37",
-              notes: "Espacio consagrado a deportivos italianos y pura sangre de Maranello. En primer plano lucen las Ferrari 308 GTB y GTS bajo los \xE1rboles de San Isidro, acompa\xF1adas por veh\xEDculos de rescate hist\xF3rico del ACA.",
+              notes: "Espacio consagrado a deportivos italianos y pura sangre de Maranello. En primer plano lucen una Ferrari 308 GTB roja y una amarilla bajo la arboleda, con unidades hist\xF3ricas del ACA de fondo.",
               images: [
+                "/streetview/autoclasica/ferrari_duo_amarilla_roja.jpg",
                 "/streetview/autoclasica/ferrari_platanos_aca.jpg"
               ],
               createdAt: 1792808894546
@@ -88243,8 +88246,9 @@ var require_carbriata_data = __commonJS({
               name: "Paddock Ferrari 308 & Auxilio ACA",
               categoryId: "zones",
               color: "#D4AF37",
-              notes: "Punto de exhibici\xF3n de la ic\xF3nica Ferrari 308 amarilla y roja junto a la gr\xFAa de auxilio mec\xE1nico del Autom\xF3vil Club Argentino.",
+              notes: "Punto de exhibici\xF3n de la dupla de Ferrari 308 (Giallo Fly y Rosso Corsa) junto a la gr\xFAa de auxilio hist\xF3rico del Autom\xF3vil Club Argentino.",
               images: [
+                "/streetview/autoclasica/ferrari_duo_amarilla_roja.jpg",
                 "/streetview/autoclasica/ferrari_platanos_aca.jpg"
               ],
               createdAt: 1792808907721
@@ -88389,8 +88393,9 @@ var require_carbriata_data = __commonJS({
               name: "Paseo Peatonal del Bulevar Central",
               categoryId: "access",
               color: "#F59E0B",
-              notes: "Bulevar principal se\xF1alizado con cadenas de contenci\xF3n que permite a los espectadores circular c\xF3modamente a pie entre los diferentes clubes y sectores del predio.",
+              notes: "Bulevar principal arbolado con el constante transitar del p\xFAblico aficionado, familias y especialistas que admiran los veh\xEDculos expuestos bajo los a\xF1osos pl\xE1tanos.",
               images: [
+                "/streetview/autoclasica/publico_paseo_platanos.jpg",
                 "/streetview/autoclasica/sendero_cadenas_bulevar.jpg"
               ],
               createdAt: 1792809037208
@@ -88407,9 +88412,9 @@ var require_carbriata_data = __commonJS({
               name: "Punto de Acceso Bulevar de Pl\xE1tanos",
               categoryId: "access",
               color: "#F59E0B",
-              notes: "Inicio de la senda peatonal delimitada por postes y cadenas blancas con vista hacia las carpas de clubes.",
+              notes: "Inicio del paseo central arbolado con vista panor\xE1mica del p\xFAblico recorriendo la muestra entre banderas y carpas de marcas.",
               images: [
-                "/streetview/autoclasica/sendero_cadenas_bulevar.jpg"
+                "/streetview/autoclasica/publico_paseo_platanos.jpg"
               ],
               createdAt: 1792809045108
             },
@@ -88437,9 +88442,9 @@ var require_carbriata_data = __commonJS({
               name: "Sector Autos Veteranos & Vintage (Pre-Guerra)",
               categoryId: "zones",
               color: "#8B5CF6",
-              notes: "Veh\xEDculos construidos antes de 1930: carruajes a motor, baquets de competici\xF3n pioneras y autom\xF3viles de vapor y arranque por manivela en impecable estado de funcionamiento.",
+              notes: "Veh\xEDculos hist\xF3ricos y participantes de rallies de regularidad. Destaca la chapa conmemorativa oficial Auto Cl\xE1sica Brasil - Argentina presente en las carrocer\xEDas de \xE9poca.",
               images: [
-                "/streetview/autoclasica/ferrari_platanos_aca.jpg"
+                "/streetview/autoclasica/emblema_autoclasica_brasil_argentina.jpg"
               ],
               createdAt: 1792809067360
             },
@@ -88455,9 +88460,9 @@ var require_carbriata_data = __commonJS({
               name: "Parada de Autos Veteranos & Baquets",
               categoryId: "zones",
               color: "#8B5CF6",
-              notes: "\xC1rea de concentraci\xF3n de las baquets hist\xF3ricas y carruajes de principios de siglo XX.",
+              notes: "Parada de veh\xEDculos con insignias oficiales del certamen y delegaciones sudamericanas participantes.",
               images: [
-                "/streetview/autoclasica/ferrari_platanos_aca.jpg"
+                "/streetview/autoclasica/emblema_autoclasica_brasil_argentina.jpg"
               ],
               createdAt: 1792809077733
             },
@@ -88533,8 +88538,9 @@ var require_carbriata_data = __commonJS({
               name: "Rampa de Premiaci\xF3n & Best of Show",
               categoryId: "stages",
               color: "#AE3EC9",
-              notes: "Escenario principal donde el jurado internacional acreditado por FIVA eval\xFAa la autenticidad y restauraci\xF3n de cada ejemplar, culminando con la elecci\xF3n del cotizado premio 'Best of Show' de Autocl\xE1sica.",
+              notes: "Escenario principal donde el jurado internacional acreditado por FIVA eval\xFAa la originalidad y restauraci\xF3n de cada joya antes de otorgar el codiciado Best of Show.",
               images: [
+                "/streetview/autoclasica/emblema_autoclasica_brasil_argentina.jpg",
                 "/streetview/autoclasica/ford_v8_bienvenidos.jpg"
               ],
               createdAt: 1792809150727
@@ -88551,9 +88557,9 @@ var require_carbriata_data = __commonJS({
               name: "Podio de Jurado & Ceremonia FIVA",
               categoryId: "stages",
               color: "#AE3EC9",
-              notes: "Rampa de premiaci\xF3n donde desfilan los veh\xEDculos galardonados en cada categor\xEDa ante los aplausos del p\xFAblico.",
+              notes: "Podio de premiaci\xF3n por el que desfilan los ganadores luciendo sus placas y condecoraciones oficiales de Auto Cl\xE1sica.",
               images: [
-                "/streetview/autoclasica/ford_v8_bienvenidos.jpg"
+                "/streetview/autoclasica/emblema_autoclasica_brasil_argentina.jpg"
               ],
               createdAt: 1792809172177
             },
